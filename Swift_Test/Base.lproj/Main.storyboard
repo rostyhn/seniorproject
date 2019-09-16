@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Swift_Test" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="39F-oY-Usu" customClass="RoundButton" customModule="Swift_Test" customModuleProvider="target">
+                                <rect key="frame" x="145" y="422" width="123" height="53"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal">
+                                    <attributedString key="attributedTitle">
+                                        <fragment content="Begin Test">
+                                            <attributes>
+                                                <font key="NSFont" size="27" name=".AppleSystemUIFont"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                            </attributes>
+                                        </fragment>
+                                    </attributedString>
+                                </state>
+                                <connections>
+                                    <action selector="act_startTest:" destination="BYZ-38-t0r" eventType="touchUpInside" id="R7l-5E-B8g"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5ea-K6-gbk" customClass="RoundButton" customModule="Swift_Test" customModuleProvider="target">
+                                <rect key="frame" x="169" y="815" width="76" height="47"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="29"/>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="About"/>
+                                <connections>
+                                    <action selector="act_OpenAbout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vmt-hU-eIv"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="39F-oY-Usu" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="46b-61-vKi"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="5ea-K6-gbk" secondAttribute="bottom" id="bXH-Xr-zXd"/>
+                            <constraint firstItem="39F-oY-Usu" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="uq7-BN-SIY"/>
+                            <constraint firstItem="5ea-K6-gbk" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="vSZ-wS-Iqh"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="btn_About" destination="5ea-K6-gbk" id="3Zm-nf-Frs"/>
+                        <outlet property="btn_startTest" destination="39F-oY-Usu" id="cAJ-BW-KSi"/>
+                        <segue destination="kNV-Qq-P6P" kind="show" identifier="to_AboutUs" id="EAq-uH-0x9"/>
+                        <segue destination="7IP-pv-jJa" kind="show" identifier="to_Test" id="ydb-yG-izd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="131.8840579710145" y="128.57142857142856"/>
+        </scene>
+        <!--About Us View Controller-->
+        <scene sceneID="4ZW-BO-AyO">
+            <objects>
+                <viewController id="kNV-Qq-P6P" customClass="AboutUsViewController" customModule="Swift_Test" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="9Jf-B5-cJL">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5C6-Ls-XO4" customClass="RoundButton" customModule="Swift_Test" customModuleProvider="target">
+                                <rect key="frame" x="154" y="802" width="107" height="60"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="34"/>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Back"/>
+                                <connections>
+                                    <action selector="act_toMain:" destination="kNV-Qq-P6P" eventType="touchUpInside" id="TTE-VI-0cc"/>
+                                </connections>
+                            </button>
+                            <label autoresizesSubviews="NO" opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="20" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UH0-Km-L7f">
+                                <rect key="frame" x="25" y="69" width="364" height="376"/>
+                                <string key="text">This app was designed in conjuction with Dr. Libon to facilitate the testing of patients who suspect they may have symptoms of neurodegenerative diseases. To test for symptoms, a scatter-like test designed by Dr. Libon was employed. We designed this application as a part of our senior project at Rowan University. </string>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="dCh-4a-uIs" firstAttribute="bottom" secondItem="5C6-Ls-XO4" secondAttribute="bottom" id="Enl-XN-bmJ"/>
+                            <constraint firstItem="5C6-Ls-XO4" firstAttribute="centerX" secondItem="dCh-4a-uIs" secondAttribute="centerX" id="GCr-tB-cSr"/>
+                            <constraint firstItem="UH0-Km-L7f" firstAttribute="top" secondItem="dCh-4a-uIs" secondAttribute="top" constant="25" id="GQg-S1-BO9"/>
+                            <constraint firstItem="UH0-Km-L7f" firstAttribute="centerX" secondItem="dCh-4a-uIs" secondAttribute="centerX" id="fOx-tx-rPV"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="dCh-4a-uIs"/>
+                    </view>
+                    <connections>
+                        <outlet property="btn_back" destination="5C6-Ls-XO4" id="xFE-Yy-Yyl"/>
+                        <outlet property="lbl_AboutUs" destination="UH0-Km-L7f" id="Nm5-Ge-BuB"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="to_MainfromAbout" id="d0k-SF-63C"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZYq-2T-9jO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="131.8840579710145" y="853.79464285714278"/>
+        </scene>
+        <!--Test View Controller-->
+        <scene sceneID="qUc-qT-w79">
+            <objects>
+                <viewController id="7IP-pv-jJa" customClass="TestViewController" customModule="Swift_Test" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Hgw-hH-EUr">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="WGr-6L-HYt"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QN4-nl-gSa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="975" y="135"/>
+        </scene>
+    </scenes>
+</document>
