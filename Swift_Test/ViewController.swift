@@ -54,11 +54,17 @@ class ViewController: UIViewController {
     
     @IBAction func act_startTest(_ sender: UIButton) {
         let alertController = UIAlertController(title: "Test", message: "The test will now begin.", preferredStyle: .alert)
-        let defaultAction = UIAlertAction(title: "Begin Test", style: .default, handler: nil)
+        let defaultAction = UIAlertAction(title: "Begin Test", style: .default, handler: {
+
+            [unowned self] (action) -> Void in
+
+            self.performSegue(withIdentifier: "to_Test", sender: self);
+        })
         alertController.addAction(defaultAction)
         
-        present(alertController, animated: true, completion: nil)
-        performSegue(withIdentifier: "to_Test", sender: self)
+        present(alertController, animated: false);
+        
+
     }
     
 
