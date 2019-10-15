@@ -23,9 +23,7 @@ class TestViewController: UIViewController {
     
 
     
-    
-    }
-
+}
 
 class drawnView: UIView {
     
@@ -38,6 +36,8 @@ class drawnView: UIView {
         let statusLabel = UILabel()
         var statusText = "DEBUG"
     
+    
+        var alphabet_Test = Test(isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A");
         var touch = UITouch()
     
         var force:CGFloat = 0.0;
@@ -75,10 +75,9 @@ class drawnView: UIView {
         
         let context = UIGraphicsGetCurrentContext()!
         
-        var alphabet_Test = Test(isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A");
-        
         alphabet_Test.draw(context: context);
         addStatusLabel()
+        
     }
 
     override func layoutSubviews() {
@@ -133,14 +132,40 @@ class drawnView: UIView {
                 pathLayer.path = UIBezierPath.interpolateHermiteFor(points: points!, closed: false).cgPath
             }
         }
-                   updateDisplay(touches: touches)
+
+            updateDisplay(touches: touches)
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 
         pathLayer.path = UIBezierPath.interpolateHermiteFor(points: points!, closed: false).cgPath
+
+        updateDisplay(touches: touches)
+        
+        
+        //the brute force is fast enough
+        for coords in alphabet_Test.answerSymbols
+        {
+        if((pathLayer.path!.contains(CGPoint(x: coords.x, y:coords.y), using: CGPathFillRule.evenOdd, transform: CGAffineTransform.identity)))
+        {
+            if #available(iOS 13.0, *) {
+            pathLayer.fillColor = CGColor.init(srgbRed: 0.0, green: 1.0, blue: 0.0, alpha: 0.2)
+            } else {
+            // Fallback on earlier versions
+            }
+            return;
+        }
+        else
+        {
+            if #available(iOS 13.0, *) {
+            pathLayer.fillColor = CGColor.init(srgbRed: 1.0, green: 0.0, blue: 0.0, alpha: 0.2)
+            } else {
+            // Fallback on earlier versions
+            }
+        }
+        }
         points?.removeAll()
-                    updateDisplay(touches: touches)
+        
     }
     }
 
@@ -215,7 +240,7 @@ class drawnView: UIView {
             var ctrlPt2 = CGPoint.zero
             ctrlPt2.x = curPt.x - mx / CGFloat(3.0)
             ctrlPt2.y = curPt.y - my / CGFloat(3.0)
-
+            
             path.addCurve(to: endPt, controlPoint1:ctrlPt1, controlPoint2:ctrlPt2)
         }
 
@@ -225,16 +250,4 @@ class drawnView: UIView {
 
         return path
     }
-        
-
-        
-    
-    
-
-    
-
-
-
 }
-
-

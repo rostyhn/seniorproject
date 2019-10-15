@@ -30,18 +30,24 @@ struct Symbol: Codable {
     }
 }
 
+struct Coords{
+    let x, y: Int;
+}
+
 class Test
 {
 
     var isTextual: Bool;
     var answerSymbol: String;
     var symbols: [Symbol];
+    var answerSymbols: [Coords];
+    
     
     init(isTextual:Bool, jsonName: String, answerSymbol: String)
     {
         self.isTextual = isTextual;
         self.answerSymbol = answerSymbol;
-        
+        self.answerSymbols = [];
         //data: try Data(contentsOf: url)
         
         
@@ -87,8 +93,19 @@ class Test
 
                 let stringRect = CGRect(x: symbol.x, y: symbol.y, width: 25, height: 25)
                 attributedString.draw(in: stringRect)
-
+                
+                context.beginPath()
+                context.stroke(stringRect)
+                
+                if(symText == answerSymbol)
+                {
+                    //don't waste time and just push an object with the symbol's
+                    //coords
+                    
+                    answerSymbols.append(Coords(x:symbol.x,y:symbol.y));
+                }
             }
+            
         }
         else
         {
