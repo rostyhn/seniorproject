@@ -30,18 +30,24 @@ struct Symbol: Codable {
     }
 }
 
+struct Coords{
+    let x, y: Int;
+}
+
 class Test
 {
 
     var isTextual: Bool;
     var answerSymbol: String;
     var symbols: [Symbol];
+    var answerSymbols: [Coords];
+    
     
     init(isTextual:Bool, jsonName: String, answerSymbol: String)
     {
         self.isTextual = isTextual;
         self.answerSymbol = answerSymbol;
-        
+        self.answerSymbols = [];
         //data: try Data(contentsOf: url)
         
         
@@ -60,8 +66,6 @@ class Test
     
     func draw(context:CGContext)
     {
-        
-        
         
         let paragraphStyle = NSMutableParagraphStyle();
         paragraphStyle.alignment = .center
@@ -84,11 +88,26 @@ class Test
             {
                 let symText = symbol.name;
                 let attributedString = NSAttributedString(string: symText, attributes: attributes)
+                
+                let bBoxWidth = 25;
+                let bBoxHeight = 25;
 
-                let stringRect = CGRect(x: symbol.x, y: symbol.y, width: 25, height: 25)
+                let stringRect = CGRect(x: symbol.x, y: symbol.y, width: bBoxWidth, height: bBoxHeight)
                 attributedString.draw(in: stringRect)
-
+                
+                context.beginPath()
+                context.stroke(stringRect)
+                
+                /*if(symText == answerSymbol)
+                {
+                    //don't waste time and just push an object with the symbol's
+                    //coords
+                    
+                    //add 1/2w and 1/2h to x & y to get symbol's center point
+                answerSymbols.append(Coords(x:symbol.x+(bBoxWidth/2),y:symbol.y+(bBoxHeight/2)));
+                }*/
             }
+            
         }
         else
         {

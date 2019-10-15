@@ -21,11 +21,9 @@ class TestViewController: UIViewController {
             view.backgroundColor = UIColor.white
         }
     
-
     
     
-    }
-
+}
 
 class drawnView: UIView {
     
@@ -34,10 +32,11 @@ class drawnView: UIView {
     var path: UIBezierPath?
     var pathLayer: CAShapeLayer!
     
-    
         let statusLabel = UILabel()
         var statusText = "DEBUG"
     
+    
+        var alphabet_Test = Test(isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A");
         var touch = UITouch()
     
         var force:CGFloat = 0.0;
@@ -75,10 +74,9 @@ class drawnView: UIView {
         
         let context = UIGraphicsGetCurrentContext()!
         
-        var alphabet_Test = Test(isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A");
-        
         alphabet_Test.draw(context: context);
         addStatusLabel()
+        
     }
 
     override func layoutSubviews() {
@@ -86,7 +84,7 @@ class drawnView: UIView {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
         pathLayer = CAShapeLayer()
         pathLayer.fillColor = UIColor.clear.cgColor
         pathLayer.strokeColor = UIColor.red.cgColor
@@ -94,12 +92,13 @@ class drawnView: UIView {
         pathLayer.lineJoin = CAShapeLayerLineJoin.round
         pathLayer.lineCap = CAShapeLayerLineCap.round
         self.layer.addSublayer(pathLayer)
-
+        
         if let touch = touches.first {
 
             points = [touch.location(in: self)]
         }
                     updateDisplay(touches: touches)
+        
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -133,16 +132,78 @@ class drawnView: UIView {
                 pathLayer.path = UIBezierPath.interpolateHermiteFor(points: points!, closed: false).cgPath
             }
         }
-                   updateDisplay(touches: touches)
+
+            updateDisplay(touches: touches)
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 
         pathLayer.path = UIBezierPath.interpolateHermiteFor(points: points!, closed: false).cgPath
+
+        updateDisplay(touches: touches)
+        
+        //BUG: you can circle more than one at a time - it will stop
+        //at the first one it finds in the list
+        
+        for symbol in alphabet_Test.symbols
+        {
+            if((pathLayer.path!.contains(CGPoint(x: CGFloat(symbol.x) + 12.5, y: CGFloat(symbol.y) + 12.5), using: CGPathFillRule.evenOdd, transform: CGAffineTransform.identity)))
+                {
+                    
+                    if(symbol.name == alphabet_Test.answerSymbol)
+                    {
+                        if #available(iOS 13.0, *) {
+                        pathLayer.fillColor = CGColor.init(srgbRed: 0.0, green: 1.0, blue: 0.0, alpha: 0.2)
+                        } else {
+                        // Fallback on earlier versions
+                        }
+                    }
+                    else
+                    {
+                        if #available(iOS 13.0, *) {
+                        pathLayer.fillColor = CGColor.init(srgbRed: 1.0, green: 0.0, blue: 0.0, alpha: 0.2)
+                        } else {
+                        // Fallback on earlier versions
+                        }
+                    }
+                    
+                    var forceSum = Float(0.0);
+                    for touch in touches {
+                        forceSum = forceSum + Float(touch.force);
+                    }
+                    forceSum = forceSum/Float(touches.count);
+
+                    statusLabel.text = "Selected " + symbol.name + " Average Force " + String(forceSum);
+                    return;
+            }
+        }
+        
+        
+        //the brute force is fast enough - hit detection for answers
+        /*for coords in alphabet_Test.answerSymbols
+        {
+        if((pathLayer.path!.contains(CGPoint(x: coords.x, y:coords.y), using: CGPathFillRule.evenOdd, transform: CGAffineTransform.identity)))
+        {
+            if #available(iOS 13.0, *) {
+            pathLayer.fillColor = CGColor.init(srgbRed: 0.0, green: 1.0, blue: 0.0, alpha: 0.2)
+            } else {
+            // Fallback on earlier versions
+            }
+            return;
+        }
+        else
+        {
+            if #available(iOS 13.0, *) {
+            pathLayer.fillColor = CGColor.init(srgbRed: 1.0, green: 0.0, blue: 0.0, alpha: 0.2)
+            } else {
+            // Fallback on earlier versions
+            }
+        }*/
+        
         points?.removeAll()
-                    updateDisplay(touches: touches)
+        
     }
-    }
+}
 
 
     extension UIBezierPath {
@@ -215,7 +276,7 @@ class drawnView: UIView {
             var ctrlPt2 = CGPoint.zero
             ctrlPt2.x = curPt.x - mx / CGFloat(3.0)
             ctrlPt2.y = curPt.y - my / CGFloat(3.0)
-
+            
             path.addCurve(to: endPt, controlPoint1:ctrlPt1, controlPoint2:ctrlPt2)
         }
 
@@ -225,16 +286,4 @@ class drawnView: UIView {
 
         return path
     }
-        
-
-        
-    
-    
-
-    
-
-
-
 }
-
-
