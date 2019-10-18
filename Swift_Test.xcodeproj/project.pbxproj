@@ -12,10 +12,10 @@
 		9839821D232F079200734D87 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9839821B232F079200734D87 /* Main.storyboard */; };
 		98398220232F079200734D87 /* Swift_Test.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9839821E232F079200734D87 /* Swift_Test.xcdatamodeld */; };
 		98398222232F079400734D87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98398221232F079400734D87 /* Assets.xcassets */; };
-		98495743232F1FE3003F6E6B /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98495742232F1FE3003F6E6B /* TestViewController.swift */; };
 		98495745232F200B003F6E6B /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98495744232F200B003F6E6B /* AboutUsViewController.swift */; };
 		984F82D32345845E00481495 /* TestObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984F82D22345845E00481495 /* TestObj.swift */; };
 		984F82DD2345AA4900481495 /* AlphabetTest.json in Resources */ = {isa = PBXBuildFile; fileRef = 984F82DC2345AA4900481495 /* AlphabetTest.json */; };
+		98EFEC3923594D480000BDD9 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EFEC3823594D480000BDD9 /* TestViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,10 +26,10 @@
 		9839821F232F079200734D87 /* Swift_Test.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Swift_Test.xcdatamodel; sourceTree = "<group>"; };
 		98398221232F079400734D87 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Swift_Test/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		98398226232F079400734D87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Swift_Test/Info.plist; sourceTree = SOURCE_ROOT; };
-		98495742232F1FE3003F6E6B /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestViewController.swift; path = Swift_Test/TestViewController.swift; sourceTree = SOURCE_ROOT; };
 		98495744232F200B003F6E6B /* AboutUsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AboutUsViewController.swift; path = Swift_Test/AboutUsViewController.swift; sourceTree = SOURCE_ROOT; };
 		984F82D22345845E00481495 /* TestObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestObj.swift; path = Swift_Test/TestObj.swift; sourceTree = SOURCE_ROOT; };
 		984F82DC2345AA4900481495 /* AlphabetTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = AlphabetTest.json; path = Swift_Test/AlphabetTest.json; sourceTree = SOURCE_ROOT; };
+		98EFEC3823594D480000BDD9 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,11 +62,11 @@
 		98398216232F079200734D87 /* Swift_Test */ = {
 			isa = PBXGroup;
 			children = (
+				98EFEC3823594D480000BDD9 /* TestViewController.swift */,
 				98398217232F079200734D87 /* AppDelegate.swift */,
 				98398219232F079200734D87 /* ViewController.swift */,
 				9839821B232F079200734D87 /* Main.storyboard */,
 				98495744232F200B003F6E6B /* AboutUsViewController.swift */,
-				98495742232F1FE3003F6E6B /* TestViewController.swift */,
 				98398221232F079400734D87 /* Assets.xcassets */,
 				98398226232F079400734D87 /* Info.plist */,
 				9839821E232F079200734D87 /* Swift_Test.xcdatamodeld */,
@@ -150,8 +150,8 @@
 				98495745232F200B003F6E6B /* AboutUsViewController.swift in Sources */,
 				9839821A232F079200734D87 /* ViewController.swift in Sources */,
 				98398218232F079200734D87 /* AppDelegate.swift in Sources */,
-				98495743232F1FE3003F6E6B /* TestViewController.swift in Sources */,
 				98398220232F079200734D87 /* Swift_Test.xcdatamodeld in Sources */,
+				98EFEC3923594D480000BDD9 /* TestViewController.swift in Sources */,
 				984F82D32345845E00481495 /* TestObj.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
