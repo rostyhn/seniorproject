@@ -10,6 +10,7 @@ import Foundation
 import CoreGraphics
 import UIKit
 
+
 //horrible name, but this serves as the top layer for the json object
 //loaded into memory, contains an array of symbols
 struct SymbolData: Codable {
@@ -18,11 +19,16 @@ struct SymbolData: Codable {
 
 
 // MARK: - Symbol
-struct Symbol: Codable {
+struct Symbol: Codable, Hashable {
     let name: String
     let x, y: Int
     let imgPath: String
     let id: Int
+    
+    func hash(into hasher: inout Hasher)
+    {
+        hasher.combine(id)
+    }
 
     enum CodingKeys: String, CodingKey {
         case name, x, y, imgPath
@@ -30,27 +36,44 @@ struct Symbol: Codable {
     }
 }
 
-struct Coords{
-    let x, y: Int;
+struct TouchData: Hashable {
+    //set of points that were drawn while touching - NOT UITouch
+    var x,y,force: CGFloat
+    //Xcode complained that DispatchTime was not hashable so I'll just include the uint instead
+    var time: dispatch_time_t
+    
+    init(x: CGFloat, y: CGFloat, force: CGFloat, time:dispatch_time_t)
+    {
+        self.x = x;
+        self.y = y;
+        self.force = force;
+        self.time = time;
+    }
+    
 }
 
 class Test
 {
-
+    var testStartTime: dispatch_time_t
     var isTextual: Bool;
     var answerSymbol: String;
     var symbols: [Symbol];
-    var answerSymbols: [Coords];
-    
+    //two seperate arrays so that order is preserved - a dictionary is unordered
+    var patientAnswerOrder: [Symbol]
+    var patientAnswerData: Array<Array<TouchData>>
+    let bBoxWidth = 25;
+    let bBoxHeight = 25;
     
     init(isTextual:Bool, jsonName: String, answerSymbol: String)
     {
         self.isTextual = isTextual;
         self.answerSymbol = answerSymbol;
-        self.answerSymbols = [];
+        patientAnswerOrder = [];
+        patientAnswerData = [];
         //data: try Data(contentsOf: url)
+        self.testStartTime = DispatchTime.now().rawValue
         
-        
+        //TODO: add functionality to read from the server
         let path = Bundle.main.path(forResource: jsonName, ofType: "json")!
         
         let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe);
@@ -89,29 +112,16 @@ class Test
                 let symText = symbol.name;
                 let attributedString = NSAttributedString(string: symText, attributes: attributes)
                 
-                let bBoxWidth = 25;
-                let bBoxHeight = 25;
-
                 let stringRect = CGRect(x: symbol.x, y: symbol.y, width: bBoxWidth, height: bBoxHeight)
                 attributedString.draw(in: stringRect)
                 
                 context.beginPath()
                 context.stroke(stringRect)
-                
-                /*if(symText == answerSymbol)
-                {
-                    //don't waste time and just push an object with the symbol's
-                    //coords
-                    
-                    //add 1/2w and 1/2h to x & y to get symbol's center point
-                answerSymbols.append(Coords(x:symbol.x+(bBoxWidth/2),y:symbol.y+(bBoxHeight/2)));
-                }*/
             }
-            
         }
         else
         {
-            
+            //add functionality to draw symbols that are images here
         }
     }
     

@@ -10,7 +10,7 @@ import UIKit
 
 class TestViewController: UIViewController {
     
-
+    //starts the view controller and then loads in our view
         override func viewDidLoad() {
             super.viewDidLoad()
             
@@ -21,40 +21,51 @@ class TestViewController: UIViewController {
             view.backgroundColor = UIColor.white
         }
     
-    
-    
 }
 
 class drawnView: UIView {
-    
 
+    //data stuff
+    var currentTest = Test(isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A");
+    //for data gathering - this gets cleared every time a new drawing starts
+    var touchData = Array<TouchData>()
+    
+    //UI stuff
+    let statusLabel = UILabel()
+    var statusText = "DEBUG"
+    //hard coded for now, add constraints later
+    let btn_end = UIButton(frame: CGRect(x:1075,y:30, width:25, height:25))
+    
+    //drawing stuff
     var points: [CGPoint]?
     var path: UIBezierPath?
     var pathLayer: CAShapeLayer!
+    var touch = UITouch()
+    var force:CGFloat = 0.0;
+    var location = CGPoint(x:200, y:200);
     
-        let statusLabel = UILabel()
-        var statusText = "DEBUG"
-    
-    
-        var alphabet_Test = Test(isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A");
-        var touch = UITouch()
-    
-        var force:CGFloat = 0.0;
-        var location = CGPoint(x:200, y:200);
-    
-    // www.makeapppie.com/2018/05/30/apple-pencil-basics/
+    /*
+     www.makeapppie.com/2018/05/30/apple-pencil-basics/
+     updates the debug status bar and also pushes the data about the path into an array
+     */
         func updateDisplay(touches: Set<UITouch>)
         {
             if let newTouch = touches.first{
                 touch = newTouch
             }
+            
             location = touch.location(in: self)
             force = touch.force
         
             statusText = String(format: "Stylus X:%3.0f Y:%3.0f Force:%2.3f", location.x, location.y, force);
             statusLabel.text = statusText;
+            
+            touchData.append(TouchData(x: touch.location(in: self).x, y: touch.location(in: self).y, force: touch.force, time: DispatchTime.now().rawValue))
         }
     
+    /*
+     adds debug status bar at the bottom
+     */
     func addStatusLabel()
     {
         self.addSubview(statusLabel)
@@ -69,22 +80,82 @@ class drawnView: UIView {
         constraints += [NSLayoutConstraint(item: statusLabel, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)]
         self.addConstraints(constraints)
     }
+    /*
+     Adds a button programatically to stop the test
+     */
+    func addButton()
+    {
+        self.addSubview(btn_end)
+        btn_end.backgroundColor = .red
+        btn_end.setTitle("X", for: .normal)
+        btn_end.addTarget(self, action: #selector(endTest), for: .touchUpInside)
+
+    }
+    
+    //for some reason, the function is now in objective C
+    @objc func endTest(sender: UIButton!)
+    {
+        let testEndTime = DispatchTime.now().rawValue
+        
+        //NOTE: every time value is a raw value in nanoseconds - calculate everything on the web app
+        print("Test started at " + String(currentTest.testStartTime))
+        print("Length of test " + String(testEndTime - currentTest.testStartTime))
+        print("Test ended at " + String(testEndTime))
+        //block drawing somehow
+        //for (symbol,touchData) in currentTest.patientAnswers
+        
+        //what are these fortran style for loops...
+        for i in 0...currentTest.patientAnswerOrder.count-1
+        {
+            let symbol = currentTest.patientAnswerOrder[i];
+            print("ID: " + String(symbol.id) + "\nName: " + symbol.name)
+            
+            print("\nTime drawing initiated: " + String(currentTest.patientAnswerData[i].first!.time))
+
+            for touch in currentTest.patientAnswerData[i]
+            {
+                print("\nTouch Data")
+                print("\nx: " + touch.x.description)
+                print("\ny: " + touch.y.description)
+                print("\nForce: " + touch.force.description)
+                print("\nTime: " + String(touch.time))
+            }
+            print("\n# of touches: " + String(currentTest.patientAnswerData[i].count))
+            print("\nTime drawing ended: " + String(currentTest.patientAnswerData[i].last!.time))
+        }
+        
+        /*time to push the data to the server - that is where we will actually tie the two arrays together
+        and maintain their order - you can easily find the order in which points where chosen and their data
+        through simply iterating through the two arrays*/
+    }
+    
+    /*
+     Setup our view
+     */
     
     override func draw(_ rect: CGRect){
         
+        //grab the graphics context
         let context = UIGraphicsGetCurrentContext()!
         
-        alphabet_Test.draw(context: context);
+        //draw the view and add labels - need to do it this way because draw() has been overrided
+        currentTest.draw(context: context);
         addStatusLabel()
+        addButton()
         
     }
 
+    //overrides layoutSubviews otherwise stuff won't draw
     override func layoutSubviews() {
-
+        //DO NOT DELETE
     }
-
+    
+    /*
+     Runs when a path is started
+     */
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
+        //create the path
         pathLayer = CAShapeLayer()
         pathLayer.fillColor = UIColor.clear.cgColor
         pathLayer.strokeColor = UIColor.red.cgColor
@@ -94,17 +165,21 @@ class drawnView: UIView {
         self.layer.addSublayer(pathLayer)
         
         if let touch = touches.first {
-
+            
             points = [touch.location(in: self)]
         }
-                    updateDisplay(touches: touches)
-        
+        updateDisplay(touches: touches)
     }
+    
+    /*
+     Runs when someone is touching the screen and moving
+     */
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
 
         if let touch = touches.first {
-
+            
+            //fancy curve smoothing - makes it look nicer than jagged lines
             if #available(iOS 9.0, *) {
 
                 if let coalescedTouches = event?.coalescedTouches(for: touch) {
@@ -127,30 +202,32 @@ class drawnView: UIView {
                 }
             }
             else {
-
                 points?.append(touch.location(in: self))
                 pathLayer.path = UIBezierPath.interpolateHermiteFor(points: points!, closed: false).cgPath
             }
         }
-
             updateDisplay(touches: touches)
     }
 
+    /*
+     Runs when a touch ends - where our hit detection mechanism lies
+     */
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 
         pathLayer.path = UIBezierPath.interpolateHermiteFor(points: points!, closed: false).cgPath
 
         updateDisplay(touches: touches)
         
-        //BUG: you can circle more than one at a time - it will stop
-        //at the first one it finds in the list
+        //BUG: you can circle more than one at a time - it will stop at the first one it finds in the list
         
-        for symbol in alphabet_Test.symbols
+        //will consider implementing a quadtree if we need the computational boost
+        
+        for symbol in currentTest.symbols
         {
             if((pathLayer.path!.contains(CGPoint(x: CGFloat(symbol.x) + 12.5, y: CGFloat(symbol.y) + 12.5), using: CGPathFillRule.evenOdd, transform: CGAffineTransform.identity)))
                 {
                     
-                    if(symbol.name == alphabet_Test.answerSymbol)
+                    if(symbol.name == currentTest.answerSymbol)
                     {
                         if #available(iOS 13.0, *) {
                         pathLayer.fillColor = CGColor.init(srgbRed: 0.0, green: 1.0, blue: 0.0, alpha: 0.2)
@@ -166,47 +243,26 @@ class drawnView: UIView {
                         // Fallback on earlier versions
                         }
                     }
-                    
-                    var forceSum = Float(0.0);
-                    for touch in touches {
-                        forceSum = forceSum + Float(touch.force);
-                    }
-                    forceSum = forceSum/Float(touches.count);
-
-                    statusLabel.text = "Selected " + symbol.name + " Average Force " + String(forceSum);
+                    //gather the data here
+                    currentTest.patientAnswerOrder.append(symbol)
+                    currentTest.patientAnswerData.append(touchData)
+                    statusLabel.text = "Selected " + symbol.name;
+                    //clear the touchData array to avoid having data points that belong to another path
+                    touchData.removeAll()
                     return;
             }
         }
-        
-        
-        //the brute force is fast enough - hit detection for answers
-        /*for coords in alphabet_Test.answerSymbols
-        {
-        if((pathLayer.path!.contains(CGPoint(x: coords.x, y:coords.y), using: CGPathFillRule.evenOdd, transform: CGAffineTransform.identity)))
-        {
-            if #available(iOS 13.0, *) {
-            pathLayer.fillColor = CGColor.init(srgbRed: 0.0, green: 1.0, blue: 0.0, alpha: 0.2)
-            } else {
-            // Fallback on earlier versions
-            }
-            return;
-        }
-        else
-        {
-            if #available(iOS 13.0, *) {
-            pathLayer.fillColor = CGColor.init(srgbRed: 1.0, green: 0.0, blue: 0.0, alpha: 0.2)
-            } else {
-            // Fallback on earlier versions
-            }
-        }*/
-        
         points?.removeAll()
+        //we don't remove the data here, we want to keep it in case the patient decides to do something other than circle things
+        //touchData.removeAll()
         
     }
 }
 
-
-    extension UIBezierPath {
+/*
+ The code from here on handles the drawing functionality... no real reason to change this
+ */
+extension UIBezierPath {
 
     static func interpolateHermiteFor(points: [CGPoint], closed: Bool = false) -> UIBezierPath {
         guard points.count >= 2 else {

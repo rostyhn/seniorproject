@@ -12,18 +12,12 @@ class AboutUsViewController: UIViewController {
     
     @IBOutlet weak var lbl_AboutUs: UILabel!
 
-    @IBOutlet weak var btn_back: RoundButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
+        
         // Do any additional setup after loading the view.
-    }
-    
-    
-    @IBAction func act_toMain(_ sender: Any) {
-        performSegue(withIdentifier: "to_MainfromAbout", sender: self)
     }
     
     
