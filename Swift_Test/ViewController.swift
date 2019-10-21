@@ -13,6 +13,9 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var btn_About: UIButton!
     
+    @IBOutlet weak var btn_Settings: UIButton!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -36,10 +39,12 @@ class ViewController: UIViewController {
 
     @IBAction func act_OpenAbout(_ sender: UIButton) {
         performSegue(withIdentifier: "to_AboutUs", sender: self)
-        
     }
     
-
+    @IBAction func act_openSettings(_ sender: Any) {
+        performSegue(withIdentifier: "to_Settings", sender: self)
+    }
+    
     
     
 }

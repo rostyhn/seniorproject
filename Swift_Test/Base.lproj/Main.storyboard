@@ -42,12 +42,15 @@
                                     <action selector="act_OpenAbout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vmt-hU-eIv"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O0e-cH-tXK">
-                                <rect key="frame" x="947" y="721" width="57" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O0e-cH-tXK">
+                                <rect key="frame" x="947" y="721" width="57" height="27"/>
                                 <state key="normal" title="Settings"/>
+                                <connections>
+                                    <action selector="act_openSettings:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6hF-RR-pqx"/>
+                                </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The Cancellation Test" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HmK-6U-3KI">
-                                <rect key="frame" x="378" y="137" width="268" height="35"/>
+                                <rect key="frame" x="378" y="87" width="268" height="35"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="29"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -71,10 +74,11 @@
                     <navigationItem key="navigationItem" id="Smu-tA-MwM"/>
                     <connections>
                         <outlet property="btn_About" destination="5ea-K6-gbk" id="3Zm-nf-Frs"/>
+                        <outlet property="btn_Settings" destination="O0e-cH-tXK" id="gAh-MF-jEb"/>
                         <outlet property="btn_startTest" destination="39F-oY-Usu" id="cAJ-BW-KSi"/>
                         <segue destination="kNV-Qq-P6P" kind="showDetail" identifier="to_AboutUs" id="EAq-uH-0x9"/>
                         <segue destination="7IP-pv-jJa" kind="presentation" identifier="to_Test" modalPresentationStyle="fullScreen" id="ydb-yG-izd"/>
-                        <segue destination="ICR-dU-mEX" kind="show" id="4uY-b8-5q6"/>
+                        <segue destination="dg3-W5-fIf" kind="show" identifier="to_Settings" id="4uY-b8-5q6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -123,6 +127,9 @@
                         <viewLayoutGuide key="safeArea" id="WGr-6L-HYt"/>
                     </view>
                     <navigationItem key="navigationItem" id="jZE-8F-U4V"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="to_Main" modalPresentationStyle="fullScreen" id="Ixy-NA-3mJ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QN4-nl-gSa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -150,8 +157,8 @@
         <!--Settings View-->
         <scene sceneID="yG8-Tj-aGS">
             <objects>
-                <viewController title="Settings View" id="ICR-dU-mEX" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="7Sc-Uz-mH4">
+                <viewController title="Settings View" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" modalPresentationStyle="fullScreen" id="ICR-dU-mEX" sceneMemberID="viewController">
+                    <view key="view" autoresizesSubviews="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="7Sc-Uz-mH4">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -162,7 +169,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AEK-0A-ktO">
-                                <rect key="frame" x="940" y="68" width="49" height="31"/>
+                                <rect key="frame" x="940" y="68" width="51" height="31"/>
                             </switch>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -173,11 +180,42 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="nUy-0e-tmb"/>
                     </view>
-                    <navigationItem key="navigationItem" id="PoW-pX-68A"/>
+                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
+                    <navigationItem key="navigationItem" title="Settings" id="PoW-pX-68A"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <size key="freeformSize" width="1024" height="768"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LUc-II-7B6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1398" y="811"/>
+            <point key="canvasLocation" x="2121.6796875" y="810.9375"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="718-di-pDQ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" id="dg3-W5-fIf" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="R7g-EK-bjW"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="zk0-7T-vjY">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="50"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Oug-qs-LRl">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="ICR-dU-mEX" kind="relationship" relationship="rootViewController" id="21r-Gu-3NF"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aTy-uh-F3S" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1397.4609375" y="810.9375"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="Ixy-NA-3mJ"/>
+    </inferredMetricsTieBreakers>
 </document>

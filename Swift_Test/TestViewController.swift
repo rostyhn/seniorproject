@@ -17,14 +17,17 @@ class TestViewController: UIViewController {
         }
         
         override func loadView() {
-            view = drawnView()
+            var view = drawnView()
+            //apple nerds will tell you this is bad design
+            view.vc = self
             view.backgroundColor = UIColor.white
-        }
-    
+            self.view = view
+            
+    }
 }
 
 class drawnView: UIView {
-
+    weak var vc: TestViewController!
     //data stuff
     var currentTest = Test(testName: "alphabet_test",isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A");
     //for data gathering - this gets cleared every time a new drawing starts
@@ -44,7 +47,7 @@ class drawnView: UIView {
     var force:CGFloat = 0.0;
     var location = CGPoint(x:200, y:200);
     
-    /*
+     /*
      www.makeapppie.com/2018/05/30/apple-pencil-basics/
      updates the debug status bar and also pushes the data about the path into an array
      */
@@ -133,6 +136,30 @@ class drawnView: UIView {
         print(json)
          */
         
+        let url = URL(string: "http://3.80.183.46:5000/data/upload_patient_test_data")
+        var request = URLRequest(url:url!)
+        request.httpMethod = "POST"
+        request.httpBody = jsonData
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let task = URLSession.shared.dataTask(with: request)
+        task.resume()
+        
+        /*show the alert that will end the test and return to the main screen
+        / so that a new test can be administered
+        */
+        let alertController = UIAlertController(title: "Test Complete", message: "Please return the device to the test administator.", preferredStyle: .alert)
+        let defaultAction = UIAlertAction(title: "Done", style: .default, handler: {
+
+            [unowned self] (action) -> Void in
+            
+            self.vc.performSegue(withIdentifier: "to_Main", sender: self);
+        })
+        alertController.addAction(defaultAction)
+        
+        self.vc.present(alertController, animated: false);
+
+        
     }
     
     /*
@@ -148,6 +175,7 @@ class drawnView: UIView {
         currentTest.draw(context: context);
         addStatusLabel()
         addButton()
+        
         
     }
 
