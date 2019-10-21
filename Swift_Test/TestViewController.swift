@@ -26,7 +26,7 @@ class TestViewController: UIViewController {
 class drawnView: UIView {
 
     //data stuff
-    var currentTest = Test(isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A");
+    var currentTest = Test(testName: "alphabet_test",isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A");
     //for data gathering - this gets cleared every time a new drawing starts
     var touchData = Array<TouchData>()
     
@@ -89,30 +89,28 @@ class drawnView: UIView {
         btn_end.backgroundColor = .red
         btn_end.setTitle("X", for: .normal)
         btn_end.addTarget(self, action: #selector(endTest), for: .touchUpInside)
-
     }
     
     //for some reason, the function is now in objective C
     @objc func endTest(sender: UIButton!)
     {
         let testEndTime = DispatchTime.now().rawValue
+        currentTest.setTestEndTime(testEndTime: testEndTime)
         
         //NOTE: every time value is a raw value in nanoseconds - calculate everything on the web app
         print("Test started at " + String(currentTest.testStartTime))
         print("Length of test " + String(testEndTime - currentTest.testStartTime))
         print("Test ended at " + String(testEndTime))
-        //block drawing somehow
-        //for (symbol,touchData) in currentTest.patientAnswers
         
         //what are these fortran style for loops...
-        for i in 0...currentTest.patientAnswerOrder.count-1
+        for i in 0...currentTest.patientAnswers.count-1
         {
-            let symbol = currentTest.patientAnswerOrder[i];
+            let symbol = currentTest.patientAnswers[i];
             print("ID: " + String(symbol.id) + "\nName: " + symbol.name)
             
-            print("\nTime drawing initiated: " + String(currentTest.patientAnswerData[i].first!.time))
+            print("\nTime drawing initiated: " + String(currentTest.patientAnswerTouchData[i].first!.time))
 
-            for touch in currentTest.patientAnswerData[i]
+            for touch in currentTest.patientAnswerTouchData[i]
             {
                 print("\nTouch Data")
                 print("\nx: " + touch.x.description)
@@ -120,13 +118,21 @@ class drawnView: UIView {
                 print("\nForce: " + touch.force.description)
                 print("\nTime: " + String(touch.time))
             }
-            print("\n# of touches: " + String(currentTest.patientAnswerData[i].count))
-            print("\nTime drawing ended: " + String(currentTest.patientAnswerData[i].last!.time))
+            print("\n# of touches: " + String(currentTest.patientAnswerTouchData[i].count))
+            print("\nTime drawing ended: " + String(currentTest.patientAnswerTouchData[i].last!.time))
         }
         
         /*time to push the data to the server - that is where we will actually tie the two arrays together
         and maintain their order - you can easily find the order in which points where chosen and their data
         through simply iterating through the two arrays*/
+        
+        let jsonEncoder = JSONEncoder()
+        let jsonData = try? jsonEncoder.encode(currentTest)
+        /* Debug: gives you the actual json created from the test
+        let json = String(data: jsonData!, encoding: String.Encoding.utf8)
+        print(json)
+         */
+        
     }
     
     /*
@@ -138,7 +144,7 @@ class drawnView: UIView {
         //grab the graphics context
         let context = UIGraphicsGetCurrentContext()!
         
-        //draw the view and add labels - need to do it this way because draw() has been overrided
+        //draw the view and add labels - need to do it this way because draw() has been overridden
         currentTest.draw(context: context);
         addStatusLabel()
         addButton()
@@ -224,7 +230,7 @@ class drawnView: UIView {
         
         for symbol in currentTest.symbols
         {
-            if((pathLayer.path!.contains(CGPoint(x: CGFloat(symbol.x) + 12.5, y: CGFloat(symbol.y) + 12.5), using: CGPathFillRule.evenOdd, transform: CGAffineTransform.identity)))
+            if((pathLayer.path!.contains(CGPoint(x: CGFloat(symbol.x) + CGFloat(currentTest.bBoxWidth/2), y: CGFloat(symbol.y) + CGFloat(currentTest.bBoxHeight/2)), using: CGPathFillRule.evenOdd, transform: CGAffineTransform.identity)))
                 {
                     
                     if(symbol.name == currentTest.answerSymbol)
@@ -244,8 +250,8 @@ class drawnView: UIView {
                         }
                     }
                     //gather the data here
-                    currentTest.patientAnswerOrder.append(symbol)
-                    currentTest.patientAnswerData.append(touchData)
+                    currentTest.patientAnswers.append(symbol)
+                    currentTest.patientAnswerTouchData.append(touchData)
                     statusLabel.text = "Selected " + symbol.name;
                     //clear the touchData array to avoid having data points that belong to another path
                     touchData.removeAll()
