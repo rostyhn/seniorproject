@@ -131,10 +131,11 @@ class drawnView: UIView {
         
         let jsonEncoder = JSONEncoder()
         let jsonData = try? jsonEncoder.encode(currentTest)
-        /* Debug: gives you the actual json created from the test
+        // Debug: gives you the actual json created from the test
         let json = String(data: jsonData!, encoding: String.Encoding.utf8)
         print(json)
-         */
+        
+        //print(JSONSerialization.isValidJSONObject(jsonData))
         
         let url = URL(string: "http://3.80.183.46:5000/data/upload_patient_test_data")
         var request = URLRequest(url:url!)
