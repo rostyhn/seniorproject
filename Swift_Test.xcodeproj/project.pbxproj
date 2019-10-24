@@ -15,6 +15,9 @@
 		98495745232F200B003F6E6B /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98495744232F200B003F6E6B /* AboutUsViewController.swift */; };
 		984F82D32345845E00481495 /* TestObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984F82D22345845E00481495 /* TestObj.swift */; };
 		984F82DD2345AA4900481495 /* AlphabetTest.json in Resources */ = {isa = PBXBuildFile; fileRef = 984F82DC2345AA4900481495 /* AlphabetTest.json */; };
+		98E6A2652361329800EC54DF /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6A2642361329800EC54DF /* QuestionViewController.swift */; };
+		98E6A267236142DB00EC54DF /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6A266236142DB00EC54DF /* SettingsViewController.swift */; };
+		98E6A26923614C8A00EC54DF /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6A26823614C8A00EC54DF /* Question.swift */; };
 		98EFEC3923594D480000BDD9 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EFEC3823594D480000BDD9 /* TestViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +32,9 @@
 		98495744232F200B003F6E6B /* AboutUsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AboutUsViewController.swift; path = Swift_Test/AboutUsViewController.swift; sourceTree = SOURCE_ROOT; };
 		984F82D22345845E00481495 /* TestObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestObj.swift; path = Swift_Test/TestObj.swift; sourceTree = SOURCE_ROOT; };
 		984F82DC2345AA4900481495 /* AlphabetTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = AlphabetTest.json; path = Swift_Test/AlphabetTest.json; sourceTree = SOURCE_ROOT; };
+		98E6A2642361329800EC54DF /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
+		98E6A266236142DB00EC54DF /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		98E6A26823614C8A00EC54DF /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		98EFEC3823594D480000BDD9 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,6 +78,9 @@
 				9839821E232F079200734D87 /* Swift_Test.xcdatamodeld */,
 				984F82D22345845E00481495 /* TestObj.swift */,
 				984F82DC2345AA4900481495 /* AlphabetTest.json */,
+				98E6A2642361329800EC54DF /* QuestionViewController.swift */,
+				98E6A266236142DB00EC54DF /* SettingsViewController.swift */,
+				98E6A26823614C8A00EC54DF /* Question.swift */,
 			);
 			path = Swift_Test;
 			sourceTree = SOURCE_ROOT;
@@ -149,10 +158,13 @@
 			files = (
 				98495745232F200B003F6E6B /* AboutUsViewController.swift in Sources */,
 				9839821A232F079200734D87 /* ViewController.swift in Sources */,
+				98E6A2652361329800EC54DF /* QuestionViewController.swift in Sources */,
+				98E6A26923614C8A00EC54DF /* Question.swift in Sources */,
 				98398218232F079200734D87 /* AppDelegate.swift in Sources */,
 				98398220232F079200734D87 /* Swift_Test.xcdatamodeld in Sources */,
 				98EFEC3923594D480000BDD9 /* TestViewController.swift in Sources */,
 				984F82D32345845E00481495 /* TestObj.swift in Sources */,
+				98E6A267236142DB00EC54DF /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

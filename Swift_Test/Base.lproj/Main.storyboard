@@ -77,8 +77,8 @@
                         <outlet property="btn_Settings" destination="O0e-cH-tXK" id="gAh-MF-jEb"/>
                         <outlet property="btn_startTest" destination="39F-oY-Usu" id="cAJ-BW-KSi"/>
                         <segue destination="kNV-Qq-P6P" kind="showDetail" identifier="to_AboutUs" id="EAq-uH-0x9"/>
-                        <segue destination="7IP-pv-jJa" kind="presentation" identifier="to_Test" modalPresentationStyle="fullScreen" id="ydb-yG-izd"/>
                         <segue destination="dg3-W5-fIf" kind="show" identifier="to_Settings" id="4uY-b8-5q6"/>
+                        <segue destination="kWc-oV-YPr" kind="show" identifier="to_Questions" id="ziY-aF-mod"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -119,7 +119,7 @@
         <!--Test View-->
         <scene sceneID="qUc-qT-w79">
             <objects>
-                <viewController title="Test View" id="7IP-pv-jJa" customClass="TestViewController" customModule="Cancellation_Test" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Test View" modalPresentationStyle="fullScreen" id="7IP-pv-jJa" customClass="TestViewController" customModule="Cancellation_Test" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Hgw-hH-EUr" customClass="drawnView" customModule="Cancellation_Test" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -133,7 +133,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QN4-nl-gSa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1871" y="128"/>
+            <point key="canvasLocation" x="2178" y="128"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="EYm-ur-j8R">
@@ -158,7 +158,7 @@
         <scene sceneID="yG8-Tj-aGS">
             <objects>
                 <viewController title="Settings View" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" modalPresentationStyle="fullScreen" id="ICR-dU-mEX" sceneMemberID="viewController">
-                    <view key="view" autoresizesSubviews="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="7Sc-Uz-mH4">
+                    <view key="view" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="7Sc-Uz-mH4">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -187,7 +187,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LUc-II-7B6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2121.6796875" y="810.9375"/>
+            <point key="canvasLocation" x="2178" y="809"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="718-di-pDQ">
@@ -212,7 +212,26 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aTy-uh-F3S" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1397.4609375" y="810.9375"/>
+            <point key="canvasLocation" x="1536" y="809"/>
+        </scene>
+        <!--Questionnaire-->
+        <scene sceneID="r2V-XD-HFI">
+            <objects>
+                <viewController title="Questionnaire" modalPresentationStyle="fullScreen" id="kWc-oV-YPr" customClass="QuestionViewController" customModule="Cancellation_Test" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8Ra-qu-Taq" customClass="QuestionView" customModule="Cancellation_Test" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="UBn-uV-EBf"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="N3R-LI-eg3"/>
+                    <connections>
+                        <segue destination="7IP-pv-jJa" kind="show" identifier="to_Test" id="w0d-QJ-6pb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gao-Ad-cr5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1536" y="128"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

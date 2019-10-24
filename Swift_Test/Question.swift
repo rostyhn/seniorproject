@@ -1,0 +1,25 @@
+//
+//  Question.swift
+//  Swift_Test
+//
+//  Created by Shashank Sastri on 10/23/19.
+//  Copyright © 2019 Rosty H. All rights reserved.
+//
+
+import Foundation
+
+// MARK: - QuestionElement
+struct QuestionElement: Codable {
+    let possibleAnswers, question: String
+    let questionID, questionType: Int
+
+    enum CodingKeys: String, CodingKey {
+        case possibleAnswers = "PossibleAnswers"
+        case question = "Question"
+        case questionID = "QuestionID"
+        case questionType = "QuestionType"
+    }
+}
+
+typealias Question = [QuestionElement]
+
