@@ -15,6 +15,11 @@
 		98495745232F200B003F6E6B /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98495744232F200B003F6E6B /* AboutUsViewController.swift */; };
 		984F82D32345845E00481495 /* TestObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984F82D22345845E00481495 /* TestObj.swift */; };
 		984F82DD2345AA4900481495 /* AlphabetTest.json in Resources */ = {isa = PBXBuildFile; fileRef = 984F82DC2345AA4900481495 /* AlphabetTest.json */; };
+		98D59AFC23663ADB00D71A3B /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D59AFB23663ADB00D71A3B /* Renderer.swift */; };
+		98D59B0023663C7100D71A3B /* brain-simple-mesh.obj in Resources */ = {isa = PBXBuildFile; fileRef = 98D59AFE23663C7100D71A3B /* brain-simple-mesh.obj */; };
+		98D59B0223663DD500D71A3B /* shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 98D59B0123663DD500D71A3B /* shaders.metal */; };
+		98D59B0423663EB000D71A3B /* maths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D59B0323663EB000D71A3B /* maths.swift */; };
+		98D59B06236646C200D71A3B /* brain-simple-mesh.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 98D59B05236646C200D71A3B /* brain-simple-mesh.mtl */; };
 		98E6A2652361329800EC54DF /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6A2642361329800EC54DF /* QuestionViewController.swift */; };
 		98E6A267236142DB00EC54DF /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6A266236142DB00EC54DF /* SettingsViewController.swift */; };
 		98E6A26923614C8A00EC54DF /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6A26823614C8A00EC54DF /* Question.swift */; };
@@ -32,6 +37,11 @@
 		98495744232F200B003F6E6B /* AboutUsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AboutUsViewController.swift; path = Swift_Test/AboutUsViewController.swift; sourceTree = SOURCE_ROOT; };
 		984F82D22345845E00481495 /* TestObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestObj.swift; path = Swift_Test/TestObj.swift; sourceTree = SOURCE_ROOT; };
 		984F82DC2345AA4900481495 /* AlphabetTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = AlphabetTest.json; path = Swift_Test/AlphabetTest.json; sourceTree = SOURCE_ROOT; };
+		98D59AFB23663ADB00D71A3B /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		98D59AFE23663C7100D71A3B /* brain-simple-mesh.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "brain-simple-mesh.obj"; path = "models/brain-simple-mesh.obj"; sourceTree = "<group>"; };
+		98D59B0123663DD500D71A3B /* shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = shaders.metal; sourceTree = "<group>"; };
+		98D59B0323663EB000D71A3B /* maths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = maths.swift; sourceTree = "<group>"; };
+		98D59B05236646C200D71A3B /* brain-simple-mesh.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "brain-simple-mesh.mtl"; path = "models/brain-simple-mesh.mtl"; sourceTree = "<group>"; };
 		98E6A2642361329800EC54DF /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
 		98E6A266236142DB00EC54DF /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		98E6A26823614C8A00EC54DF /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
@@ -68,6 +78,8 @@
 		98398216232F079200734D87 /* Swift_Test */ = {
 			isa = PBXGroup;
 			children = (
+				98D59B05236646C200D71A3B /* brain-simple-mesh.mtl */,
+				98D59AFE23663C7100D71A3B /* brain-simple-mesh.obj */,
 				98EFEC3823594D480000BDD9 /* TestViewController.swift */,
 				98398217232F079200734D87 /* AppDelegate.swift */,
 				98398219232F079200734D87 /* ViewController.swift */,
@@ -81,6 +93,9 @@
 				98E6A2642361329800EC54DF /* QuestionViewController.swift */,
 				98E6A266236142DB00EC54DF /* SettingsViewController.swift */,
 				98E6A26823614C8A00EC54DF /* Question.swift */,
+				98D59AFB23663ADB00D71A3B /* Renderer.swift */,
+				98D59B0123663DD500D71A3B /* shaders.metal */,
+				98D59B0323663EB000D71A3B /* maths.swift */,
 			);
 			path = Swift_Test;
 			sourceTree = SOURCE_ROOT;
@@ -144,6 +159,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				98398222232F079400734D87 /* Assets.xcassets in Resources */,
+				98D59B06236646C200D71A3B /* brain-simple-mesh.mtl in Resources */,
+				98D59B0023663C7100D71A3B /* brain-simple-mesh.obj in Resources */,
 				9839821D232F079200734D87 /* Main.storyboard in Resources */,
 				984F82DD2345AA4900481495 /* AlphabetTest.json in Resources */,
 			);
@@ -164,7 +181,10 @@
 				98398220232F079200734D87 /* Swift_Test.xcdatamodeld in Sources */,
 				98EFEC3923594D480000BDD9 /* TestViewController.swift in Sources */,
 				984F82D32345845E00481495 /* TestObj.swift in Sources */,
+				98D59AFC23663ADB00D71A3B /* Renderer.swift in Sources */,
 				98E6A267236142DB00EC54DF /* SettingsViewController.swift in Sources */,
+				98D59B0223663DD500D71A3B /* shaders.metal in Sources */,
+				98D59B0423663EB000D71A3B /* maths.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

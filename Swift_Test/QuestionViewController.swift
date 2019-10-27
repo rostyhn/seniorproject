@@ -26,7 +26,7 @@ class QuestionViewController: UIViewController {
         view = QuestionView()
         view.backgroundColor = UIColor.white
         
-        let url = URL(string: "http://192.168.1.160:5000/data/download_questions")
+        let url = URL(string: "http://10.38.109.25:5000/data/download_questions")
         let jsonData = try? Data(contentsOf: url!, options: .mappedIfSafe);
         
         //debug - gives you the string of data read in
@@ -118,7 +118,7 @@ class QuestionViewController: UIViewController {
             print(json)
             */
             
-            let url = URL(string: "http://192.168.1.160:5000/data/upload_patient_questionnaire_answers")
+            let url = URL(string: "http://10.38.109.25:5000/data/upload_patient_questionnaire_answers")
             var request = URLRequest(url:url!)
             request.httpMethod = "POST"
             request.httpBody = jsonData

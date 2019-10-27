@@ -8,12 +8,17 @@
 
 import UIKit
 
+
+//set init settings here, can change them in the app
+
 class TestViewController: UIViewController {
+    
+    
+    
     
     //starts the view controller and then loads in our view
         override func viewDidLoad() {
             super.viewDidLoad()
-            
         }
         
         override func loadView() {
@@ -139,7 +144,7 @@ class drawnView: UIView {
         */
         
         
-        let url = URL(string: "http://192.168.1.160:5000/data/upload_patient_test_data")
+        let url = URL(string: "http://10.38.109.25:5000/data/upload_patient_test_data")
         var request = URLRequest(url:url!)
         request.httpMethod = "POST"
         request.httpBody = jsonData
