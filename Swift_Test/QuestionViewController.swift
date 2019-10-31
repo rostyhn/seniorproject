@@ -9,13 +9,28 @@
 import Foundation
 import UIKit
 
+var answerData = AnswerData(patientID: patientID, answers: Array<Answer>())
+//the full file to be uploaded to the server
+struct AnswerData: Codable, Equatable {
+    var patientID: String
+    var answers: Array<Answer>
+    
+    init(patientID: String, answers: Array<Answer>)
+    {
+        self.patientID = patientID
+        self.answers = answers
+    }
+}
+
 struct Answer : Codable, Equatable {
     var QuestionID: Int
     var Answer: String
 }
 
 class QuestionViewController: UIViewController {
-    var answers = Array<Answer>()
+    let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,25 +41,29 @@ class QuestionViewController: UIViewController {
         view = QuestionView()
         view.backgroundColor = UIColor.white
         
-        let url = URL(string: "http://10.38.109.25:5000/data/download_questions")
-        let jsonData = try? Data(contentsOf: url!, options: .mappedIfSafe);
         
+        let url = URL(string: serverAddress + "/data/download_questions")
+        let jsonData = try? Data(contentsOf: url!, options: .mappedIfSafe)
+        
+        if(UserDefaults.standard.bool(forKey: "debugMode"))
+        {
         //debug - gives you the string of data read in
-        /*var rawData = String(decoding: jsonData!, as: UTF8.self);
-        print(rawData)
+            let rawData = String(decoding: jsonData!, as: UTF8.self);
+            print(rawData)
+            
+            print("")
+            print("Data as JSON:")
+            print("")
+            print(jsonData)
         
-        print(jsonData)
-        */
-        
-        
-        
+        }
         let questions = try? JSONDecoder().decode(Question.self, from: jsonData!)
         
         var counter = 0;
         
         for question in questions!
         {
-            var currentQuestionLabel = UILabel()
+            let currentQuestionLabel = UILabel()
             currentQuestionLabel.numberOfLines = 0
             currentQuestionLabel.textColor = UIColor.black
             currentQuestionLabel.text = String(counter + 1) + ". " + question.question
@@ -73,7 +92,7 @@ class QuestionViewController: UIViewController {
                 break;
                 //text field
                 case 2:
-                var textField = UITextField()
+                let textField = UITextField()
                 textField.borderStyle = .bezel
                 textField.clearsOnBeginEditing = true
                 textField.frame = CGRect(x: 40, y: counter * 100 + 100, width: 250, height:40)
@@ -104,21 +123,26 @@ class QuestionViewController: UIViewController {
             nextScreenButton.heightAnchor.constraint(equalToConstant: 48.0)
         ])
         
-            
-        }
+        
+    }
     
     @objc private func finishQuestions()
     {
-        if(!answers.isEmpty)
+        //the data will now be pushed after the test ends
+        /*if(!answerData.answers.isEmpty)
         {
             let jsonEncoder = JSONEncoder()
-            let jsonData = try? jsonEncoder.encode(answers)
+            
+            let jsonData = try? jsonEncoder.encode(finalAnswers)
+            
             // Debug: gives you the actual json created from the test
             /*let json = String(data: jsonData!, encoding: String.Encoding.utf8)
             print(json)
             */
             
-            let url = URL(string: "http://10.38.109.25:5000/data/upload_patient_questionnaire_answers")
+            
+            
+            let url = URL(string: serverAddress + "/data/upload_patient_questionnaire_answers")
             var request = URLRequest(url:url!)
             request.httpMethod = "POST"
             request.httpBody = jsonData
@@ -126,12 +150,11 @@ class QuestionViewController: UIViewController {
             
             let task = URLSession.shared.dataTask(with: request)
             task.resume()
-        }
+        }*/
         let alertController = UIAlertController(title: "Test", message: "The test will now begin.", preferredStyle: .alert)
         let defaultAction = UIAlertAction(title: "Begin Test", style: .default, handler: {
 
             [unowned self] (action) -> Void in
-
         self.performSegue(withIdentifier: "to_Test", sender: self);
         })
         alertController.addAction(defaultAction)
@@ -141,32 +164,34 @@ class QuestionViewController: UIViewController {
     
     @objc func segmentedControlValueChanged(segment: UISegmentedControl!) {
         //check if the question has been already answered - if so, remove it
-        for answer in answers
+        for answer in answerData.answers
         {
             if(answer.QuestionID == segment.tag)
             {
-                answers.remove(at: answers.firstIndex(of: answer)!)
+                answerData.answers.remove(at: answerData.answers.firstIndex(of: answer)!)
             }
         }
         
-        answers.append(Answer(QuestionID: segment.tag, Answer: segment.titleForSegment(at: segment.selectedSegmentIndex)!))
+        answerData.answers.append(Answer(QuestionID: segment.tag, Answer: segment.titleForSegment(at: segment.selectedSegmentIndex)!))
     }
     
     @objc func textFieldFinishedEditing(textField: UITextField!)
     {
-        for answer in answers
+        for answer in answerData.answers
         {
             if(answer.QuestionID == textField.tag)
             {
-                answers.remove(at: answers.firstIndex(of: answer)!)
+                answerData.answers.remove(at: answerData.answers.firstIndex(of: answer)!)
             }
         }
         
-        answers.append(Answer(QuestionID: textField.tag, Answer: textField.text!))
+        answerData.answers.append(Answer(QuestionID: textField.tag, Answer: textField.text!))
     }
     
-        
-        
+    
+    
+    
+    
 }
 
 class QuestionView: UIView {

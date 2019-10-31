@@ -9,17 +9,64 @@
 import Foundation
 import UIKit
 
-
-
 class SettingsViewController: UIViewController
 {
+    @IBOutlet weak var serverNameTextField: UITextField!
+    
+    @IBOutlet weak var doctorIDTextField: UITextField!
+    @IBOutlet weak var toggle_Debug: UISwitch!
+    
+    @IBAction func change_DoctorID(_ sender: UITextField) {
+        UserDefaults.standard.set(sender.text, forKey: "doctorID")
+    }
+    @IBAction func f_toggle_Debug(_ sender: UISwitch) {
+        if(sender.isOn)
+        {
+            UserDefaults.standard.set(true, forKey: "debugMode")
+        }
+        else
+        {
+            UserDefaults.standard.set(false, forKey: "debugMode")
+        }
+    }
+    
+    @IBAction func change_ServerName(_ sender: UITextField) {
+        UserDefaults.standard.set(sender.text,forKey: "serverAddress")
+    }
     
     override func viewWillAppear(_ animated: Bool) {
          self.navigationController?.navigationBar.isHidden = false
+        
+        //need to add error checking for both fields
+        serverNameTextField.text = UserDefaults.standard.string(forKey: "serverAddress")
+        
+        doctorIDTextField.text = UserDefaults.standard.string(forKey: "doctorID")
+        
+        if(UserDefaults.standard.bool(forKey: "debugMode"))
+        {
+            //if true, switch should be on
+            toggle_Debug.setOn(true, animated: true)
+        }
+        else
+        {
+            toggle_Debug.setOn(false, animated: true)
+        }
+        
+        
+        
      }
+    
+    
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         
         //connect to server and check if it works;
         //if not warn user and try again when a new address is typed in
@@ -38,11 +85,6 @@ class SettingsViewController: UIViewController
         */
         
         
-        
-    }
-    
-    override func loadView()
-    {
         
     }
 }

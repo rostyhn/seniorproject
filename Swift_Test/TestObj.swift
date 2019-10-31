@@ -64,17 +64,21 @@ class Test : Codable
     var isTextual: Bool;
     var answerSymbol: String;
     var symbols: [Symbol];
+    var patientID: String
+    var doctorID: String
     //two seperate arrays so that order is preserved - a dictionary is unordered
     var patientAnswers: [Symbol]
     var patientAnswerTouchData: Array<Array<TouchData>>
     let bBoxWidth = 25;
     let bBoxHeight = 25;
     
-    init(testName:String,isTextual:Bool, jsonName: String, answerSymbol: String)
+    init(testName:String,isTextual:Bool, jsonName: String, answerSymbol: String, patientID: String)
     {
+        self.doctorID = UserDefaults.standard.string(forKey: "doctorID")!
         self.testName = testName
         self.isTextual = isTextual;
         self.answerSymbol = answerSymbol;
+        self.patientID = patientID
         patientAnswers = [];
         patientAnswerTouchData = [];
         //data: try Data(contentsOf: url)
@@ -127,8 +131,11 @@ class Test : Codable
                 let stringRect = CGRect(x: symbol.x, y: symbol.y, width: bBoxWidth, height: bBoxHeight)
                 attributedString.draw(in: stringRect)
                 
-                context.beginPath()
-                context.stroke(stringRect)
+                if(UserDefaults.standard.bool(forKey: "debugMode"))
+                {
+                    context.beginPath()
+                    context.stroke(stringRect)
+                }
             }
         }
         else

@@ -10,6 +10,8 @@ import UIKit
 import MetalKit
 import ModelIO
 
+var patientID: String = ""
+
 class ViewController: UIViewController {
     
     var mtkView: MTKView!
@@ -36,8 +38,11 @@ class ViewController: UIViewController {
         mtkView.device = device
         mtkView.colorPixelFormat = .bgra8Unorm
         
+        
         renderer = Renderer(view: mtkView, device: device!)
         mtkView.delegate = renderer
+        
+        
         
         let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
         if !launchedBefore  {
@@ -54,6 +59,7 @@ class ViewController: UIViewController {
             UserDefaults.standard.set("Alphabet_test", forKey: "testSelected")
             UserDefaults.standard.set("A", forKey: "targetSymbol")
             UserDefaults.standard.set(true, forKey: "launchedBefore")
+            UserDefaults.standard.set("123456789", forKey: "doctorID")
         }
         
         
@@ -66,10 +72,41 @@ class ViewController: UIViewController {
     
     
     @IBAction func act_startTest(_ sender: UIButton) {
-        performSegue(withIdentifier: "to_Questions", sender: self);
+        
+        let errorAlert = UIAlertController(title: "No ID entered", message: "Please enter a valid patient ID and try again.", preferredStyle: .alert)
+        
+        let errorAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        
+        errorAlert.addAction(errorAction)
+        
+        let alert = UIAlertController(title: "Enter Patient ID", message: "Please enter the patient's ID.", preferredStyle: .alert)
+        
+        alert.addTextField { (textField) -> Void in
+            textField.text = ""
+        }
+        
+        let defaultAction = UIAlertAction(title: "Continue", style: .default, handler: {
+
+            [unowned self] (action) -> Void in
+            
+            let textField = alert.textFields![0] as UITextField
+            
+            if(textField.text != "")
+            {
+                patientID = textField.text!
+                self.performSegue(withIdentifier: "to_Questions", sender: self)
+            }
+            else
+            {
+                self.present(errorAlert, animated: true, completion: nil)
+            }
+        })
+        alert.addAction(defaultAction)
+        self.present(alert, animated: true, completion: nil)
+        
+        
     }
     
-
     @IBAction func act_OpenAbout(_ sender: UIButton) {
 
         performSegue(withIdentifier: "to_AboutUs", sender: self)
@@ -81,7 +118,8 @@ class ViewController: UIViewController {
         performSegue(withIdentifier: "to_Settings", sender: self)
     }
     
-    
+
     
 }
+
 
