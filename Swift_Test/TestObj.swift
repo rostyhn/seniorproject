@@ -36,7 +36,7 @@ struct Symbol: Codable, Hashable {
     }
 }
 
-struct TouchData: Hashable {
+struct TouchData: Codable, Hashable {
     //set of points that were drawn while touching - NOT UITouch
     var x,y,force: CGFloat
     //Xcode complained that DispatchTime was not hashable so I'll just include the uint instead
@@ -50,29 +50,40 @@ struct TouchData: Hashable {
         self.time = time;
     }
     
+    enum CodingKeys: String, CodingKey {
+        case x,y,force,time
+    }
+    
 }
 
-class Test
+class Test : Codable
 {
+    var testName: String
     var testStartTime: dispatch_time_t
+    var testEndTime: dispatch_time_t
     var isTextual: Bool;
     var answerSymbol: String;
     var symbols: [Symbol];
+    var patientID: String
+    var doctorID: String
     //two seperate arrays so that order is preserved - a dictionary is unordered
-    var patientAnswerOrder: [Symbol]
-    var patientAnswerData: Array<Array<TouchData>>
+    var patientAnswers: [Symbol]
+    var patientAnswerTouchData: Array<Array<TouchData>>
     let bBoxWidth = 25;
     let bBoxHeight = 25;
     
-    init(isTextual:Bool, jsonName: String, answerSymbol: String)
+    init(testName:String,isTextual:Bool, jsonName: String, answerSymbol: String, patientID: String)
     {
+        self.doctorID = UserDefaults.standard.string(forKey: "doctorID")!
+        self.testName = testName
         self.isTextual = isTextual;
         self.answerSymbol = answerSymbol;
-        patientAnswerOrder = [];
-        patientAnswerData = [];
+        self.patientID = patientID
+        patientAnswers = [];
+        patientAnswerTouchData = [];
         //data: try Data(contentsOf: url)
         self.testStartTime = DispatchTime.now().rawValue
-        
+        self.testEndTime = 0;
         //TODO: add functionality to read from the server
         let path = Bundle.main.path(forResource: jsonName, ofType: "json")!
         
@@ -85,6 +96,11 @@ class Test
         
         symbols = symbolData!.symbols;
         
+    }
+    
+    func setTestEndTime(testEndTime: dispatch_time_t)
+    {
+        self.testEndTime = testEndTime
     }
     
     func draw(context:CGContext)
@@ -115,8 +131,11 @@ class Test
                 let stringRect = CGRect(x: symbol.x, y: symbol.y, width: bBoxWidth, height: bBoxHeight)
                 attributedString.draw(in: stringRect)
                 
-                context.beginPath()
-                context.stroke(stringRect)
+                if(UserDefaults.standard.bool(forKey: "debugMode"))
+                {
+                    context.beginPath()
+                    context.stroke(stringRect)
+                }
             }
         }
         else

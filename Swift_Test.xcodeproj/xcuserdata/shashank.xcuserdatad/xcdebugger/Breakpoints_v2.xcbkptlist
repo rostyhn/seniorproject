@@ -3,23 +3,4 @@
    uuid = "F099BEE5-24B7-4127-ABE0-28018E4C6D94"
    type = "1"
    version = "2.0">
-   <Breakpoints>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "159B2DF0-2868-49F7-B210-F5E90D2CB01A"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Swift_Test/AboutUsViewController.swift"
-            timestampString = "590293848.656764"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2"
-            endingLineNumber = "2"
-            landmarkName = "unknown"
-            landmarkType = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-   </Breakpoints>
 </Bucket>
