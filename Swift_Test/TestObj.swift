@@ -125,7 +125,7 @@ class Test : Codable
             
             for symbol in symbols
             {
-                let symText = symbol.name;
+                let symText = symbol.name
                 let attributedString = NSAttributedString(string: symText, attributes: attributes)
                 
                 let stringRect = CGRect(x: symbol.x, y: symbol.y, width: bBoxWidth, height: bBoxHeight)
@@ -141,6 +141,26 @@ class Test : Codable
         else
         {
             //add functionality to draw symbols that are images here
+            for symbol in symbols
+                       {
+                        //let pngPath = symbol.imgPath
+                        let imgRect = CGRect(x: symbol.x, y: symbol.y, width: bBoxWidth, height: bBoxHeight)
+                        
+                        
+                        let path = Bundle.main.path(forResource: symbol.name, ofType: "PNG", inDirectory: "res")!
+                        
+                        let image = UIImage.init(data: try! Data(contentsOf: URL(fileURLWithPath: path)))
+                        
+                        image?.draw(in: imgRect)
+                        
+                           if(UserDefaults.standard.bool(forKey: "debugMode"))
+                           {
+                            //for bounding box rendering
+                               context.beginPath()
+                               context.stroke(imgRect)
+                           }
+                       }
+            
         }
     }
     

@@ -32,7 +32,9 @@ class drawnView: UIView {
     let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
     
     //data stuff
-    var currentTest = Test(testName: "alphabet_test",isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A", patientID: patientID);
+    //var currentTest = Test(testName: "alphabet_test",isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A", patientID: patientID)
+    
+    var currentTest = Test(testName: "symbol_test",isTextual:false, jsonName:"SymbolTest", answerSymbol:"21_white_star", patientID: patientID)
     //for data gathering - this gets cleared every time a new drawing starts
     var touchData = Array<TouchData>()
     

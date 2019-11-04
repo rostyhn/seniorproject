@@ -42,8 +42,6 @@ class ViewController: UIViewController {
         renderer = Renderer(view: mtkView, device: device!)
         mtkView.delegate = renderer
         
-        
-        
         let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
         if !launchedBefore  {
             
