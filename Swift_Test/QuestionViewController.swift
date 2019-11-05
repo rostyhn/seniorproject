@@ -30,8 +30,6 @@ struct Answer : Codable, Equatable {
 class QuestionViewController: UIViewController {
     let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

@@ -1,10 +1,10 @@
 {
+"isTextual": false,
 "symbols": [
     {
         "name": "37",
         "x": 75,
         "y": 75,
-        "imgPath": "",
         "ID": 1
     }]
 }

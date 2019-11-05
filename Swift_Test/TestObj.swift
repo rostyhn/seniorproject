@@ -14,6 +14,7 @@ import UIKit
 //horrible name, but this serves as the top layer for the json object
 //loaded into memory, contains an array of symbols
 struct SymbolData: Codable {
+    let isTextual: Bool
     let symbols: [Symbol]
 }
 
@@ -22,7 +23,6 @@ struct SymbolData: Codable {
 struct Symbol: Codable, Hashable {
     let name: String
     let x, y: Int
-    let imgPath: String
     let id: Int
     
     func hash(into hasher: inout Hasher)
@@ -31,7 +31,7 @@ struct Symbol: Codable, Hashable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case name, x, y, imgPath
+        case name, x, y
         case id = "ID"
     }
 }
@@ -72,30 +72,40 @@ class Test : Codable
     let bBoxWidth = 25;
     let bBoxHeight = 25;
     
-    init(testName:String,isTextual:Bool, jsonName: String, answerSymbol: String, patientID: String)
+    init(jsonName: String, answerSymbol: String, patientID: String)
     {
         self.doctorID = UserDefaults.standard.string(forKey: "doctorID")!
-        self.testName = testName
-        self.isTextual = isTextual;
-        self.answerSymbol = answerSymbol;
+        self.testName = jsonName
+        self.answerSymbol = answerSymbol
         self.patientID = patientID
-        patientAnswers = [];
-        patientAnswerTouchData = [];
+        self.patientAnswers = []
+        self.patientAnswerTouchData = []
         //data: try Data(contentsOf: url)
         self.testStartTime = DispatchTime.now().rawValue
-        self.testEndTime = 0;
+        self.testEndTime = 0
+        
         //TODO: add functionality to read from the server
-        let path = Bundle.main.path(forResource: jsonName, ofType: "json")!
-        
-        let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe);
-        
-        //debug - gives you the string of data read in
-        //var rawData = String(decoding: jsonData!, as: UTF8.self);
-        
-        let symbolData = try? JSONDecoder().decode(SymbolData.self, from: jsonData!);
-        
-        symbols = symbolData!.symbols;
-        
+        if(UserDefaults.standard.bool(forKey: "loadLocally"))
+        {
+            let path = Bundle.main.path(forResource: jsonName, ofType: "json")!
+            
+            let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+            
+            //debug - gives you the string of data read in
+            //var rawData = String(decoding: jsonData!, as: UTF8.self);
+            
+            let symbolData = try? JSONDecoder().decode(SymbolData.self, from: jsonData!)
+            
+            self.symbols = symbolData!.symbols
+            self.isTextual = symbolData!.isTextual
+            
+            
+        }
+        else
+        {
+            self.isTextual = true
+            self.symbols = []
+        }
     }
     
     func setTestEndTime(testEndTime: dispatch_time_t)
@@ -140,12 +150,9 @@ class Test : Codable
         }
         else
         {
-            //add functionality to draw symbols that are images here
             for symbol in symbols
                        {
-                        //let pngPath = symbol.imgPath
                         let imgRect = CGRect(x: symbol.x, y: symbol.y, width: bBoxWidth, height: bBoxHeight)
-                        
                         
                         let path = Bundle.main.path(forResource: symbol.name, ofType: "PNG", inDirectory: "res")!
                         

@@ -54,13 +54,15 @@ class ViewController: UIViewController {
 
             UserDefaults.standard.set(false, forKey: "debugMode")
             UserDefaults.standard.set("192.168.1.1", forKey: "serverAddress")
-            UserDefaults.standard.set("Alphabet_test", forKey: "testSelected")
+            UserDefaults.standard.set("AlphabetTest", forKey: "testSelected")
             UserDefaults.standard.set("A", forKey: "targetSymbol")
             UserDefaults.standard.set(true, forKey: "launchedBefore")
             UserDefaults.standard.set("123456789", forKey: "doctorID")
+            UserDefaults.standard.set(true, forKey: "loadLocally")
+            //if it loaded in the settings screen, we'll assume that the connection is working
+            UserDefaults.standard.set(false, forKey: "isConnectionSafe")
+            UserDefaults.standard.set(true, forKey: "showQuestionnaire")
         }
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -70,13 +72,6 @@ class ViewController: UIViewController {
     
     
     @IBAction func act_startTest(_ sender: UIButton) {
-        
-        let errorAlert = UIAlertController(title: "No ID entered", message: "Please enter a valid patient ID and try again.", preferredStyle: .alert)
-        
-        let errorAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        
-        errorAlert.addAction(errorAction)
-        
         let alert = UIAlertController(title: "Enter Patient ID", message: "Please enter the patient's ID.", preferredStyle: .alert)
         
         alert.addTextField { (textField) -> Void in
@@ -92,11 +87,26 @@ class ViewController: UIViewController {
             if(textField.text != "")
             {
                 patientID = textField.text!
-                self.performSegue(withIdentifier: "to_Questions", sender: self)
+                
+                if(UserDefaults.standard.value(forKey: "isConnectionSafe") as! Bool)
+                    {
+                        if(UserDefaults.standard.value(forKey: "showQuestionnaire") as! Bool)
+                        {
+                            self.performSegue(withIdentifier: "to_Questions", sender: self)
+                        }
+                        else
+                        {
+                            self.performSegue(withIdentifier: "to_Test", sender: self)
+                        }
+                    }
+                    else
+                    {
+                    self.showErrorAlert(title: "Connection error", message: "The connection specified in the settings menu is potentially unsafe. Please change the server address and try again.")
+                    }
             }
             else
             {
-                self.present(errorAlert, animated: true, completion: nil)
+                self.showErrorAlert(title: "No ID entered", message: "Please enter a valid patient ID and try again.")
             }
         })
         alert.addAction(defaultAction)
@@ -105,10 +115,23 @@ class ViewController: UIViewController {
         
     }
     
+    func showErrorAlert(title: String, message: String)
+    {
+        let errorAlert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let errorAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        
+        errorAlert.addAction(errorAction)
+        self.present(errorAlert, animated: true, completion: nil)
+    }
+    
+    
     @IBAction func act_OpenAbout(_ sender: UIButton) {
 
         performSegue(withIdentifier: "to_AboutUs", sender: self)
     }
+    
+    
     
     @IBAction func act_openSettings(_ sender: Any) {
         //except when we open the settings menu
