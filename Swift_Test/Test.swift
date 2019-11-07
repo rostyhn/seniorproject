@@ -16,6 +16,7 @@ import UIKit
 struct SymbolData: Codable {
     let isTextual: Bool
     let symbols: [Symbol]
+    let possibleTargets: [String]
 }
 
 
@@ -72,11 +73,11 @@ class Test : Codable
     let bBoxWidth = 25;
     let bBoxHeight = 25;
     
-    init(jsonName: String, answerSymbol: String, patientID: String)
+    init(jsonName: String, patientID: String)
     {
         self.doctorID = UserDefaults.standard.string(forKey: "doctorID")!
         self.testName = jsonName
-        self.answerSymbol = answerSymbol
+        self.answerSymbol = UserDefaults.standard.string(forKey: "targetSymbol")!
         self.patientID = patientID
         self.patientAnswers = []
         self.patientAnswerTouchData = []
@@ -84,7 +85,6 @@ class Test : Codable
         self.testStartTime = DispatchTime.now().rawValue
         self.testEndTime = 0
         
-        //TODO: add functionality to read from the server
         if(UserDefaults.standard.bool(forKey: "loadLocally"))
         {
             let path = Bundle.main.path(forResource: jsonName, ofType: "json")!
@@ -98,13 +98,17 @@ class Test : Codable
             
             self.symbols = symbolData!.symbols
             self.isTextual = symbolData!.isTextual
-            
-            
         }
         else
         {
-            self.isTextual = true
-            self.symbols = []
+            let targetURL = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000" + "/data/download/" + UserDefaults.standard.string(forKey: "testSelected")!)
+            
+            let targetJsonData = try? Data(contentsOf: targetURL!, options: .mappedIfSafe)
+            
+            let symbolData = try? JSONDecoder().decode(SymbolData.self, from: targetJsonData!)
+            
+            self.symbols = symbolData!.symbols
+            self.isTextual = symbolData!.isTextual
         }
     }
     
@@ -167,7 +171,6 @@ class Test : Codable
                                context.stroke(imgRect)
                            }
                        }
-            
         }
     }
     

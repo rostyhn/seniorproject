@@ -1,6 +1,6 @@
 {
     "isTextual": true,
-    
+    "possibleTargets": ["A","B","C"],
     "symbols": [
         {
             "name": "N",

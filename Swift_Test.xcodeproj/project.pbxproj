@@ -7,15 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		98398218232F079200734D87 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98398217232F079200734D87 /* AppDelegate.swift */; };
-		9839821A232F079200734D87 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98398219232F079200734D87 /* ViewController.swift */; };
+		9839821A232F079200734D87 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98398219232F079200734D87 /* MainViewController.swift */; };
 		9839821D232F079200734D87 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9839821B232F079200734D87 /* Main.storyboard */; };
 		98398220232F079200734D87 /* Swift_Test.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9839821E232F079200734D87 /* Swift_Test.xcdatamodeld */; };
 		98398222232F079400734D87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98398221232F079400734D87 /* Assets.xcassets */; };
 		98495745232F200B003F6E6B /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98495744232F200B003F6E6B /* AboutUsViewController.swift */; };
-		984F82D32345845E00481495 /* TestObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984F82D22345845E00481495 /* TestObj.swift */; };
+		984F82D32345845E00481495 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984F82D22345845E00481495 /* Test.swift */; };
 		984F82DD2345AA4900481495 /* AlphabetTest.json in Resources */ = {isa = PBXBuildFile; fileRef = 984F82DC2345AA4900481495 /* AlphabetTest.json */; };
-		98A0B4E12370C31000AF855C /* BlurLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A0B4E02370C31000AF855C /* BlurLoader.swift */; };
+		987314E32373C6C1004D5C7A /* TestNameFromJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987314E22373C6C1004D5C7A /* TestNameFromJSON.swift */; };
+		989FF83F23722EDD00D77518 /* BlurLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989FF83E23722EDD00D77518 /* BlurLoader.swift */; };
+		989FF84223722F6300D77518 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989FF84123722F6300D77518 /* AppDelegate.swift */; };
 		98D1B566236FCB980069CDD0 /* SymbolTest.json in Resources */ = {isa = PBXBuildFile; fileRef = 98D1B565236FCB970069CDD0 /* SymbolTest.json */; };
 		98D1B568236FD02E0069CDD0 /* res in Resources */ = {isa = PBXBuildFile; fileRef = 98D1B567236FD02E0069CDD0 /* res */; };
 		98D87EF0237107150014F1CB /* TestSpecificSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D87EEF237107150014F1CB /* TestSpecificSettingsViewController.swift */; };
@@ -32,16 +33,17 @@
 
 /* Begin PBXFileReference section */
 		98398214232F079200734D87 /* Cancellation Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cancellation Test.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		98398217232F079200734D87 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Swift_Test/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
-		98398219232F079200734D87 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = Swift_Test/ViewController.swift; sourceTree = SOURCE_ROOT; };
+		98398219232F079200734D87 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = Swift_Test/MainViewController.swift; sourceTree = SOURCE_ROOT; };
 		9839821C232F079200734D87 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9839821F232F079200734D87 /* Swift_Test.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Swift_Test.xcdatamodel; sourceTree = "<group>"; };
 		98398221232F079400734D87 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Swift_Test/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		98398226232F079400734D87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Swift_Test/Info.plist; sourceTree = SOURCE_ROOT; };
 		98495744232F200B003F6E6B /* AboutUsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AboutUsViewController.swift; path = Swift_Test/AboutUsViewController.swift; sourceTree = SOURCE_ROOT; };
-		984F82D22345845E00481495 /* TestObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestObj.swift; path = Swift_Test/TestObj.swift; sourceTree = SOURCE_ROOT; };
+		984F82D22345845E00481495 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Test.swift; path = Swift_Test/Test.swift; sourceTree = SOURCE_ROOT; };
 		984F82DC2345AA4900481495 /* AlphabetTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = AlphabetTest.json; path = Swift_Test/AlphabetTest.json; sourceTree = SOURCE_ROOT; };
-		98A0B4E02370C31000AF855C /* BlurLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurLoader.swift; sourceTree = "<group>"; };
+		987314E22373C6C1004D5C7A /* TestNameFromJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNameFromJSON.swift; sourceTree = "<group>"; };
+		989FF83E23722EDD00D77518 /* BlurLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurLoader.swift; sourceTree = "<group>"; };
+		989FF84123722F6300D77518 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		98D1B565236FCB970069CDD0 /* SymbolTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SymbolTest.json; sourceTree = "<group>"; };
 		98D1B567236FD02E0069CDD0 /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = Swift_Test/res; sourceTree = SOURCE_ROOT; };
 		98D87EEF237107150014F1CB /* TestSpecificSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSpecificSettingsViewController.swift; sourceTree = "<group>"; };
@@ -86,38 +88,71 @@
 		98398216232F079200734D87 /* Swift_Test */ = {
 			isa = PBXGroup;
 			children = (
-				98D87F01237118100014F1CB /* brain-simple-mesh.mtl */,
-				98D87F002371180F0014F1CB /* brain-simple-mesh.obj */,
-				98D87EF7237117C70014F1CB /* 3D Components */,
+				989FF84523722FB400D77518 /* JSON Files */,
+				989FF84423722F9800D77518 /* Utilities */,
+				989FF84323722F7B00D77518 /* Data Structures */,
+				989FF84023722EE900D77518 /* View Controllers */,
+				989FF83D23722E5800D77518 /* 3D Rendering */,
 				98D1B567236FD02E0069CDD0 /* res */,
-				98D1B565236FCB970069CDD0 /* SymbolTest.json */,
-				98EFEC3823594D480000BDD9 /* TestViewController.swift */,
-				98398217232F079200734D87 /* AppDelegate.swift */,
-				98398219232F079200734D87 /* ViewController.swift */,
+				989FF84123722F6300D77518 /* AppDelegate.swift */,
 				9839821B232F079200734D87 /* Main.storyboard */,
-				98495744232F200B003F6E6B /* AboutUsViewController.swift */,
 				98398221232F079400734D87 /* Assets.xcassets */,
 				98398226232F079400734D87 /* Info.plist */,
 				9839821E232F079200734D87 /* Swift_Test.xcdatamodeld */,
-				984F82D22345845E00481495 /* TestObj.swift */,
-				984F82DC2345AA4900481495 /* AlphabetTest.json */,
-				98E6A2642361329800EC54DF /* QuestionViewController.swift */,
-				98D87EEF237107150014F1CB /* TestSpecificSettingsViewController.swift */,
-				98E6A266236142DB00EC54DF /* SettingsViewController.swift */,
-				98E6A26823614C8A00EC54DF /* Question.swift */,
-				98A0B4E02370C31000AF855C /* BlurLoader.swift */,
-				98D87EF9237117C70014F1CB /* shaders.metal */,
-				98D87EFC237117C70014F1CB /* Renderer.swift */,
-				98D87EFA237117C70014F1CB /* maths.swift */,
 			);
 			path = Swift_Test;
 			sourceTree = SOURCE_ROOT;
 		};
-		98D87EF7237117C70014F1CB /* 3D Components */ = {
+		989FF83D23722E5800D77518 /* 3D Rendering */ = {
 			isa = PBXGroup;
 			children = (
+				98D87EF9237117C70014F1CB /* shaders.metal */,
+				98D87EFC237117C70014F1CB /* Renderer.swift */,
+				98D87F002371180F0014F1CB /* brain-simple-mesh.obj */,
+				98D87F01237118100014F1CB /* brain-simple-mesh.mtl */,
 			);
-			path = "3D Components";
+			name = "3D Rendering";
+			sourceTree = "<group>";
+		};
+		989FF84023722EE900D77518 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				98398219232F079200734D87 /* MainViewController.swift */,
+				98E6A2642361329800EC54DF /* QuestionViewController.swift */,
+				98D87EEF237107150014F1CB /* TestSpecificSettingsViewController.swift */,
+				98E6A266236142DB00EC54DF /* SettingsViewController.swift */,
+				98495744232F200B003F6E6B /* AboutUsViewController.swift */,
+				98EFEC3823594D480000BDD9 /* TestViewController.swift */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		989FF84323722F7B00D77518 /* Data Structures */ = {
+			isa = PBXGroup;
+			children = (
+				984F82D22345845E00481495 /* Test.swift */,
+				98E6A26823614C8A00EC54DF /* Question.swift */,
+				987314E22373C6C1004D5C7A /* TestNameFromJSON.swift */,
+			);
+			name = "Data Structures";
+			sourceTree = "<group>";
+		};
+		989FF84423722F9800D77518 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				98D87EFA237117C70014F1CB /* maths.swift */,
+				989FF83E23722EDD00D77518 /* BlurLoader.swift */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		989FF84523722FB400D77518 /* JSON Files */ = {
+			isa = PBXGroup;
+			children = (
+				98D1B565236FCB970069CDD0 /* SymbolTest.json */,
+				984F82DC2345AA4900481495 /* AlphabetTest.json */,
+			);
+			name = "JSON Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,18 +231,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				98495745232F200B003F6E6B /* AboutUsViewController.swift in Sources */,
-				9839821A232F079200734D87 /* ViewController.swift in Sources */,
+				9839821A232F079200734D87 /* MainViewController.swift in Sources */,
 				98D87EFF237117DB0014F1CB /* Renderer.swift in Sources */,
 				98E6A2652361329800EC54DF /* QuestionViewController.swift in Sources */,
+				989FF84223722F6300D77518 /* AppDelegate.swift in Sources */,
 				98E6A26923614C8A00EC54DF /* Question.swift in Sources */,
-				98398218232F079200734D87 /* AppDelegate.swift in Sources */,
 				98D87EF0237107150014F1CB /* TestSpecificSettingsViewController.swift in Sources */,
+				989FF83F23722EDD00D77518 /* BlurLoader.swift in Sources */,
 				98398220232F079200734D87 /* Swift_Test.xcdatamodeld in Sources */,
 				98EFEC3923594D480000BDD9 /* TestViewController.swift in Sources */,
+				987314E32373C6C1004D5C7A /* TestNameFromJSON.swift in Sources */,
 				98D87EFD237117D80014F1CB /* shaders.metal in Sources */,
-				98A0B4E12370C31000AF855C /* BlurLoader.swift in Sources */,
 				98D87EFE237117DA0014F1CB /* maths.swift in Sources */,
-				984F82D32345845E00481495 /* TestObj.swift in Sources */,
+				984F82D32345845E00481495 /* Test.swift in Sources */,
 				98E6A267236142DB00EC54DF /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

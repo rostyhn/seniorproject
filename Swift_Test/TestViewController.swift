@@ -34,7 +34,7 @@ class drawnView: UIView {
     //data stuff
     //var currentTest = Test(testName: "alphabet_test",isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A", patientID: patientID)
     
-    var currentTest = Test(jsonName: UserDefaults.standard.string(forKey: "testSelected")!, answerSymbol: UserDefaults.standard.string(forKey: "targetSymbol")!, patientID: patientID)
+    var currentTest = Test(jsonName: UserDefaults.standard.string(forKey: "testSelected")!, patientID: patientID)
     //for data gathering - this gets cleared every time a new drawing starts
     var touchData = Array<TouchData>()
     

@@ -12,7 +12,7 @@ import ModelIO
 
 var patientID: String = ""
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
     
     var mtkView: MTKView!
     var renderer: Renderer!
@@ -38,10 +38,10 @@ class ViewController: UIViewController {
         mtkView.device = device
         mtkView.colorPixelFormat = .bgra8Unorm
         
-        
         renderer = Renderer(view: mtkView, device: device!)
         mtkView.delegate = renderer
         
+        //first time settings set up
         let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
         if !launchedBefore  {
             
