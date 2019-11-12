@@ -36,9 +36,10 @@ class MainViewController: UIViewController {
         view.addSubview(mtkView)
         let device = MTLCreateSystemDefaultDevice()
         mtkView.device = device
-        mtkView.colorPixelFormat = .bgra8Unorm
+        mtkView.colorPixelFormat = .bgra8Unorm_srgb
+        mtkView.depthStencilPixelFormat = .depth32Float
         
-        renderer = Renderer(view: mtkView, device: device!)
+        renderer = Renderer(view: mtkView, device: device!, mode: 0)
         mtkView.delegate = renderer
         
         //first time settings set up
@@ -72,6 +73,10 @@ class MainViewController: UIViewController {
     
     
     @IBAction func act_startTest(_ sender: UIButton) {
+        
+        if(UserDefaults.standard.string(forKey: "doctorID")! != "")
+        {
+        
         let alert = UIAlertController(title: "Enter Patient ID", message: "Please enter the patient's ID.", preferredStyle: .alert)
         
         alert.addTextField { (textField) -> Void in
@@ -87,7 +92,7 @@ class MainViewController: UIViewController {
             if(textField.text != "")
             {
                 patientID = textField.text!
-                
+                //bad because it assumes that the connection is safe from previous loads...
                 if(UserDefaults.standard.value(forKey: "isConnectionSafe") as! Bool)
                     {
                         if(UserDefaults.standard.value(forKey: "showQuestionnaire") as! Bool)
@@ -101,21 +106,25 @@ class MainViewController: UIViewController {
                     }
                     else
                     {
-                    self.showErrorAlert(title: "Connection error", message: "The connection specified in the settings menu is potentially unsafe. Please change the server address and try again.")
+                        self.showAlert(title: "Connection error", message: "The connection specified in the settings menu is potentially unsafe. Please change the server address and try again.")
                     }
-            }
-            else
-            {
-                self.showErrorAlert(title: "No ID entered", message: "Please enter a valid patient ID and try again.")
-            }
-        })
-        alert.addAction(defaultAction)
-        self.present(alert, animated: true, completion: nil)
-        
+                }
+                else
+                {
+                    self.showAlert(title: "No ID entered", message: "Please enter a valid patient ID and try again.")
+                }
+            })
+            alert.addAction(defaultAction)
+            self.present(alert, animated: true, completion: nil)
+        }
+        else
+        {
+            showAlert(title: "No doctor ID entered.", message: "Please enter a valid doctor ID and try again.")
+        }
         
     }
     
-    func showErrorAlert(title: String, message: String)
+    func showAlert(title: String, message: String)
     {
         let errorAlert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
@@ -127,8 +136,18 @@ class MainViewController: UIViewController {
     
     
     @IBAction func act_OpenAbout(_ sender: UIButton) {
-
-        performSegue(withIdentifier: "to_AboutUs", sender: self)
+        
+         let alert = UIAlertController(title: "Instructions", message: "Double tap to exit the about screen.", preferredStyle: .alert)
+         
+        let action = UIAlertAction(title: "OK", style: .default, handler: { [unowned self] (action) -> Void in
+            self.performSegue(withIdentifier: "to_AboutUs", sender: self)
+            
+        })
+         
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+        
+        
     }
     
     

@@ -25,6 +25,7 @@
 		98D87EFF237117DB0014F1CB /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D87EFC237117C70014F1CB /* Renderer.swift */; };
 		98D87F02237118100014F1CB /* brain-simple-mesh.obj in Resources */ = {isa = PBXBuildFile; fileRef = 98D87F002371180F0014F1CB /* brain-simple-mesh.obj */; };
 		98D87F03237118100014F1CB /* brain-simple-mesh.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 98D87F01237118100014F1CB /* brain-simple-mesh.mtl */; };
+		98DD3B242374B104008AB7E6 /* DoctorList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DD3B232374B104008AB7E6 /* DoctorList.swift */; };
 		98E6A2652361329800EC54DF /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6A2642361329800EC54DF /* QuestionViewController.swift */; };
 		98E6A267236142DB00EC54DF /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6A266236142DB00EC54DF /* SettingsViewController.swift */; };
 		98E6A26923614C8A00EC54DF /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6A26823614C8A00EC54DF /* Question.swift */; };
@@ -52,6 +53,7 @@
 		98D87EFC237117C70014F1CB /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		98D87F002371180F0014F1CB /* brain-simple-mesh.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "brain-simple-mesh.obj"; sourceTree = "<group>"; };
 		98D87F01237118100014F1CB /* brain-simple-mesh.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "brain-simple-mesh.mtl"; sourceTree = "<group>"; };
+		98DD3B232374B104008AB7E6 /* DoctorList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorList.swift; sourceTree = "<group>"; };
 		98E6A2642361329800EC54DF /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
 		98E6A266236142DB00EC54DF /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		98E6A26823614C8A00EC54DF /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				984F82D22345845E00481495 /* Test.swift */,
 				98E6A26823614C8A00EC54DF /* Question.swift */,
 				987314E22373C6C1004D5C7A /* TestNameFromJSON.swift */,
+				98DD3B232374B104008AB7E6 /* DoctorList.swift */,
 			);
 			name = "Data Structures";
 			sourceTree = "<group>";
@@ -232,6 +235,7 @@
 			files = (
 				98495745232F200B003F6E6B /* AboutUsViewController.swift in Sources */,
 				9839821A232F079200734D87 /* MainViewController.swift in Sources */,
+				98DD3B242374B104008AB7E6 /* DoctorList.swift in Sources */,
 				98D87EFF237117DB0014F1CB /* Renderer.swift in Sources */,
 				98E6A2652361329800EC54DF /* QuestionViewController.swift in Sources */,
 				989FF84223722F6300D77518 /* AppDelegate.swift in Sources */,

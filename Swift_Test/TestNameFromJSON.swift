@@ -8,8 +8,6 @@
 
 import Foundation
 
-import Foundation
-
 // MARK: - TestNameFromJSONElement
 struct TestNameFromJSONElement : Codable {
     let name: String

@@ -47,13 +47,7 @@ class QuestionViewController: UIViewController {
         {
         //debug - gives you the string of data read in
             let rawData = String(decoding: jsonData!, as: UTF8.self);
-            print(rawData)
-            
-            print("")
-            print("Data as JSON:")
-            print("")
-            print(jsonData)
-        
+            print(rawData)        
         }
         let questions = try? JSONDecoder().decode(Question.self, from: jsonData!)
         
@@ -126,30 +120,7 @@ class QuestionViewController: UIViewController {
     
     @objc private func finishQuestions()
     {
-        //the data will now be pushed after the test ends
-        /*if(!answerData.answers.isEmpty)
-        {
-            let jsonEncoder = JSONEncoder()
-            
-            let jsonData = try? jsonEncoder.encode(finalAnswers)
-            
-            // Debug: gives you the actual json created from the test
-            /*let json = String(data: jsonData!, encoding: String.Encoding.utf8)
-            print(json)
-            */
-            
-            
-            
-            let url = URL(string: serverAddress + "/data/upload_patient_questionnaire_answers")
-            var request = URLRequest(url:url!)
-            request.httpMethod = "POST"
-            request.httpBody = jsonData
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            let task = URLSession.shared.dataTask(with: request)
-            task.resume()
-        }*/
-        let alertController = UIAlertController(title: "Test", message: "The test will now begin.", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Test Starting", message: "The test will now begin. Circle every "  + UserDefaults.standard.string(forKey: "targetSymbol")! + " you can find.", preferredStyle: .alert)
         let defaultAction = UIAlertAction(title: "Begin Test", style: .default, handler: {
 
             [unowned self] (action) -> Void in

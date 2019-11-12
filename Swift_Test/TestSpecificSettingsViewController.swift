@@ -46,8 +46,6 @@ class TestSpecificSettingsViewController : UIViewController, UIPickerViewDelegat
         }
         else
         {
-            // /data/getTestList
-            // /data/download/<name>.json
             let url = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000" + "/data/download/getTestList")
             
             let jsonData = try? Data(contentsOf: url!, options: .mappedIfSafe)
