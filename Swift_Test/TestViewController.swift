@@ -8,33 +8,27 @@
 
 import UIKit
 
-
-//set init settings here, can change them in the app
-
+//MARK: View Controller Setup
 class TestViewController: UIViewController {
     //starts the view controller and then loads in our view
         override func viewDidLoad() {
             super.viewDidLoad()
         }
-        
         override func loadView() {
             let view = drawnView()
-            //apple nerds will tell you this is bad design
+            //apple nerds will tell you this is bad design - I do not understand why
             view.vc = self
             view.backgroundColor = UIColor.white
             self.view = view
-            
     }
 }
 
 class drawnView: UIView {
     weak var vc: TestViewController!
     let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
-    
-    //data stuff
-    //var currentTest = Test(testName: "alphabet_test",isTextual:true, jsonName:"AlphabetTest", answerSymbol:"A", patientID: patientID)
-    
     var currentTest = Test(jsonName: UserDefaults.standard.string(forKey: "testSelected")!, patientID: patientID)
+    
+    
     //for data gathering - this gets cleared every time a new drawing starts
     var touchData = Array<TouchData>()
     
@@ -52,8 +46,58 @@ class drawnView: UIView {
     var force:CGFloat = 0.0;
     var location = CGPoint(x:200, y:200);
     
-     /*
-     www.makeapppie.com/2018/05/30/apple-pencil-basics/
+    /* MARK: View setup
+     Setup our view
+     */
+    override func draw(_ rect: CGRect){
+        
+        //grab the graphics context
+        let context = UIGraphicsGetCurrentContext()!
+        
+        //draw the view and add labels - need to do it this way because draw() has been overridden
+        currentTest.draw(context: context);
+        if(UserDefaults.standard.bool(forKey: "debugMode"))
+        {
+            addStatusLabel()
+        }
+        addButton()
+    }
+    //overrides layoutSubviews otherwise stuff won't draw
+    override func layoutSubviews() {
+        //DO NOT DELETE
+    }
+    
+    
+    /* MARK: Create debug status bar
+     adds debug status bar at the bottom
+     */
+    func addStatusLabel()
+    {
+        self.addSubview(statusLabel)
+        statusLabel.text = "DEBUG"
+        statusLabel.font = UIFont(name: "Menlo", size: 20)
+        statusLabel.backgroundColor = UIColor.darkGray.withAlphaComponent(50)
+        statusLabel.textColor = .white
+        statusLabel.translatesAutoresizingMaskIntoConstraints = false
+        var constraints = [NSLayoutConstraint]()
+        constraints += [NSLayoutConstraint(item: statusLabel, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0)]
+        constraints += [NSLayoutConstraint(item: statusLabel, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)]
+        constraints += [NSLayoutConstraint(item: statusLabel, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)]
+        self.addConstraints(constraints)
+    }
+    /* MARK: Create finish test button
+     Adds a button programatically to stop the test
+     */
+    func addButton()
+    {
+        self.addSubview(btn_end)
+        btn_end.backgroundColor = .red
+        btn_end.setTitle("X", for: .normal)
+        btn_end.addTarget(self, action: #selector(endTest), for: .touchUpInside)
+    }
+    
+    
+     /* MARK: Update Display
      updates the debug status bar and also pushes the data about the path into an array
      */
         func updateDisplay(touches: Set<UITouch>)
@@ -73,35 +117,7 @@ class drawnView: UIView {
             touchData.append(TouchData(x: touch.location(in: self).x, y: touch.location(in: self).y, force: touch.force, time: DispatchTime.now().rawValue))
         }
     
-    /*
-     adds debug status bar at the bottom
-     */
-    func addStatusLabel()
-    {
-        self.addSubview(statusLabel)
-        statusLabel.text = "DEBUG"
-        statusLabel.font = UIFont(name: "Menlo", size: 20)
-        statusLabel.backgroundColor = UIColor.darkGray.withAlphaComponent(50)
-        statusLabel.textColor = .white
-        statusLabel.translatesAutoresizingMaskIntoConstraints = false
-        var constraints = [NSLayoutConstraint]()
-        constraints += [NSLayoutConstraint(item: statusLabel, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0)]
-        constraints += [NSLayoutConstraint(item: statusLabel, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)]
-        constraints += [NSLayoutConstraint(item: statusLabel, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)]
-        self.addConstraints(constraints)
-    }
-    /*
-     Adds a button programatically to stop the test
-     */
-    func addButton()
-    {
-        self.addSubview(btn_end)
-        btn_end.backgroundColor = .red
-        btn_end.setTitle("X", for: .normal)
-        btn_end.addTarget(self, action: #selector(endTest), for: .touchUpInside)
-    }
-    
-    //for some reason, the function is now in objective C
+    //MARK: Upload test data
     @objc func endTest(sender: UIButton!)
     {
         if(currentTest.patientAnswers.count != 0)
@@ -109,7 +125,7 @@ class drawnView: UIView {
             let testEndTime = DispatchTime.now().rawValue
             currentTest.setTestEndTime(testEndTime: testEndTime)
         
-            
+            //MARK: Output test data to debugger
             if(UserDefaults.standard.bool(forKey: "debugMode"))
             {
         //NOTE: every time value is a raw value in nanoseconds - calculate everything on the web app
@@ -143,6 +159,7 @@ class drawnView: UIView {
         and maintain their order - you can easily find the order in which points where chosen and their data
         through simply iterating through the two arrays*/
         
+        //MARK: Upload
         let jsonEncoder = JSONEncoder()
         let jsonData = try? jsonEncoder.encode(currentTest)
         // Debug: gives you the actual json created from the test
@@ -175,10 +192,6 @@ class drawnView: UIView {
         
         let answerJSONData = try? jsonEncoder.encode(answerData)
         
-        // Debug: gives you the actual json created from the test
-        /*let json = String(data: jsonData!, encoding: String.Encoding.utf8)
-        print(json)
-        */
         let answersUrl = URL(string: serverAddress + "/data/upload_patient_questionnaire_answers")
         var answerRequest = URLRequest(url:answersUrl!)
         answerRequest.httpMethod = "POST"
@@ -196,14 +209,11 @@ class drawnView: UIView {
             }
             sendQuestionnaireData.addDependency(sendTestData)
             opQueue.addOperation(sendQuestionnaireData)
-            
-        
-        
-        /*show the alert that will end the test and return to the main screen
-        / so that a new test can be administered
+        /*
+          show the alert that will end the test and return to the main screen
+          so that a new test can be administered
         */
     
-        
         let alertController = UIAlertController(title: "Test Complete", message: "Please return the device to the test administator.", preferredStyle: .alert)
         let defaultAction = UIAlertAction(title: "Done", style: .default, handler: {
 
@@ -218,31 +228,9 @@ class drawnView: UIView {
         
     }
     
-    /*
-     Setup our view
-     */
-    
-    override func draw(_ rect: CGRect){
-        
-        //grab the graphics context
-        let context = UIGraphicsGetCurrentContext()!
-        
-        //draw the view and add labels - need to do it this way because draw() has been overridden
-        currentTest.draw(context: context);
-        if(UserDefaults.standard.bool(forKey: "debugMode"))
-        {
-            addStatusLabel()
-        }
-        addButton()
-        
-    }
 
-    //overrides layoutSubviews otherwise stuff won't draw
-    override func layoutSubviews() {
-        //DO NOT DELETE
-    }
     
-    /*
+    /* MARK: Touches Began
      Runs when a path is started
      */
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -261,13 +249,11 @@ class drawnView: UIView {
             points = [touch.location(in: self)]
         }
         updateDisplay(touches: touches)
-        
     }
     
-    /*
+    /* MARK: Touches Moved
      Runs when someone is touching the screen and moving
      */
-
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
 
         if let touch = touches.first {
@@ -302,13 +288,12 @@ class drawnView: UIView {
         updateDisplay(touches: touches)
     }
 
-    /*
+    /* MARK: Touches Ended / Gather Touch Data
      Runs when a touch ends - where our hit detection mechanism lies
      */
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 
         pathLayer.path = UIBezierPath.interpolateHermiteFor(points: points!, closed: false).cgPath
-
 
         updateDisplay(touches: touches)
         
@@ -355,7 +340,7 @@ class drawnView: UIView {
     }
 }
 
-/*
+/* MARK: Bezier Path functions
  The code from here on handles the drawing functionality... no real reason to change this
  */
 extension UIBezierPath {

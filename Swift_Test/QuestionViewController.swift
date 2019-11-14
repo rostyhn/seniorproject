@@ -5,12 +5,13 @@
 //  Created by Shashank Sastri on 10/23/19.
 //  Copyright © 2019 Rosty H. All rights reserved.
 //
-
+//TODO: figure out more intelligent way to place UI components rather than hard coding them
 import Foundation
 import UIKit
 
 var answerData = AnswerData(patientID: patientID, answers: Array<Answer>())
 //the full file to be uploaded to the server
+//MARK: AnswerData
 struct AnswerData: Codable, Equatable {
     var patientID: String
     var answers: Array<Answer>
@@ -21,7 +22,7 @@ struct AnswerData: Codable, Equatable {
         self.answers = answers
     }
 }
-
+//MARK: Answer
 struct Answer : Codable, Equatable {
     var QuestionID: Int
     var Answer: String
@@ -30,15 +31,14 @@ struct Answer : Codable, Equatable {
 class QuestionViewController: UIViewController {
     let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
     
+    //MARK: On view load
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     override func loadView() {
         view = QuestionView()
         view.backgroundColor = UIColor.white
-        
         
         let url = URL(string: serverAddress + "/data/download_questions")
         let jsonData = try? Data(contentsOf: url!, options: .mappedIfSafe)
@@ -52,7 +52,7 @@ class QuestionViewController: UIViewController {
         let questions = try? JSONDecoder().decode(Question.self, from: jsonData!)
         
         var counter = 0;
-        
+        //MARK: Load questions from server
         for question in questions!
         {
             let currentQuestionLabel = UILabel()
@@ -63,6 +63,7 @@ class QuestionViewController: UIViewController {
             
             view.addSubview(currentQuestionLabel)
             
+            //MARK: Generate UI based on question type
             switch(question.questionType)
             {
                 //segmented control
@@ -100,7 +101,7 @@ class QuestionViewController: UIViewController {
             counter = counter + 1;
         }
         
-        //button that will get us out of here
+        //MARK: Generate next button
         let nextScreenButton = UIButton()
         nextScreenButton.setTitleColor(UIColor.blue, for: .normal)
         nextScreenButton.setTitle("Begin test", for: .normal)
@@ -117,7 +118,7 @@ class QuestionViewController: UIViewController {
         
         
     }
-    
+    //MARK: Leave view
     @objc private func finishQuestions()
     {
         let alertController = UIAlertController(title: "Test Starting", message: "The test will now begin. Circle every "  + UserDefaults.standard.string(forKey: "targetSymbol")! + " you can find.", preferredStyle: .alert)
@@ -130,7 +131,7 @@ class QuestionViewController: UIViewController {
         
         present(alertController, animated: false);
     }
-    
+    //MARK: UI component utility functions
     @objc func segmentedControlValueChanged(segment: UISegmentedControl!) {
         //check if the question has been already answered - if so, remove it
         for answer in answerData.answers
@@ -146,6 +147,7 @@ class QuestionViewController: UIViewController {
     
     @objc func textFieldFinishedEditing(textField: UITextField!)
     {
+        //change answer when the text field is finished begin edited
         for answer in answerData.answers
         {
             if(answer.QuestionID == textField.tag)
@@ -156,10 +158,6 @@ class QuestionViewController: UIViewController {
         
         answerData.answers.append(Answer(QuestionID: textField.tag, Answer: textField.text!))
     }
-    
-    
-    
-    
     
 }
 

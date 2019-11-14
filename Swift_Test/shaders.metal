@@ -1,27 +1,22 @@
 #include <metal_stdlib>
 using namespace metal;
-
-
-
+//MARK: Uniforms for the 3D model
 struct VertexIn {
     float3 position  [[attribute(0)]];
     float3 normal    [[attribute(1)]];
     float2 texCoords [[attribute(2)]];
 };
-
 struct VertexOut {
     float4 position [[position]];
     float4 eyeNormal;
     float4 eyePosition;
     float2 texCoords;
 };
-
 struct Uniforms {
     float4x4 modelViewMatrix;
     float4x4 projectionMatrix;
 };
-
-//positions
+//MARK: Vertex Shader
 vertex VertexOut vertex_main(VertexIn vertexIn [[stage_in]],
                              constant Uniforms &uniforms [[buffer(1)]])
 {
@@ -32,59 +27,39 @@ vertex VertexOut vertex_main(VertexIn vertexIn [[stage_in]],
     vertexOut.texCoords = vertexIn.texCoords;
     return vertexOut;
 }
-//color
+//MARK: Fragment
 fragment float4 fragment_main(VertexOut fragmentIn [[stage_in]]) {
     float3 normal = normalize(fragmentIn.eyeNormal.xyz);
     return float4(abs(normal), 1);
 }
 
-//about screen utility methods
-
-//const float maxDist = 250.;
-
-float3x3 rotMat(float3 ax, float a) {
-    ax = normalize(ax);
-    float s = sin(a), c = cos(a), oc = 1. - c;
-    float2 j = oc * ax.x * ax.xy, k = oc * ax.y * ax.yz, l = oc * ax.z * ax.zx;
-    return float3x3(j.x+c,j.y-s*ax.z,l.y+s*ax.y,j.y+s*ax.z,k.x+c,k.y-s*ax.x,l.y-s*ax.y,k.y+s*ax.x,l.x+c);
-};
-
-//have to implement mod myself because apple is lazy
+//MARK: About Us Shader
+//Abandon all Hope, Ye who enter here
+//original modified from http://glslsandbox.com/e#57026.0
 #define textureS(s, uv) float4(0.0)
-//#define R float2x2(0.0)
-float2 mod(float2 x, float y)
+
+//MARK: Mod function
+//have to implement mod myself because apple is lazy
+float3 mod(float3 x, float y)
 {
     //formula: x - y * floor(x/y)
     //apple way: x - y * trunc(x/y) <----- values are off for negative values
-    float2 temp = (0.);
-    temp.x = x.x - y * floor(x.x/y);
-    temp.y = x.y - y * floor(x.y/y);
-    return temp;
-};
-
-float3 mod(float3 x, float y)
-{
     float3 temp = (0.);
     temp.x = x.x - y * floor(x.x/y);
     temp.y = x.y - y * floor(x.y/y);
     temp.z = x.z - y * floor(x.z/y);
     return temp;
 }
-
-float hash(float x){
-    return fract(sin(x*54265.135165416));
-}
-
+//MARK: SMIN
+//source: https://www.iquilezles.org/www/articles/smin/smin.htm
 float smin(float a, float b, float k){
     float h = max(k-abs(a-b), 0.0)/k;
     return min(a, b) - h*h*h*k*(1.0/6.0);
 }
 
-// store the matrix globally so the 2D "normal map" sticks better
-
+//MARK: Map
 float map(float3 p, float time){
     // rotate
-    
     float r = 3.14159*sin(p.z*0.15)+time*0.25;
     p.x = p.x*cos(r) + p.y*sin(r);
     p.y = p.x*sin(-r) + p.y*cos(r);
@@ -97,12 +72,13 @@ float map(float3 p, float time){
     // primitives
     // center sphere
     float v = length(p)-(0.02+(0.01*(0.6+0.4*sin(5.0*time)) ));
-
+    // cylindrical legs
     v = smin(v, length(p.xz+0.01*sin(-5.0*time-8.0*(op.x-op.z)))-0.03, 0.45);
     
     return v;
 }
 
+//MARK: Calculate normal
 float3 normal(float3 p, float time){
     float o = map(p,time);
     const float e = 0.001;
@@ -111,6 +87,7 @@ float3 normal(float3 p, float time){
                            map(p+float3(0,0,e),time)-o));
 }
 
+//MARK: Raymarch function
 float3 march(float3 o, float3 dir, float time){
     float3 p = o;
     float e = 0.0;
@@ -126,6 +103,7 @@ float3 march(float3 o, float3 dir, float time){
     return p;
 }
 
+//MARK: Subsurface calculation
 float4 subsurface(float3 o, float3 dir,float time){
     float3 p = o;
     float e = 0.0;
@@ -136,14 +114,14 @@ float4 subsurface(float3 o, float3 dir,float time){
             break;
         p -= d*dir;
     }
-    
     return float4(p, e);
 }
 
+//MARK: ???
 float G(float dotNV, float k){
     return 1.0/(dotNV*(1.0-k)+k);
 }
-
+//MARK: GGX optimization
 // from http://filmicworlds.com/blog/optimizing-ggx-shaders-with-dotlh/
 float ggx(float3 N, float3 V, float3 L, float roughness, float F0){
     float alpha = roughness*roughness;
@@ -171,7 +149,7 @@ float ggx(float3 N, float3 V, float3 L, float roughness, float F0){
 }
 
 
-
+//MARK: Shader main
 kernel void compute(texture2d<float, access::write> output [[texture(0)]],  constant float &input [[buffer(0)]],
 uint2 gid [[thread_position_in_grid]])
 {
@@ -182,65 +160,60 @@ uint2 gid [[thread_position_in_grid]])
     float2 res = float2(width, height);
     float2 uv = float2(gid.x,height - gid.y) / res;
     
-    
-    // quadratic, increase this if your gpu is gpu enough
-    const int samples = 1;
-    
+    //color vector
     float3 c = float3(0);
-    for(int y = 0; y < samples; ++y)
-    for(int x = 0; x < samples; ++x){
-        // anti-aliasing
-        float2 p = -1.0 + 2.0 * (uv + (-0.5+(float2(x, y)))/res.xy);
-        p.x *= res.x/res.y;
-        
-        // camera setup
-        float3 cam = float3(0.1*sin(time*0.51),0.1*cos(time*0.59),time);
-        float3 l = float3(0.6*cos(time*0.83),0.6*sin(time*0.79),cam.z+3.0+0.5*sin(0.7*time));
-        float3 dir = normalize(float3(p, 2.0)+0.1*float3(sin(time*0.63),cos(time*0.71),0));
-        
-        // solve intersection and normal
-        float3 pos = march(cam, dir, time);
-        float3 mp = pos;
-        float r = 3.14159*sin(mp.z*0.15)+time*0.25;
-        mp.x = mp.x*cos(r) + mp.y*sin(r);
-        mp.y = mp.x*sin(-r) + mp.y*cos(r);
-        
-        float3 np = pos+float3(0,0,-0.08*textureS(time, mp.xy*4.0).r);
-        float3 n = normalize(mix(normal(np, time), pow(textureS(time, pos*2.0).xyz, float3(2)), 0.08));
-        
-        // shade
-        float3 ld = normalize(l-pos);
-        float3 alb = mix((float3(0.3,0.5,0.9)),
-                       (float3(0.4,0.9,0.4)),
-                       textureS(time, 0.04*mp).r)*1.25;
 
-        float mat = smoothstep(0.1,0.8,pow(textureS(time, 0.14*mp).b, 3.0));
-        alb = mix(alb, float3(0.9,0.78,0.42), mat);
-        float dif = 0.5+0.5*dot(n, ld);
-        float spe = ggx(n, -dir, ld, mix(0.3,0.5,mat), mix(0.7,1.0,mat));
+    float2 p = -1.0 + 2.0 * (uv + (-0.5+(float2(1, 1)))/res.xy);
+    p.x *= res.x/res.y;
+        
+    // camera setup
+    float3 cam = float3(0.1*sin(time*0.51),0.1*cos(time*0.59),time);
+    float3 l = float3(0.6*cos(time*0.83),0.6*sin(time*0.79),cam.z+3.0+0.5*sin(0.7*time));
+    float3 dir = normalize(float3(p, 2.0)+0.1*float3(sin(time*0.63),cos(time*0.71),0));
+        
+    // solve intersection and normal
+    float3 pos = march(cam, dir, time);
+    float3 mp = pos;
+    float r = 3.14159*sin(mp.z*0.15)+time*0.25;
+    mp.x = mp.x*cos(r) + mp.y*sin(r);
+    mp.y = mp.x*sin(-r) + mp.y*cos(r);
+        
+    float3 np = pos+float3(0,0,-0.08*textureS(time, mp.xy*4.0).r);
+    float3 n = normalize(mix(normal(np, time), pow(textureS(time, pos*2.0).xyz, float3(2)), 0.08));
+        
+    // shade
+    float3 ld = normalize(l-pos);
+    float3 alb = mix((float3(0.3,0.5,0.9)),
+                    (float3(0.4,0.9,0.4)),
+                    textureS(time, 0.04*mp).r)*1.25;
 
-        float att = 1.0+pow(distance(l, pos), 2.0);
-        dif /= att;
-        spe /= att;
+    float mat = smoothstep(0.1,0.8,pow(textureS(time, 0.14*mp).b, 3.0));
+    alb = mix(alb, float3(0.9,0.78,0.42), mat);
+    float dif = 0.5+0.5*dot(n, ld);
+    float spe = ggx(n, -dir, ld, mix(0.3,0.5,mat), mix(0.7,1.0,mat));
+
+    float att = 1.0+pow(distance(l, pos), 2.0);
+    dif /= att;
+    spe /= att;
         
-        // subsurface scattering
-        float3 h = normalize(mix(-normal(pos, time), dir, 0.5));
-        // sv.zyz contains outgoing position, w contains accumulate distance (path "tightness)
-        float4 sv = subsurface(pos+h*0.02, dir, time);
-        // subsurface magic term
-        float sss = max(0.0, 1.0-3.0*sv.w);
-        // light visibility across the volume
-        float ssha = max(0.0, dot(normal(sv.xyz, time), normalize(l-sv.xyz)));
-        sss /= att;
-        ssha /= att;
+    // subsurface scattering
+    float3 h = normalize(mix(-normal(pos, time), dir, 0.5));
+    // sv.zyz contains outgoing position, w contains accumulate distance (path "tightness)
+    float4 sv = subsurface(pos+h*0.02, dir, time);
+    // subsurface magic term
+    float sss = max(0.0, 1.0-3.0*sv.w);
+    // light visibility across the volume
+    float ssha = max(0.0, dot(normal(sv.xyz, time), normalize(l-sv.xyz)));
+    sss /= att;
+    ssha /= att;
         
-        // mix reflecting and refracting contributions
-        dif = mix(dif, mix(sss, ssha, 0.2), 0.5);
+    // mix reflecting and refracting contributions
+    dif = mix(dif, mix(sss, ssha, 0.2), 0.5);
        
-        c += alb*dif+0.025*spe;
-    }
-    
-    c = mix(float3(dot(c, float3(1,.1,.1))), c, 0.5);
+    c += alb*dif+0.025*spe;
+                                                //color as a function over time
+                                                //tan for violent changes
+    c = mix(float3(dot(c, float3(.1,.1,.1))), c, (sin(time/2)));
     c = smoothstep(0.0, .75, c);
     c = pow(c, float3(1.0/2.2));
     float4 color  = float4(c, 1.);

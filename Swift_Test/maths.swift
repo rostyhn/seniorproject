@@ -1,13 +1,14 @@
 import simd
 
 extension float4x4 {
+    //MARK: Scale
     init(scaleBy s: Float) {
         self.init(SIMD4<Float>(s, 0, 0, 0),
                   SIMD4<Float>(0, s, 0, 0),
                   SIMD4<Float>(0, 0, s, 0),
                   SIMD4<Float>(0, 0, 0, 1))
     }
-    
+    //MARK: Rotate
     init(rotationAbout axis: SIMD3<Float>, by angleRadians: Float) {
         let x = axis.x, y = axis.y, z = axis.z
         let c = cosf(angleRadians)
@@ -18,14 +19,14 @@ extension float4x4 {
                   SIMD4<Float>( t * x * z + y * s, t * y * z - x * s,     t * z * z + c, 0),
                   SIMD4<Float>(                 0,                 0,                 0, 1))
     }
-    
+    //MARK: Translate
     init(translationBy t: SIMD3<Float>) {
         self.init(SIMD4<Float>(   1,    0,    0, 0),
                   SIMD4<Float>(   0,    1,    0, 0),
                   SIMD4<Float>(   0,    0,    1, 0),
                   SIMD4<Float>(t[0], t[1], t[2], 1))
     }
-    
+    //MARK: Projection
     init(perspectiveProjectionFov fovRadians: Float, aspectRatio aspect: Float, nearZ: Float, farZ: Float) {
         let yScale = 1 / tan(fovRadians * 0.5)
         let xScale = yScale / aspect

@@ -19,18 +19,30 @@ var renderer: Renderer!
 
 
 class AboutUsViewController: UIViewController, UIGestureRecognizerDelegate {
-    var labelArray = ["The Cancellation Test",
+    var credits = ["The Cancellation Test",
+                      "Project Sponsors: \n" +
+                      "Dr. Libon \n" +
+                      "Dr. Baliga",
                       "Swift Team: \n" +
-                      "Rosty Hnatyshyn - Graphics, Web Interop, Logic \n" +
-                      "Hiral Shah - Test Design, UI",
+                      "Rosty Hnatyshyn - Graphics, Web interop, Logic, UI \n" +
+                      "Hiral Shah - Test design",
                       "Web Team: \n" +
-                      "Thomas Auriemma - RESTful API, Backend, Database Design"]
+                      "Thomas Auriemma - RESTful API, Web backend, Database design \n" +
+                      "Richard Gonzalez - Database design \n" +
+                      "Thomas Lentz - Web frontend \n" +
+                      "Micheal Zacierka - Web backend",
+                      "Purpose: \n" +
+                      "This app is designed to facilitate the testing of patients who suspect they have symptoms of neurodegenerative disease. Dr. Libon suspects that the way a patient interacts with the test can reveal cognitive patterns that may be early warning signs of dementia or Alzheimer's.",
+                      "Shader modified from \n" +
+                      "http://glslsandbox.com/e#57026.0",
+                      "THE END"]
     var label = UILabel()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        labelArray.reverse()
+        credits.reverse()
+        
+        //MARK: Metal View setup
         mtkView = MTKView()
         mtkView.translatesAutoresizingMaskIntoConstraints = false
         //sets the view to the metal view, automatically making it the size of the screen + giving us access directly to the touch gestures
@@ -41,6 +53,8 @@ class AboutUsViewController: UIViewController, UIGestureRecognizerDelegate {
         mtkView.depthStencilPixelFormat = .depth32Float
         mtkView.framebufferOnly = false
         //double tapping gets us back to the main page
+        
+        //MARK: Gesture setup
         let singletap = UITapGestureRecognizer(target: self, action: #selector(singleTapped))
         singletap.numberOfTapsRequired = 1
         singletap.numberOfTouchesRequired = 1
@@ -53,18 +67,24 @@ class AboutUsViewController: UIViewController, UIGestureRecognizerDelegate {
         renderer = Renderer(view: mtkView, device: device, mode: 1)
         mtkView.delegate = renderer
         view = mtkView
-        label.frame = CGRect(x: UIScreen.main.bounds.maxX / 2 - 256, y: UIScreen.main.bounds.maxY / 2 - 256, width: UIScreen.main.bounds.maxX, height: UIScreen.main.bounds.maxY)
+        
+        //MARK: Label setup
+        
+        label.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.maxX, height: UIScreen.main.bounds.maxY)
+        label.center = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
+        label.textAlignment = .center
         label.numberOfLines = 99
         label.layer.zPosition = 1
         label.textColor = UIColor.white
-        label.font = UIFont(name: "Avenir-Light", size: 30.0)
+        label.font = UIFont(name: "Optima", size: 30.0)
         mtkView.addSubview(label)
-        label.text = labelArray.popLast()
+        label.text = credits.popLast()
     }
     
+    //MARK: Gesture functions
     @objc func singleTapped()
     {
-        if(labelArray.count != 0)
+        if(credits.count != 0)
         {
             if(label.alpha == 1)
             {
@@ -73,16 +93,17 @@ class AboutUsViewController: UIViewController, UIGestureRecognizerDelegate {
             else
             {
                 fadeViewIn(view: label, delay: 1.0)
-                label.text = labelArray.popLast()
+                label.text = credits.popLast()
             }
-
         }
     }
-    
     @objc func doubleTapped()
     {
-        self.performSegue(withIdentifier: "to_Main", sender: self)
+        //self.navigationController?.popViewController(animated: true)
+       self.performSegue(withIdentifier: "to_Main", sender: self)
     }
+    
+    //MARK: Label fade in / out
     
     func fadeViewIn(view : UIView, delay: TimeInterval) {
 

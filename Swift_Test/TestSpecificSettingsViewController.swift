@@ -14,17 +14,17 @@ class TestSpecificSettingsViewController : UIViewController, UIPickerViewDelegat
     var testNames: [String] = [String]()
     var possibleTargets: [String] = [String]()
     @IBOutlet weak var picker_TestName: UIPickerView!
-    
     @IBOutlet weak var picker_TargetSymbol: UIPickerView!
     
+    //MARK: On view open
     override func viewDidLoad() {
         
         picker_TestName.delegate = self
         picker_TestName.dataSource = self
-        
         picker_TargetSymbol.delegate = self
         picker_TargetSymbol.dataSource = self
         
+        //MARK: If load locally
         if(UserDefaults.standard.bool(forKey:"loadLocally"))
         {
             self.testNames = ["AlphabetTest", "SymbolTest"]
@@ -44,6 +44,7 @@ class TestSpecificSettingsViewController : UIViewController, UIPickerViewDelegat
             self.picker_TargetSymbol.reloadAllComponents()
             
         }
+        //MARK: If load from server
         else
         {
             let url = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000" + "/data/download/getTestList")
@@ -71,23 +72,17 @@ class TestSpecificSettingsViewController : UIViewController, UIPickerViewDelegat
             self.picker_TargetSymbol.reloadAllComponents()
         }
     }
-    
+    //MARK: Picker functions
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
+    //MARK: Return number of components
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if pickerView == picker_TestName
-        {
-            return testNames.count
-        }
-        else
-        {
-            return possibleTargets.count
-        }
-        return 1
+        return (pickerView == picker_TestName) ? testNames.count : possibleTargets.count
     }
     
+    //MARK: Return chosen component
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
         if pickerView == picker_TestName
@@ -121,26 +116,12 @@ class TestSpecificSettingsViewController : UIViewController, UIPickerViewDelegat
                 self.possibleTargets = testData!.possibleTargets
                 self.picker_TargetSymbol.reloadAllComponents()
             }
-            
-            return testNames[row]
         }
         else
         {
             //set to target symbol
             UserDefaults.standard.set(possibleTargets[row], forKey: "targetSymbol")
-            return possibleTargets[row]
         }
-        return ""
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        //figure out how to display this alert on close
-        /*
-        let closingAlert = UIAlertController(title: "Test settings set!", message: "Test selected: " + UserDefaults.standard.string(forKey: "testSelected")! + "\n Target symbol selected:" + UserDefaults.standard.string(forKey: "targetSymbol")!, preferredStyle: .alert)
-        
-        let closingAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        closingAlert.addAction(closingAction)
-        self.present(closingAlert, animated: true, completion: nil)
-        */
+        return (pickerView == picker_TestName) ? testNames[row] : possibleTargets[row]
     }
 }

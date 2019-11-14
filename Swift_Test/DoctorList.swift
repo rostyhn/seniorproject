@@ -8,6 +8,7 @@
 
 import Foundation
 
+// MARK: - DoctorName
 struct DoctorName : Codable {
     let DoctorID: Int
     let DoctorName: String

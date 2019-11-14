@@ -1,9 +1,8 @@
-//https://stackoverflow.com/questions/27960556/loading-an-overlay-when-running-long-tasks-in-ios
-
-
+// sourced from https://stackoverflow.com/questions/27960556/loading-an-overlay-when-running-long-tasks-in-ios
 import Foundation
 import UIKit
 
+//MARK: Extends UIView
 extension UIView {
     func showBlurLoader() {
         let blurLoader = BlurLoader(frame: frame)
@@ -20,7 +19,7 @@ extension UIView {
 class BlurLoader: UIView {
 
     var blurEffectView: UIVisualEffectView?
-
+    //MARK: Init
     override init(frame: CGRect) {
         let blurEffect = UIBlurEffect(style: .regular)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
@@ -35,7 +34,7 @@ class BlurLoader: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    //MARK: Add loader
     private func addLoader() {
         guard let blurEffectView = blurEffectView else { return }
         let activityIndicator = UIActivityIndicatorView(style: .gray)

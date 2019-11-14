@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5VB-ZU-HMS">
     <device id="ipad10_5" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,7 +11,7 @@
         <!--Main-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController autoresizesArchivedViewToFullSize="NO" title="Main" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" hidesBottomBarWhenPushed="YES" id="BYZ-38-t0r" customClass="MainViewController" customModule="Cancellation_Test" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController autoresizesArchivedViewToFullSize="NO" title="Main" automaticallyAdjustsScrollViewInsets="NO" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" modalPresentationStyle="fullScreen" hidesBottomBarWhenPushed="YES" id="BYZ-38-t0r" customClass="MainViewController" customModule="Cancellation_Test" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="1112" height="784"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -104,12 +104,12 @@
                     <navigationItem key="navigationItem" id="VIS-zq-P9i"/>
                     <size key="freeformSize" width="500" height="500"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="showDetail" identifier="to_Main" id="RRd-A6-paU"/>
+                        <segue destination="5VB-ZU-HMS" kind="show" identifier="to_Main" id="jlY-C9-W8d"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZYq-2T-9jO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="871" y="811"/>
+            <point key="canvasLocation" x="862" y="691"/>
         </scene>
         <!--Test View-->
         <scene sceneID="qUc-qT-w79">
@@ -124,7 +124,7 @@
                     <navigationItem key="navigationItem" id="jZE-8F-U4V"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
-                        <segue destination="5VB-ZU-HMS" kind="presentation" identifier="to_Main" modalPresentationStyle="fullScreen" id="Ixy-NA-3mJ"/>
+                        <segue destination="5VB-ZU-HMS" kind="show" identifier="to_Main" id="V8v-sI-8lv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QN4-nl-gSa" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -140,26 +140,26 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Debug Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eqt-km-B1N">
-                                <rect key="frame" x="20" y="64" width="265" height="39"/>
+                                <rect key="frame" x="20" y="114" width="265" height="39"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Server Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5KK-4l-uPP">
-                                <rect key="frame" x="20" y="150" width="265" height="39"/>
+                                <rect key="frame" x="20" y="200" width="265" height="39"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AEK-0A-ktO">
-                                <rect key="frame" x="1026" y="68" width="51" height="31"/>
+                                <rect key="frame" x="1026" y="118" width="51" height="31"/>
                                 <connections>
                                     <action selector="f_toggle_Debug:" destination="ICR-dU-mEX" eventType="valueChanged" id="DMM-Kp-kTB"/>
                                     <action selector="toggle_Debug:" destination="2AN-R6-DnZ" eventType="valueChanged" id="7pi-Eh-R9y"/>
                                 </connections>
                             </switch>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AH4-cw-duh">
-                                <rect key="frame" x="961" y="150" width="114" height="34"/>
+                                <rect key="frame" x="961" y="200" width="114" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="114" id="v37-wy-aKj"/>
                                 </constraints>
@@ -171,13 +171,13 @@
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Doctor ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f1p-cD-lxx">
-                                <rect key="frame" x="20" y="242" width="130" height="39"/>
+                                <rect key="frame" x="20" y="292" width="130" height="39"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1J3-A3-f41">
-                                <rect key="frame" x="961" y="247" width="114" height="34"/>
+                                <rect key="frame" x="961" y="297" width="114" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -191,7 +191,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hox-51-bZB">
-                                <rect key="frame" x="1026" y="332" width="51" height="31"/>
+                                <rect key="frame" x="1026" y="382" width="51" height="31"/>
                                 <connections>
                                     <action selector="f_toggle_LoadLocallyWithSender:" destination="ICR-dU-mEX" eventType="valueChanged" id="ZO5-Af-U5a"/>
                                 </connections>
@@ -205,13 +205,13 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show Questionnaire" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qtx-2T-SOU">
-                                <rect key="frame" x="20" y="417" width="276" height="39"/>
+                                <rect key="frame" x="20" y="467" width="276" height="39"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FE1-cz-VrO">
-                                <rect key="frame" x="1026" y="421" width="51" height="31"/>
+                                <rect key="frame" x="1026" y="471" width="51" height="31"/>
                                 <connections>
                                     <action selector="f_toggle_Questionnaire:" destination="ICR-dU-mEX" eventType="valueChanged" id="EE6-Cx-gu6"/>
                                 </connections>
@@ -294,13 +294,17 @@
         <!--Navigation Controller-->
         <scene sceneID="x63-00-SdK">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5VB-ZU-HMS" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" id="5VB-ZU-HMS" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="YWp-IF-XgE"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="FHk-cr-sxj">
                         <rect key="frame" x="0.0" y="0.0" width="1112" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8nc-k1-DS9">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="ccU-qQ-BK8"/>
                     </connections>
@@ -363,7 +367,7 @@
         <image name="gear" catalog="system" width="64" height="58"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="V8v-sI-8lv"/>
         <segue reference="64q-07-DvQ"/>
-        <segue reference="ccU-qQ-BK8"/>
     </inferredMetricsTieBreakers>
 </document>

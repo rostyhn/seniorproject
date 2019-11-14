@@ -13,6 +13,7 @@ import UIKit
 
 //horrible name, but this serves as the top layer for the json object
 //loaded into memory, contains an array of symbols
+//MARK: SymbolData
 struct SymbolData: Codable {
     let isTextual: Bool
     let symbols: [Symbol]
@@ -36,7 +37,7 @@ struct Symbol: Codable, Hashable {
         case id = "ID"
     }
 }
-
+// MARK: TouchData
 struct TouchData: Codable, Hashable {
     //set of points that were drawn while touching - NOT UITouch
     var x,y,force: CGFloat
@@ -56,7 +57,7 @@ struct TouchData: Codable, Hashable {
     }
     
 }
-
+//MARK: Test object
 class Test : Codable
 {
     var testName: String
@@ -73,6 +74,7 @@ class Test : Codable
     let bBoxWidth = 25;
     let bBoxHeight = 25;
     
+    //MARK: Init
     init(jsonName: String, patientID: String)
     {
         self.doctorID = UserDefaults.standard.string(forKey: "doctorID")!
@@ -84,7 +86,7 @@ class Test : Codable
         //data: try Data(contentsOf: url)
         self.testStartTime = DispatchTime.now().rawValue
         self.testEndTime = 0
-        
+        //MARK: If load locally
         if(UserDefaults.standard.bool(forKey: "loadLocally"))
         {
             let path = Bundle.main.path(forResource: jsonName, ofType: "json")!
@@ -99,6 +101,7 @@ class Test : Codable
             self.symbols = symbolData!.symbols
             self.isTextual = symbolData!.isTextual
         }
+        //MARK: If load from server
         else
         {
             let targetURL = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000" + "/data/download/" + UserDefaults.standard.string(forKey: "testSelected")!)
@@ -112,25 +115,23 @@ class Test : Codable
         }
     }
     
+    //MARK: Set end time
     func setTestEndTime(testEndTime: dispatch_time_t)
     {
         self.testEndTime = testEndTime
     }
     
+    //MARK: Render symbols
     func draw(context:CGContext)
     {
-        
         let paragraphStyle = NSMutableParagraphStyle();
         paragraphStyle.alignment = .center
-        
-        
         let attributes: [NSAttributedString.Key : Any] = [
             .paragraphStyle: paragraphStyle,
             .font: UIFont.boldSystemFont(ofSize: 20.0),
-            .foregroundColor: UIColor.black
-            
-        ]
+            .foregroundColor: UIColor.black]
         
+        //MARK: If test is textual
         if(isTextual)
         {
             /*use names of symbols instead of image files
@@ -152,6 +153,7 @@ class Test : Codable
                 }
             }
         }
+        //MARK: If test is graphical
         else
         {
             for symbol in symbols

@@ -1,10 +1,10 @@
-//
-//  ViewController.swift
-//  Swift_Test
-//
-//  Created by Shashank Sastri on 9/15/19.
-//  Copyright © 2019 Rosty H. All rights reserved.
-//
+/* MARK: README
+/ Start here if you are looking to modify this app - I added a lot of mark statements so that its easy to find functions.
+/ I started building this app knowing NOTHING about Swift and ended up semi-competent; if some of the parts aren't up to standard
+/ its because I was learning along the way. I tried my best to maintain a good programming style throughout. In any case, enjoy!
+/ P.S - it says "Shashank Sastri" instead of Rosty Hnatyshyn at the top of every file because I used my roommate's laptop while writing
+/ this.
+*/
 
 import UIKit
 import MetalKit
@@ -16,18 +16,15 @@ class MainViewController: UIViewController {
     
     var mtkView: MTKView!
     var renderer: Renderer!
-    
+
     @IBOutlet weak var btn_startTest: UIButton!
-    
     @IBOutlet weak var btn_About: UIButton!
-    
     @IBOutlet weak var btn_Settings: UIButton!
-    
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         
+        //MARK: Metal View Setup
         mtkView = MTKView()
         mtkView.translatesAutoresizingMaskIntoConstraints = false
         mtkView.backgroundColor = UIColor.white
@@ -38,21 +35,14 @@ class MainViewController: UIViewController {
         mtkView.device = device
         mtkView.colorPixelFormat = .bgra8Unorm_srgb
         mtkView.depthStencilPixelFormat = .depth32Float
-        
         renderer = Renderer(view: mtkView, device: device!, mode: 0)
         mtkView.delegate = renderer
         
-        //first time settings set up
+        //MARK: First launch settings
         let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
         if !launchedBefore  {
+            self.showAlert(title: "Welcome", message: "This is the first time the app has been opened. Please check the settings page.")
             
-            let alertController = UIAlertController(title: "First Launch", message: "This is the first time the app has been opened. Please consider checking the settings page.", preferredStyle: .alert)
-            let defaultAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
-            
-            alertController.addAction(defaultAction)
-            
-            self.present(alertController, animated: false);
-
             UserDefaults.standard.set(false, forKey: "debugMode")
             UserDefaults.standard.set("192.168.1.1", forKey: "serverAddress")
             UserDefaults.standard.set("AlphabetTest", forKey: "testSelected")
@@ -71,43 +61,51 @@ class MainViewController: UIViewController {
          self.navigationController?.navigationBar.isHidden = true
      }
     
-    
+    //MARK: Begin button
     @IBAction func act_startTest(_ sender: UIButton) {
         
         if(UserDefaults.standard.string(forKey: "doctorID")! != "")
         {
         
-        let alert = UIAlertController(title: "Enter Patient ID", message: "Please enter the patient's ID.", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Enter Patient ID", message: "Please enter the patient's ID.", preferredStyle: .alert)
         
-        alert.addTextField { (textField) -> Void in
-            textField.text = ""
-        }
-        
-        let defaultAction = UIAlertAction(title: "Continue", style: .default, handler: {
+            alert.addTextField { (textField) -> Void in textField.text = "" }
+            
+            let defaultAction = UIAlertAction(title: "Continue", style: .default, handler: {
 
-            [unowned self] (action) -> Void in
+                [unowned self] (action) -> Void in
             
-            let textField = alert.textFields![0] as UITextField
+                let textField = alert.textFields![0] as UITextField
             
-            if(textField.text != "")
-            {
-                patientID = textField.text!
-                //bad because it assumes that the connection is safe from previous loads...
-                if(UserDefaults.standard.value(forKey: "isConnectionSafe") as! Bool)
-                    {
-                        if(UserDefaults.standard.value(forKey: "showQuestionnaire") as! Bool)
-                        {
-                            self.performSegue(withIdentifier: "to_Questions", sender: self)
-                        }
-                        else
-                        {
-                            self.performSegue(withIdentifier: "to_Test", sender: self)
-                        }
-                    }
-                    else
-                    {
-                        self.showAlert(title: "Connection error", message: "The connection specified in the settings menu is potentially unsafe. Please change the server address and try again.")
-                    }
+                if(textField.text != "")
+                {
+                    patientID = textField.text!
+                    self.view.showBlurLoader()
+                    guard let url = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000/data/testConnection") else { return }
+                    var request = URLRequest(url: url)
+                    request.timeoutInterval = 3.0
+                    let task = URLSession.shared.dataTask(with: request)
+                        { data, response, error in
+                            if let error = error
+                                {
+                                    print("\(error.localizedDescription)")
+                                    DispatchQueue.main.async
+                                        {
+                                            self.view.removeBlurLoader()
+                                            self.showAlert(title:"Unable to connect to server", message: "Check the server address you entered and try again.")
+                                        }
+                                  }
+                             if let httpResponse = response as? HTTPURLResponse
+                                  {
+                                    print("statusCode: \(httpResponse.statusCode)")
+                                    DispatchQueue.main.async
+                                        {
+                                            self.view.removeBlurLoader()
+                                            (UserDefaults.standard.bool(forKey: "showQuestionnaire")) ? self.self.performSegue(withIdentifier: "to_Questions", sender: self) : self.performSegue(withIdentifier: "to_Test", sender: self)
+                                        }
+                                  }
+                            }
+                    task.resume()
                 }
                 else
                 {
@@ -119,47 +117,35 @@ class MainViewController: UIViewController {
         }
         else
         {
-            showAlert(title: "No doctor ID entered.", message: "Please enter a valid doctor ID and try again.")
+            showAlert(title: "Invalid doctor ID.", message: "Please enter a valid doctor ID and try again.")
         }
-        
     }
     
-    func showAlert(title: String, message: String)
-    {
-        let errorAlert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
-        let errorAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        
-        errorAlert.addAction(errorAction)
-        self.present(errorAlert, animated: true, completion: nil)
-    }
-    
-    
+    //MARK: About Us button
     @IBAction func act_OpenAbout(_ sender: UIButton) {
-        
-         let alert = UIAlertController(title: "Instructions", message: "Double tap to exit the about screen.", preferredStyle: .alert)
+         let alert = UIAlertController(title: "Instructions", message: "Double tap to exit the about screen. Tap once to continue through the credits.", preferredStyle: .alert)
          
         let action = UIAlertAction(title: "OK", style: .default, handler: { [unowned self] (action) -> Void in
             self.performSegue(withIdentifier: "to_AboutUs", sender: self)
-            
         })
-         
         alert.addAction(action)
         self.present(alert, animated: true, completion: nil)
-        
-        
     }
-    
-    
-    
+    //MARK: Settings button
     @IBAction func act_openSettings(_ sender: Any) {
         //except when we open the settings menu
         self.navigationController?.navigationBar.isHidden = false
         performSegue(withIdentifier: "to_Settings", sender: self)
     }
     
-
-    
+    //MARK: UI Utility functions
+    func showAlert(title: String, message: String)
+    {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 
 

@@ -40,7 +40,7 @@ class Renderer: NSObject, MTKViewDelegate
     var inputBuffer : MTLBuffer?
     
     
-    
+    //MARK: Init
     init(view: MTKView, device: MTLDevice, mode: Int)
     {
         self.mtkView = view
@@ -55,7 +55,7 @@ class Renderer: NSObject, MTKViewDelegate
         }
         buildPipeline()
     }
-    
+    //MARK: Build render pipeline
     func buildPipeline()
     {
         guard let library = device.makeDefaultLibrary() else {
@@ -88,7 +88,7 @@ class Renderer: NSObject, MTKViewDelegate
             
         }
     }
-    
+    //MARK: Load Model
     func loadResources()
     {
         let modelURL = Bundle.main.url(forResource: "brain-simple-mesh", withExtension: "obj")!
@@ -111,6 +111,7 @@ class Renderer: NSObject, MTKViewDelegate
         
     }
     
+    //MARK: Build Depth Stencil
     static func buildDepthStencilState(device: MTLDevice) -> MTLDepthStencilState {
         let depthStencilDescriptor = MTLDepthStencilDescriptor()
         depthStencilDescriptor.depthCompareFunction = .less
@@ -118,23 +119,24 @@ class Renderer: NSObject, MTKViewDelegate
         return device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
     }
     
-    
+    //MARK: Avoid deleting - metal needs this
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        //<#code#>
+        //Don't delete this
     }
     
+    //MARK: Draw
     func draw(in view: MTKView) {
+        //MARK: If on main screen
         if(self.mode == 0)
         {
             let commandBuffer = commandQueue.makeCommandBuffer()!
-        if let renderPassDescriptor = view.currentRenderPassDescriptor, let drawable = view.currentDrawable {
+            if let renderPassDescriptor = view.currentRenderPassDescriptor, let drawable = view.currentDrawable {
             let commandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
             commandEncoder.setDepthStencilState(depthStencilState)
             time += 1 / Float(mtkView.preferredFramesPerSecond)
-            var scale = Float(0.5)
             
             let angle = -time
-            let modelMatrix = float4x4(rotationAbout: SIMD3<Float>(0, 1, 0), by: angle) *  float4x4(scaleBy: scale)
+            let modelMatrix = float4x4(rotationAbout: SIMD3<Float>(0, 1, 0), by: angle) *  float4x4(scaleBy: 0.5)
 
             let viewMatrix = float4x4(translationBy: -cameraWorldPosition)
             let modelViewMatrix = viewMatrix * modelMatrix
@@ -169,6 +171,7 @@ class Renderer: NSObject, MTKViewDelegate
             commandBuffer.commit()
         }
     }
+    //MARK: If on about screen
     else
         {
              if let drawable = view.currentDrawable
@@ -178,8 +181,6 @@ class Renderer: NSObject, MTKViewDelegate
                  //input
                  let inputBufferPtr = inputBuffer!.contents().bindMemory(to: Float.self, capacity: 1)
                  inputBufferPtr.pointee = Float(time)
-                 
-                
                  guard let commandBuffer = commandQueue.makeCommandBuffer() else { return }
                  guard let commandEncoder = commandBuffer.makeComputeCommandEncoder() else { return }
                  commandEncoder.setComputePipelineState(computePipeline)
