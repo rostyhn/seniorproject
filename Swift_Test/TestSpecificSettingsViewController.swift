@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+//"more settings" view controller
 class TestSpecificSettingsViewController : UIViewController, UIPickerViewDelegate, UIPickerViewDataSource
 {
     var testNames: [String] = [String]()

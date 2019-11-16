@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+//settings view controller
 class SettingsViewController: UIViewController
 {
     @IBOutlet weak var serverNameTextField: UITextField!

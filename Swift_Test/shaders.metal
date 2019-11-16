@@ -27,7 +27,7 @@ vertex VertexOut vertex_main(VertexIn vertexIn [[stage_in]],
     vertexOut.texCoords = vertexIn.texCoords;
     return vertexOut;
 }
-//MARK: Fragment
+//MARK: Fragment Shader
 fragment float4 fragment_main(VertexOut fragmentIn [[stage_in]]) {
     float3 normal = normalize(fragmentIn.eyeNormal.xyz);
     return float4(abs(normal), 1);

@@ -1,17 +1,21 @@
 /* MARK: README
-/ Start here if you are looking to modify this app - I added a lot of mark statements so that its easy to find functions.
+/ Start here if you are looking to modify this app - I added a lot of mark statements so that it's easy to find functions.
 / I started building this app knowing NOTHING about Swift and ended up semi-competent; if some of the parts aren't up to standard
 / its because I was learning along the way. I tried my best to maintain a good programming style throughout. In any case, enjoy!
 / P.S - it says "Shashank Sastri" instead of Rosty Hnatyshyn at the top of every file because I used my roommate's laptop while writing
 / this.
+/ Some additional notes:
+/ The if #avaliable clauses were forced on me by Swift
 */
 
 import UIKit
 import MetalKit
 import ModelIO
 
+//made this a global variable so it's easy to use across views
 var patientID: String = ""
 
+//main menu view controller
 class MainViewController: UIViewController {
     
     var mtkView: MTKView!
@@ -81,6 +85,7 @@ class MainViewController: UIViewController {
                 {
                     patientID = textField.text!
                     self.view.showBlurLoader()
+                    //MARK: Test connection
                     guard let url = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000/data/testConnection") else { return }
                     var request = URLRequest(url: url)
                     request.timeoutInterval = 3.0
@@ -101,6 +106,7 @@ class MainViewController: UIViewController {
                                     DispatchQueue.main.async
                                         {
                                             self.view.removeBlurLoader()
+                                            //MARK: Segue to next view
                                             (UserDefaults.standard.bool(forKey: "showQuestionnaire")) ? self.self.performSegue(withIdentifier: "to_Questions", sender: self) : self.performSegue(withIdentifier: "to_Test", sender: self)
                                         }
                                   }
@@ -112,7 +118,10 @@ class MainViewController: UIViewController {
                     self.showAlert(title: "No ID entered", message: "Please enter a valid patient ID and try again.")
                 }
             })
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
             alert.addAction(defaultAction)
+            alert.addAction(cancelAction)
             self.present(alert, animated: true, completion: nil)
         }
         else

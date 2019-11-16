@@ -1,6 +1,7 @@
 // sourced from https://stackoverflow.com/questions/27960556/loading-an-overlay-when-running-long-tasks-in-ios
 import Foundation
 import UIKit
+//UI extension that shows a loading gear when a connection is attempted
 
 //MARK: Extends UIView
 extension UIView {

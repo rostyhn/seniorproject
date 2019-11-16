@@ -8,6 +8,7 @@
 
 import Foundation
 
+//struct for loading in possible tests
 // MARK: - TestNameFromJSONElement
 struct TestNameFromJSONElement : Codable {
     let name: String

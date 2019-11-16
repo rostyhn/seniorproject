@@ -8,6 +8,7 @@
 
 import Foundation
 
+//struct for loading in questions
 // MARK: - QuestionElement
 struct QuestionElement: Codable {
     let possibleAnswers, question: String

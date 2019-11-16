@@ -16,11 +16,7 @@ struct Uniforms {
     var projectionMatrix: float4x4
 }
 
-struct FractalUniforms {
-    var iTime: Float
-}
-
-
+//render class
 class Renderer: NSObject, MTKViewDelegate
 {
     let device: MTLDevice

@@ -1,5 +1,6 @@
 import simd
 
+//math utility functions
 extension float4x4 {
     //MARK: Scale
     init(scaleBy s: Float) {

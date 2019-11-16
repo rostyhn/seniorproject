@@ -23,11 +23,13 @@ struct AnswerData: Codable, Equatable {
     }
 }
 //MARK: Answer
+//struct for uploading answers
 struct Answer : Codable, Equatable {
     var QuestionID: Int
     var Answer: String
 }
 
+//questionnaire view controller
 class QuestionViewController: UIViewController {
     let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
     

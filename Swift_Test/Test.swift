@@ -42,9 +42,9 @@ struct TouchData: Codable, Hashable {
     //set of points that were drawn while touching - NOT UITouch
     var x,y,force: CGFloat
     //Xcode complained that DispatchTime was not hashable so I'll just include the uint instead
-    var time: dispatch_time_t
+    var time: TimeInterval
     
-    init(x: CGFloat, y: CGFloat, force: CGFloat, time:dispatch_time_t)
+    init(x: CGFloat, y: CGFloat, force: CGFloat, time: TimeInterval)
     {
         self.x = x;
         self.y = y;
@@ -61,8 +61,8 @@ struct TouchData: Codable, Hashable {
 class Test : Codable
 {
     var testName: String
-    var testStartTime: dispatch_time_t
-    var testEndTime: dispatch_time_t
+    var testStartTime: Date
+    var testEndTime: Date?
     var isTextual: Bool;
     var answerSymbol: String;
     var symbols: [Symbol];
@@ -83,9 +83,8 @@ class Test : Codable
         self.patientID = patientID
         self.patientAnswers = []
         self.patientAnswerTouchData = []
-        //data: try Data(contentsOf: url)
-        self.testStartTime = DispatchTime.now().rawValue
-        self.testEndTime = 0
+        //Date() is the time right now in UTC; in the upload function I convert it to the timezone the iPad is in
+        self.testStartTime = Date()
         //MARK: If load locally
         if(UserDefaults.standard.bool(forKey: "loadLocally"))
         {
@@ -116,9 +115,9 @@ class Test : Codable
     }
     
     //MARK: Set end time
-    func setTestEndTime(testEndTime: dispatch_time_t)
+    func setTestEndTime()
     {
-        self.testEndTime = testEndTime
+        self.testEndTime = Date()
     }
     
     //MARK: Render symbols

@@ -16,7 +16,6 @@ class TestViewController: UIViewController {
         }
         override func loadView() {
             let view = drawnView()
-            //apple nerds will tell you this is bad design - I do not understand why
             view.vc = self
             view.backgroundColor = UIColor.white
             self.view = view
@@ -24,10 +23,10 @@ class TestViewController: UIViewController {
 }
 
 class drawnView: UIView {
+    //gets the view controller so that we can send alerts from here
     weak var vc: TestViewController!
     let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
     var currentTest = Test(jsonName: UserDefaults.standard.string(forKey: "testSelected")!, patientID: patientID)
-    
     
     //for data gathering - this gets cleared every time a new drawing starts
     var touchData = Array<TouchData>()
@@ -105,54 +104,65 @@ class drawnView: UIView {
             if let newTouch = touches.first{
                 touch = newTouch
             }
-            
+            //MARK: Store pressure data
             location = touch.location(in: self)
             force = touch.force
+            //there's a touch timestamp we can leverage - but it's time since the system started
+            //time.timestamp
+            //the timeinterval since the test started is much better
         
             if(UserDefaults.standard.bool(forKey: "debugMode"))
             {
                 statusText = String(format: "Stylus X:%3.0f Y:%3.0f Force:%2.3f", location.x, location.y, force);
                 statusLabel.text = statusText;
             }
-            touchData.append(TouchData(x: touch.location(in: self).x, y: touch.location(in: self).y, force: touch.force, time: DispatchTime.now().rawValue))
+            touchData.append(TouchData(x: touch.preciseLocation(in: self).x, y: touch.preciseLocation(in: self).y, force: touch.force, time: Date().timeIntervalSince(currentTest.testStartTime)))
         }
+    
+    //MARK: Store coalesced touches
+    func storeCoalescedTouches(touches: [UITouch])
+    {
+        //solves the mystery of why there were so few points - they were being hidden by apple
+        for touch in touches
+        {
+            touchData.append(TouchData(x: touch.preciseLocation(in: self).x, y: touch.preciseLocation(in: self).y, force: touch.force, time: Date().timeIntervalSince(currentTest.testStartTime)))
+        }
+    }
     
     //MARK: Upload test data
     @objc func endTest(sender: UIButton!)
     {
         if(currentTest.patientAnswers.count != 0)
         {
-            let testEndTime = DispatchTime.now().rawValue
-            currentTest.setTestEndTime(testEndTime: testEndTime)
-        
+            currentTest.setTestEndTime()
+            
             //MARK: Output test data to debugger
             if(UserDefaults.standard.bool(forKey: "debugMode"))
             {
-        //NOTE: every time value is a raw value in nanoseconds - calculate everything on the web app
-            print("Test started at " + String(currentTest.testStartTime))
-            print("Length of test " + String(testEndTime - currentTest.testStartTime))
-            print("Test ended at " + String(testEndTime))
+                print("Test started at " + String(currentTest.testStartTime.description))
+                print("Length of test " + String(currentTest.testEndTime!.timeIntervalSince(currentTest.testStartTime).description))
+                print("Test ended at " + String(currentTest.testEndTime!.description) + "\n")
         
-        //what are these fortran style for loops...
-            for i in 0...currentTest.patientAnswers.count-1
-            {
-                let symbol = currentTest.patientAnswers[i];
-                print("ID: " + String(symbol.id) + "\nName: " + symbol.name)
-            
-                print("\nTime drawing initiated: " + String(currentTest.patientAnswerTouchData[i].first!.time))
 
-                for touch in currentTest.patientAnswerTouchData[i]
-                {
-                    print("\nTouch Data")
-                    print("\nx: " + touch.x.description)
-                    print("\ny: " + touch.y.description)
-                    print("\nForce: " + touch.force.description)
-                    print("\nTime: " + String(touch.time))
-                }
+                for i in 0...currentTest.patientAnswers.count-1
+                    {
+                        let symbol = currentTest.patientAnswers[i];
+                        print("ID: " + String(symbol.id) + "\nName: " + symbol.name)
+            
+                        print("\nTime drawing initiated: " + String(currentTest.patientAnswerTouchData[i].first!.time))
+
+                        for touch in currentTest.patientAnswerTouchData[i]
+                            {
+                                print("\nTouch Data")
+                                print("\nx: " + touch.x.description)
+                                print("\ny: " + touch.y.description)
+                                print("\nForce: " + touch.force.description)
+                                print("\nTime: " + String(touch.time))
+                            }
                 
-                print("\n# of touches: " + String(currentTest.patientAnswerTouchData[i].count))
-                print("\nTime drawing ended: " + String(currentTest.patientAnswerTouchData[i].last!.time))
-                }
+                        print("\n# of touches: " + String(currentTest.patientAnswerTouchData[i].count))
+                        print("\nTime drawing ended: " + String(currentTest.patientAnswerTouchData[i].last!.time))
+                    }
             }
         
         /*time to push the data to the server - that is where we will actually tie the two arrays together
@@ -162,10 +172,7 @@ class drawnView: UIView {
         //MARK: Upload
         let jsonEncoder = JSONEncoder()
         let jsonData = try? jsonEncoder.encode(currentTest)
-        // Debug: gives you the actual json created from the test
-        /*let json = String(data: jsonData!, encoding: String.Encoding.utf8)
-        print(json)
-        */
+
         //https://medium.com/@oleary.audio/simultaneous-asynchronous-calls-in-swift-9c1f5fd3ea32
             //creates an operationQueue to handle the async calls - we need the testData to be uploaded before the questionnaire data
         let opQueue = OperationQueue()
@@ -173,13 +180,15 @@ class drawnView: UIView {
             
         let group = DispatchGroup()
         
+        //MARK: Send test data
         let url = URL(string: serverAddress + "/data/upload_patient_test_data")
         var request = URLRequest(url:url!)
         request.httpMethod = "POST"
         request.httpBody = jsonData
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
             //will leave the queue AFTER the data has been sent
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 group.leave()
             }
         
@@ -190,26 +199,27 @@ class drawnView: UIView {
         
         opQueue.addOperation(sendTestData)
         
+        //MARK: Send questionnaire answers
         let answerJSONData = try? jsonEncoder.encode(answerData)
-        
         let answersUrl = URL(string: serverAddress + "/data/upload_patient_questionnaire_answers")
         var answerRequest = URLRequest(url:answersUrl!)
         answerRequest.httpMethod = "POST"
         answerRequest.httpBody = answerJSONData
         answerRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-            let task_answers = URLSession.shared.dataTask(with: answerRequest)
+        let task_answers = URLSession.shared.dataTask(with: answerRequest)
             
-            //wait till we finish posting the data
-            group.wait()
+        //wait till we finish posting the data
+        group.wait()
             
-            let sendQuestionnaireData = BlockOperation {
-                //then send the data
-                task_answers.resume()
-            }
-            sendQuestionnaireData.addDependency(sendTestData)
-            opQueue.addOperation(sendQuestionnaireData)
-        /*
+        let sendQuestionnaireData = BlockOperation {
+            //then send the data
+            task_answers.resume()
+        }
+        sendQuestionnaireData.addDependency(sendTestData)
+        opQueue.addOperation(sendQuestionnaireData)
+            
+        /* MARK: Show test completed
           show the alert that will end the test and return to the main screen
           so that a new test can be administered
         */
@@ -228,8 +238,6 @@ class drawnView: UIView {
         
     }
     
-
-    
     /* MARK: Touches Began
      Runs when a path is started
      */
@@ -244,8 +252,8 @@ class drawnView: UIView {
         pathLayer.lineCap = CAShapeLayerLineCap.round
         self.layer.addSublayer(pathLayer)
         
+        //MARK: First point of the circle stored
         if let touch = touches.first {
-            
             points = [touch.location(in: self)]
         }
         updateDisplay(touches: touches)
@@ -260,18 +268,29 @@ class drawnView: UIView {
             
             //fancy curve smoothing - makes it look nicer than jagged lines
             if #available(iOS 9.0, *) {
-
+                //MARK: Catch coalesced touches
                 if let coalescedTouches = event?.coalescedTouches(for: touch) {
-
+                //https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/handling_touches_in_your_view/getting_high-fidelity_input_with_coalesced_touches
+                    
+                    //"it coalesces any extra touches into a single UITouch object, whose location reflects only the last recorded touch."
+                    //we should store these - these are the points gathered in between
+                    
+                    //points is simply for drawing, hence the mapping of only the location
                     points? += coalescedTouches.map { $0.location(in: self) }
+                    
+                    //here, we're gonna grab the entire set of touches
+                    storeCoalescedTouches(touches: coalescedTouches)
                 }
                 else {
 
                     points?.append(touch.location(in: self))
                 }
-
+                
+                //MARK: Catch predicted touches
                 if let predictedTouches = event?.predictedTouches(for: touch) {
-
+                    
+                //https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/handling_touches_in_your_view/minimizing_latency_with_predicted_touches
+                    //we shouldn't store these - they're only predicted touches to make the drawing experience appear smoother
                     let predictedPoints = predictedTouches.map { $0.location(in: self) }
                     pathLayer.path = UIBezierPath.interpolateHermiteFor(points: points! + predictedPoints, closed: false).cgPath
                 }
@@ -311,16 +330,12 @@ class drawnView: UIView {
                         {
                             if #available(iOS 13.0, *) {
                                 pathLayer.fillColor = CGColor.init(srgbRed: 0.0, green: 1.0, blue: 0.0, alpha: 0.2)
-                            } else {
-                                // Fallback on earlier versions
                             }
                         }
                         else
                         {
                             if #available(iOS 13.0, *) {
                             pathLayer.fillColor = CGColor.init(srgbRed: 1.0, green: 0.0, blue: 0.0, alpha: 0.2)
-                            } else {
-                        // Fallback on earlier versions
                             }
                         }
                         statusLabel.text = "Selected " + symbol.name;

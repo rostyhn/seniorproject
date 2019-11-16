@@ -6,6 +6,7 @@
 //  Copyright © 2019 Rosty H. All rights reserved.
 //
 
+//struct for loading in doctor credentials
 import Foundation
 
 // MARK: - DoctorName
