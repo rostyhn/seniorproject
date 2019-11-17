@@ -116,7 +116,8 @@ class drawnView: UIView {
                 statusText = String(format: "Stylus X:%3.0f Y:%3.0f Force:%2.3f", location.x, location.y, force);
                 statusLabel.text = statusText;
             }
-            touchData.append(TouchData(x: touch.preciseLocation(in: self).x, y: touch.preciseLocation(in: self).y, force: touch.force, time: Date().timeIntervalSince(currentTest.testStartTime)))
+            
+            touchData.append(TouchData(x: touch.preciseLocation(in: self).x, y: touch.preciseLocation(in: self).y, force: touch.force, time: Date().timeIntervalSince(currentTest.testStartTime), altitudeAngle: touch.altitudeAngle, azimuthAngle: touch.azimuthAngle(in: self)))
         }
     
     //MARK: Store coalesced touches
@@ -125,7 +126,7 @@ class drawnView: UIView {
         //solves the mystery of why there were so few points - they were being hidden by apple
         for touch in touches
         {
-            touchData.append(TouchData(x: touch.preciseLocation(in: self).x, y: touch.preciseLocation(in: self).y, force: touch.force, time: Date().timeIntervalSince(currentTest.testStartTime)))
+            touchData.append(TouchData(x: touch.preciseLocation(in: self).x, y: touch.preciseLocation(in: self).y, force: touch.force, time: Date().timeIntervalSince(currentTest.testStartTime), altitudeAngle: touch.altitudeAngle, azimuthAngle: touch.azimuthAngle(in: self)))
         }
     }
     
@@ -134,6 +135,7 @@ class drawnView: UIView {
     {
         if(currentTest.patientAnswers.count != 0)
         {
+            self.showBlurLoader()
             currentTest.setTestEndTime()
             
             //MARK: Output test data to debugger
@@ -158,6 +160,8 @@ class drawnView: UIView {
                                 print("\ny: " + touch.y.description)
                                 print("\nForce: " + touch.force.description)
                                 print("\nTime: " + String(touch.time))
+                                print("\nAltitude: " + touch.altitudeAngle.description)
+                                print("\nAzimuth: " + touch.azimuthAngle.description)
                             }
                 
                         print("\n# of touches: " + String(currentTest.patientAnswerTouchData[i].count))
@@ -218,7 +222,7 @@ class drawnView: UIView {
         }
         sendQuestionnaireData.addDependency(sendTestData)
         opQueue.addOperation(sendQuestionnaireData)
-            
+        self.removeBlurLoader()
         /* MARK: Show test completed
           show the alert that will end the test and return to the main screen
           so that a new test can be administered

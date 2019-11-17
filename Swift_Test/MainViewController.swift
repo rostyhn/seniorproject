@@ -111,7 +111,8 @@ class MainViewController: UIViewController {
                                         }
                                   }
                             }
-                    task.resume()
+                    //task.resume()
+                    self.performSegue(withIdentifier: "to_Test", sender: self)
                 }
                 else
                 {

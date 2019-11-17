@@ -40,20 +40,22 @@ struct Symbol: Codable, Hashable {
 // MARK: TouchData
 struct TouchData: Codable, Hashable {
     //set of points that were drawn while touching - NOT UITouch
-    var x,y,force: CGFloat
+    var x,y,force,altitudeAngle,azimuthAngle: CGFloat
     //Xcode complained that DispatchTime was not hashable so I'll just include the uint instead
     var time: TimeInterval
     
-    init(x: CGFloat, y: CGFloat, force: CGFloat, time: TimeInterval)
+    init(x: CGFloat, y: CGFloat, force: CGFloat, time: TimeInterval, altitudeAngle: CGFloat, azimuthAngle: CGFloat)
     {
         self.x = x;
         self.y = y;
         self.force = force;
         self.time = time;
+        self.altitudeAngle = altitudeAngle;
+        self.azimuthAngle = azimuthAngle;
     }
     
     enum CodingKeys: String, CodingKey {
-        case x,y,force,time
+        case x,y,force,time, altitudeAngle,azimuthAngle
     }
     
 }
