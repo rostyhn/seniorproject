@@ -176,7 +176,17 @@ class drawnView: UIView {
         //MARK: Upload
         let jsonEncoder = JSONEncoder()
         let jsonData = try? jsonEncoder.encode(currentTest)
-
+        
+        if(UserDefaults.standard.bool(forKey: "debugMode"))
+        {
+            //debug - gives you the string of data read in
+            let rawData = String(decoding: jsonData!, as: UTF8.self);
+            print(rawData)
+        }
+            
+            
+            
+            
         //https://medium.com/@oleary.audio/simultaneous-asynchronous-calls-in-swift-9c1f5fd3ea32
             //creates an operationQueue to handle the async calls - we need the testData to be uploaded before the questionnaire data
         let opQueue = OperationQueue()

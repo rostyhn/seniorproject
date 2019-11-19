@@ -63,6 +63,7 @@ struct TouchData: Codable, Hashable {
 class Test : Codable
 {
     var testName: String
+    //date will be converted to int; seconds since JAN 1, 2001 00:00
     var testStartTime: Date
     var testEndTime: Date?
     var isTextual: Bool;

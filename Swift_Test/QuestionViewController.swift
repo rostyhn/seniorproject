@@ -32,15 +32,15 @@ struct Answer : Codable, Equatable {
 //questionnaire view controller
 class QuestionViewController: UIViewController {
     let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
+    let questionView = QuestionView()
     
     //MARK: On view load
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    override func loadView() {
-        view = QuestionView()
-        view.backgroundColor = UIColor.white
+        questionView.frame = view.bounds
+        questionView.contentSize = view.bounds.size
+        questionView.translatesAutoresizingMaskIntoConstraints = false
+        questionView.autoresizingMask = UIView.AutoresizingMask(rawValue: UIView.AutoresizingMask.flexibleWidth.rawValue | UIView.AutoresizingMask.flexibleHeight.rawValue)
         
         let url = URL(string: serverAddress + "/data/download_questions")
         let jsonData = try? Data(contentsOf: url!, options: .mappedIfSafe)
@@ -49,7 +49,7 @@ class QuestionViewController: UIViewController {
         {
         //debug - gives you the string of data read in
             let rawData = String(decoding: jsonData!, as: UTF8.self);
-            print(rawData)        
+            print(rawData)
         }
         let questions = try? JSONDecoder().decode(Question.self, from: jsonData!)
         
@@ -62,8 +62,10 @@ class QuestionViewController: UIViewController {
             currentQuestionLabel.textColor = UIColor.black
             currentQuestionLabel.text = String(counter + 1) + ". " + question.question
             currentQuestionLabel.frame = CGRect(x: 40, y: counter * 100 + 50, width: 1000, height:40)
+            questionView.contentSize = CGSize(width: questionView.contentSize.width, height: questionView.contentSize.height + 20)
+
+            questionView.addSubview(currentQuestionLabel)
             
-            view.addSubview(currentQuestionLabel)
             
             //MARK: Generate UI based on question type
             switch(question.questionType)
@@ -82,8 +84,8 @@ class QuestionViewController: UIViewController {
                 segControl.frame = CGRect(x: 40, y: counter * 100 + 100, width: 1000, height:40)
                 
                 segControl.addTarget(self, action: #selector(segmentedControlValueChanged), for:.valueChanged)
-                
-                view.addSubview(segControl)
+                questionView.contentSize = CGSize(width: questionView.contentSize.width, height: questionView.contentSize.height + 30)
+                questionView.addSubview(segControl)
                 break;
                 //text field
                 case 2:
@@ -91,10 +93,11 @@ class QuestionViewController: UIViewController {
                 textField.borderStyle = .bezel
                 textField.clearsOnBeginEditing = true
                 textField.frame = CGRect(x: 40, y: counter * 100 + 100, width: 250, height:40)
+                questionView.contentSize = CGSize(width: questionView.contentSize.width, height: questionView.contentSize.height + 20)
                 textField.addTarget(self, action: #selector(textFieldFinishedEditing), for: .editingDidEnd)
                 textField.tag = question.questionID
                 
-                view.addSubview(textField)
+                questionView.addSubview(textField)
                 break;
                 default:
                 print("Question type not supported.")
@@ -108,18 +111,17 @@ class QuestionViewController: UIViewController {
         nextScreenButton.setTitleColor(UIColor.blue, for: .normal)
         nextScreenButton.setTitle("Begin test", for: .normal)
         nextScreenButton.addTarget(self, action: #selector(finishQuestions), for: .touchUpInside)
+        nextScreenButton.frame = CGRect(x: 0.0, y: 0.0, width: 100.0, height:50.0)
+        nextScreenButton.center = CGPoint(x: UIScreen.main.bounds.midX, y: CGFloat(counter) * 100.0 + 100.0)
         nextScreenButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(nextScreenButton)
+        questionView.addSubview(nextScreenButton)
                 
-        NSLayoutConstraint.activate([
-            nextScreenButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 48.0),
-            nextScreenButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -48.0),
-            nextScreenButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -16.0),
-            nextScreenButton.heightAnchor.constraint(equalToConstant: 48.0)
-        ])
-        
+        self.view.removeBlurLoader()
+        view = questionView
+        view.backgroundColor = UIColor.white
         
     }
+    
     //MARK: Leave view
     @objc private func finishQuestions()
     {
@@ -163,6 +165,6 @@ class QuestionViewController: UIViewController {
     
 }
 
-class QuestionView: UIView {
+class QuestionView: UIScrollView {
     
 }
