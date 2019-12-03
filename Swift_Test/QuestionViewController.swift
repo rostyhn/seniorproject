@@ -84,7 +84,7 @@ class QuestionViewController: UIViewController {
                 segControl.frame = CGRect(x: 40, y: counter * 100 + 100, width: 1000, height:40)
                 
                 segControl.addTarget(self, action: #selector(segmentedControlValueChanged), for:.valueChanged)
-                questionView.contentSize = CGSize(width: questionView.contentSize.width, height: questionView.contentSize.height + 30)
+                questionView.contentSize = CGSize(width: questionView.contentSize.width, height: questionView.contentSize.height + 35)
                 questionView.addSubview(segControl)
                 break;
                 //text field
