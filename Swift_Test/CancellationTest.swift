@@ -60,7 +60,7 @@ struct TouchData: Codable, Hashable {
     
 }
 //MARK: Test object
-class Test : Codable
+class CancellationTest : Codable
 {
     var testName: String
     //date will be converted to int; seconds since JAN 1, 2001 00:00

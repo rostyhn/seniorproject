@@ -12,7 +12,7 @@
 		98398220232F079200734D87 /* Swift_Test.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9839821E232F079200734D87 /* Swift_Test.xcdatamodeld */; };
 		98398222232F079400734D87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98398221232F079400734D87 /* Assets.xcassets */; };
 		98495745232F200B003F6E6B /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98495744232F200B003F6E6B /* AboutUsViewController.swift */; };
-		984F82D32345845E00481495 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984F82D22345845E00481495 /* Test.swift */; };
+		984F82D32345845E00481495 /* CancellationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984F82D22345845E00481495 /* CancellationTest.swift */; };
 		984F82DD2345AA4900481495 /* AlphabetTest.json in Resources */ = {isa = PBXBuildFile; fileRef = 984F82DC2345AA4900481495 /* AlphabetTest.json */; };
 		987314E32373C6C1004D5C7A /* TestNameFromJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987314E22373C6C1004D5C7A /* TestNameFromJSON.swift */; };
 		989FF83F23722EDD00D77518 /* BlurLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989FF83E23722EDD00D77518 /* BlurLoader.swift */; };
@@ -30,6 +30,10 @@
 		98E6A267236142DB00EC54DF /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6A266236142DB00EC54DF /* SettingsViewController.swift */; };
 		98E6A26923614C8A00EC54DF /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E6A26823614C8A00EC54DF /* Question.swift */; };
 		98EFEC3923594D480000BDD9 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EFEC3823594D480000BDD9 /* TestViewController.swift */; };
+		E902197F23DF5E430070678D /* CancellationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E902197E23DF5E430070678D /* CancellationView.swift */; };
+		E902198123DF5E910070678D /* JOLOView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E902198023DF5E910070678D /* JOLOView.swift */; };
+		E902198323DF5FD30070678D /* JOLOTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E902198223DF5FD30070678D /* JOLOTest.swift */; };
+		E9C6937023E10AD600F4FBC4 /* GfxHacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C6936F23E10AD600F4FBC4 /* GfxHacks.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,7 +44,7 @@
 		98398221232F079400734D87 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Swift_Test/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		98398226232F079400734D87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Swift_Test/Info.plist; sourceTree = SOURCE_ROOT; };
 		98495744232F200B003F6E6B /* AboutUsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AboutUsViewController.swift; path = Swift_Test/AboutUsViewController.swift; sourceTree = SOURCE_ROOT; };
-		984F82D22345845E00481495 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Test.swift; path = Swift_Test/Test.swift; sourceTree = SOURCE_ROOT; };
+		984F82D22345845E00481495 /* CancellationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CancellationTest.swift; path = Swift_Test/CancellationTest.swift; sourceTree = SOURCE_ROOT; };
 		984F82DC2345AA4900481495 /* AlphabetTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = AlphabetTest.json; path = Swift_Test/AlphabetTest.json; sourceTree = SOURCE_ROOT; };
 		987314E22373C6C1004D5C7A /* TestNameFromJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNameFromJSON.swift; sourceTree = "<group>"; };
 		989FF83E23722EDD00D77518 /* BlurLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurLoader.swift; sourceTree = "<group>"; };
@@ -58,6 +62,10 @@
 		98E6A266236142DB00EC54DF /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		98E6A26823614C8A00EC54DF /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		98EFEC3823594D480000BDD9 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		E902197E23DF5E430070678D /* CancellationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationView.swift; sourceTree = "<group>"; };
+		E902198023DF5E910070678D /* JOLOView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JOLOView.swift; sourceTree = "<group>"; };
+		E902198223DF5FD30070678D /* JOLOTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JOLOTest.swift; sourceTree = "<group>"; };
+		E9C6936F23E10AD600F4FBC4 /* GfxHacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GfxHacks.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +133,8 @@
 				98E6A266236142DB00EC54DF /* SettingsViewController.swift */,
 				98495744232F200B003F6E6B /* AboutUsViewController.swift */,
 				98EFEC3823594D480000BDD9 /* TestViewController.swift */,
+				E902198023DF5E910070678D /* JOLOView.swift */,
+				E902197E23DF5E430070678D /* CancellationView.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -132,10 +142,11 @@
 		989FF84323722F7B00D77518 /* Data Structures */ = {
 			isa = PBXGroup;
 			children = (
-				984F82D22345845E00481495 /* Test.swift */,
+				984F82D22345845E00481495 /* CancellationTest.swift */,
 				98E6A26823614C8A00EC54DF /* Question.swift */,
 				987314E22373C6C1004D5C7A /* TestNameFromJSON.swift */,
 				98DD3B232374B104008AB7E6 /* DoctorList.swift */,
+				E902198223DF5FD30070678D /* JOLOTest.swift */,
 			);
 			name = "Data Structures";
 			sourceTree = "<group>";
@@ -145,6 +156,7 @@
 			children = (
 				98D87EFA237117C70014F1CB /* maths.swift */,
 				989FF83E23722EDD00D77518 /* BlurLoader.swift */,
+				E9C6936F23E10AD600F4FBC4 /* GfxHacks.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -233,9 +245,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9C6937023E10AD600F4FBC4 /* GfxHacks.swift in Sources */,
+				E902198323DF5FD30070678D /* JOLOTest.swift in Sources */,
+				E902198123DF5E910070678D /* JOLOView.swift in Sources */,
 				98495745232F200B003F6E6B /* AboutUsViewController.swift in Sources */,
 				9839821A232F079200734D87 /* MainViewController.swift in Sources */,
 				98DD3B242374B104008AB7E6 /* DoctorList.swift in Sources */,
+				E902197F23DF5E430070678D /* CancellationView.swift in Sources */,
 				98D87EFF237117DB0014F1CB /* Renderer.swift in Sources */,
 				98E6A2652361329800EC54DF /* QuestionViewController.swift in Sources */,
 				989FF84223722F6300D77518 /* AppDelegate.swift in Sources */,
@@ -247,7 +263,7 @@
 				987314E32373C6C1004D5C7A /* TestNameFromJSON.swift in Sources */,
 				98D87EFD237117D80014F1CB /* shaders.metal in Sources */,
 				98D87EFE237117DA0014F1CB /* maths.swift in Sources */,
-				984F82D32345845E00481495 /* Test.swift in Sources */,
+				984F82D32345845E00481495 /* CancellationTest.swift in Sources */,
 				98E6A267236142DB00EC54DF /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -388,13 +404,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = F9BB79R786;
+				DEVELOPMENT_TEAM = SS5YTKHG36;
 				INFOPLIST_FILE = Swift_Test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Rowan-University.Swift-Test";
+				PRODUCT_BUNDLE_IDENTIFIER = "Rowan-University.Swift-Test2";
 				PRODUCT_NAME = "Cancellation Test";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -406,13 +422,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = F9BB79R786;
+				DEVELOPMENT_TEAM = SS5YTKHG36;
 				INFOPLIST_FILE = Swift_Test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Rowan-University.Swift-Test";
+				PRODUCT_BUNDLE_IDENTIFIER = "Rowan-University.Swift-Test2";
 				PRODUCT_NAME = "Cancellation Test";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 2;
