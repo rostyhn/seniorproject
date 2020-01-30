@@ -36,7 +36,9 @@ class MainViewController: UIViewController {
     //MARK: Begin button
     @IBAction func act_startTest(_ sender: UIButton)
     {
-            UserDefaults.standard.set("10.38.41.204", forKey: "serverAddress")
+            UserDefaults.standard.set("10.38.37.146", forKey: "serverAddress")
+        
+            
         
             let alert = UIAlertController(title: "Enter Patient ID", message: "Please enter the patient's ID.", preferredStyle: .alert)
         
@@ -50,6 +52,7 @@ class MainViewController: UIViewController {
             
                 if(textField.text != "")
                 {
+                    
                     self.performSegue(withIdentifier: "to_Test", sender: self)
                 }
                 else
@@ -62,6 +65,7 @@ class MainViewController: UIViewController {
             alert.addAction(defaultAction)
             alert.addAction(cancelAction)
             self.present(alert, animated: true, completion: nil)
+            
     }
     
     //MARK: Settings button

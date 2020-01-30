@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreGraphics
+import AVFoundation
 
 class JOLOView: UIView {
     // weak var can be deallocated from memory
@@ -17,11 +18,9 @@ class JOLOView: UIView {
     var test: JOLOTest!
     var count: Int = 0;
     var pathLayer: CAShapeLayer!
-    
-    var btn_plus = UIButton(frame:  CGRect(x:1240,y:30, width:25, height:25))
-    var btn_minus = UIButton(frame: CGRect(x:100,y:30, width:25, height:25))
-    
-    
+    var stopButton = UIButton(frame: CGRect(x:800,y:30, width:50, height:25))
+    var startButton = UIButton(frame: CGRect(x:200,y:30, width:70, height:25))
+
     // Override required here
     override func draw(_ rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()!
@@ -38,34 +37,30 @@ class JOLOView: UIView {
         drawStimulus(stimulus: test.stimuli![count], context: context)
         
         //later add this to only be in debug mode
-        renderButtons()
+        renderButton()
     }
     
-    func renderButtons()
+    func renderButton()
     {
-        btn_minus.backgroundColor = .red
-        btn_minus.setTitle("-", for: .normal)
-        btn_minus.addTarget(self, action: #selector(decrementCounter), for: .touchUpInside)
+        stopButton.backgroundColor = UIColor.red
+        stopButton.setTitle("STOP", for: .normal)
+        stopButton.addTarget(self, action: #selector(recordTapped), for: .touchUpInside)
+        self.addSubview(stopButton)
         
-        btn_plus.backgroundColor = .blue
-        btn_plus.setTitle("+", for: .normal)
-        btn_plus.addTarget(self, action: #selector(incrementCounter), for: .touchUpInside)
+        startButton.backgroundColor = UIColor.green
+        startButton.setTitle("START", for: .normal)
+        startButton.addTarget(self, action: #selector(recordTapped), for: .touchUpInside)
+        self.addSubview(startButton)
+    }
+    
+    //this will eventually just be triggered when the user stops talking - a bit complicated for now
+    @objc func recordTapped(sender: UIButton!){
+        self.vc.finishRecording(success: true)
+        //need to setup async function here to wait until data is posted to continue
         
-        
-        if(count != 0)
-        {
-            //draw back button
-            
-            
-
-            self.addSubview(btn_minus)
-        }
-        if(count < test.stimuli!.count - 1)
-        {
-            //draw forward button
-
-            self.addSubview(btn_plus)
-        }
+        count = count + 1;
+        self.setNeedsDisplay()
+        self.vc.startRecording()
     }
     
     @objc func decrementCounter(sender: UIButton!)
@@ -88,10 +83,25 @@ class JOLOView: UIView {
         }
     }
     
+    
     func drawStimulus(stimulus: Stimulus, context: CGContext)
     {
-        drawLine(start: test.exampleLines![stimulus.line1].point1, end: test.exampleLines![stimulus.line1].point2, context:context, offX: stimulus.offX, offY: stimulus.offY);
-        drawLine(start: test.exampleLines![stimulus.line2].point1, end: test.exampleLines![stimulus.line2].point2, context:context, offX: stimulus.offX, offY: stimulus.offY);
+        let mirror = Mirror(reflecting: stimulus)
+        
+        for child in mirror.children {
+            print("Property name: ", child.label)
+            print("Property value: ", (String(describing: child.value)))
+            if child.label!.contains("line") {
+                let val = (child.value as? Int)
+                
+                
+                if(val != nil)
+                {
+                    drawLine(start: test.exampleLines![val!].point1, end: test.exampleLines![val!].point2, context: context, offX: 0.0, offY: 600.0)
+                }
+            }
+        }
+        
     }
     
     //draw stimulus lines without a number

@@ -18,8 +18,10 @@ struct Line: Codable {
 
 struct Stimulus: Codable {
     var stimuliID: Int
-    var line1: Int
-    var line2: Int
+    var line1: Int?
+    var line2: Int?
+    var line3: Int?
+    var line4: Int?
     var offX: CGFloat
     var offY: CGFloat
     var scalar: CGFloat
@@ -46,7 +48,7 @@ class JOLOTest: Codable {
         let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
         let url = URL(string: serverAddress + "/data/getStimuli")
         let jsonData = try? Data(contentsOf: url!, options: .mappedIfSafe)
-        
+
         self.stimuli = try? JSONDecoder().decode(Stimuli.self, from: jsonData!)
         
     }
@@ -56,7 +58,7 @@ class JOLOTest: Codable {
         let botY = maxY - 50;
         var lines = [Line]()
         
-        let center = CGPoint(x: midX, y: botY)
+        let center = CGPoint(x: 510, y: 1320)
         let startAngle: CGFloat = .pi
         let endAngle: CGFloat = 0
         let innerCircle = BezierPath(arcCenter: center,
@@ -85,9 +87,6 @@ class JOLOTest: Codable {
                 lines.append(Line(id: (i),  point1: startPoints[i] as! CGPoint, point2: endPoints[i] as! CGPoint));
             
         }
-        
-        
-        
         return lines;
     }
     
