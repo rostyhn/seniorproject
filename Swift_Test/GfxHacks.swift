@@ -3,7 +3,7 @@
 //  Swift_Test
 //
 //  Created by Auriemma, Thomas Henry on 1/28/20.
-//  Copyright © 2020 Rosty H. All rights reserved.
+//  Copyright © 2020 Cogniscreen All rights reserved.
 //
 
 import Foundation

@@ -6,6 +6,7 @@
 / this.
 / Some additional notes:
 / The if #avaliable clauses were forced on me by Swift
+//  Copyright © 2020 Cogniscreen All rights reserved.
 */
 
 import UIKit
@@ -36,7 +37,7 @@ class MainViewController: UIViewController {
     //MARK: Begin button
     @IBAction func act_startTest(_ sender: UIButton)
     {
-            UserDefaults.standard.set("10.38.37.146", forKey: "serverAddress")
+            UserDefaults.standard.set("10.38.43.138", forKey: "serverAddress")
         
             
         
@@ -52,7 +53,6 @@ class MainViewController: UIViewController {
             
                 if(textField.text != "")
                 {
-                    
                     self.performSegue(withIdentifier: "to_Test", sender: self)
                 }
                 else

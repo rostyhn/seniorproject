@@ -2,6 +2,8 @@
 import Foundation
 import UIKit
 //UI extension that shows a loading gear when a connection is attempted
+//  Copyright © 2020 Cogniscreen All rights reserved.
+
 
 //MARK: Extends UIView
 extension UIView {

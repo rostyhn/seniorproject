@@ -3,7 +3,7 @@
 //  Swift_Test
 //
 //  Created by Auriemma, Thomas Henry on 1/27/20.
-//  Copyright © 2020 Rosty H. All rights reserved.
+//  Copyright © 2020 Cogniscreen All rights reserved.
 //
 
 import Foundation
@@ -15,6 +15,33 @@ struct Line: Codable {
     var point1: CGPoint
     var point2: CGPoint
 }
+
+struct Response: Codable {
+    var responseDataList: [ResponseData]
+    
+    init(responseDataList: [ResponseData])
+    {
+        self.responseDataList = responseDataList
+    }
+}
+
+struct ResponseData : Codable {
+    // stuff that's in the segment
+    var responsePart: String
+    var timestamp: TimeInterval
+    var confidence: Float
+    var duration: TimeInterval
+
+    
+    init(responsePart: String, timestamp: TimeInterval, confidence: Float, duration: TimeInterval)
+    {
+        self.responsePart = responsePart;
+        self.timestamp = timestamp;
+        self.confidence = confidence;
+        self.duration = duration;
+    }
+}
+
 
 struct Stimulus: Codable {
     var stimuliID: Int
@@ -37,14 +64,16 @@ class JOLOTest: Codable {
     //var patientAnswers: [Response]
     var stimuli: [Stimulus]?
     var exampleLines: [Line]?
+    var responses: [Response]
+    
     
     init(patientID: String, bounds: CGRect)
     {
         self.testStartTime = Date();
         self.patientID = patientID;
         self.doctorID = "123456789";
+        self.responses = []
         self.exampleLines = populateLines(midX: bounds.midX, maxY: bounds.maxY);
-        
         let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
         let url = URL(string: serverAddress + "/data/getStimuli")
         let jsonData = try? Data(contentsOf: url!, options: .mappedIfSafe)

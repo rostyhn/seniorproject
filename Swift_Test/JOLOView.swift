@@ -3,7 +3,7 @@
 //  Swift_Test
 //
 //  Created by Auriemma, Thomas Henry on 1/27/20.
-//  Copyright © 2020 Rosty H. All rights reserved.
+//  Copyright © 2020 Cogniscreen All rights reserved.
 //
 
 import Foundation
@@ -18,8 +18,9 @@ class JOLOView: UIView {
     var test: JOLOTest!
     var count: Int = 0;
     var pathLayer: CAShapeLayer!
-    var stopButton = UIButton(frame: CGRect(x:800,y:30, width:50, height:25))
-    var startButton = UIButton(frame: CGRect(x:200,y:30, width:70, height:25))
+    var stopButton = UIButton(frame: CGRect(x:800,y:30,  width:75, height:50))
+    var startButton = UIButton(frame: CGRect(x:200,y:30, width:75, height:50))
+    var isRecording = false
 
     // Override required here
     override func draw(_ rect: CGRect) {
@@ -44,23 +45,64 @@ class JOLOView: UIView {
     {
         stopButton.backgroundColor = UIColor.red
         stopButton.setTitle("STOP", for: .normal)
-        stopButton.addTarget(self, action: #selector(recordTapped), for: .touchUpInside)
+        stopButton.addTarget(self, action: #selector(finishRecording), for: .touchUpInside)
         self.addSubview(stopButton)
+        stopButton.isEnabled = false;
+        stopButton.alpha = 0.0
         
         startButton.backgroundColor = UIColor.green
         startButton.setTitle("START", for: .normal)
-        startButton.addTarget(self, action: #selector(recordTapped), for: .touchUpInside)
+        startButton.addTarget(self, action: #selector(startRecording), for: .touchUpInside)
         self.addSubview(startButton)
     }
     
     //this will eventually just be triggered when the user stops talking - a bit complicated for now
-    @objc func recordTapped(sender: UIButton!){
-        self.vc.finishRecording(success: true)
+    @objc func startRecording(sender: UIButton!){
+        if(!isRecording)
+        {
         //need to setup async function here to wait until data is posted to continue
-        
-        count = count + 1;
-        self.setNeedsDisplay()
-        self.vc.startRecording()
+            self.vc.startRecording()
+            isRecording = true;
+            sender.isEnabled = false;
+            stopButton.isEnabled = true;
+            sender.alpha = 0.0
+            stopButton.alpha = 1.0
+        }
+    }
+    
+    @objc func finishRecording(sender: UIButton!)
+    {
+        if(self.vc.audioRecorder.url.absoluteString != "" && isRecording)
+        {
+            isRecording = false;
+            sender.isEnabled = false;
+            sender.alpha = 0.0
+            startButton.isEnabled = true;
+            startButton.alpha = 1.0
+            
+            DispatchQueue.main.async {
+                self.showBlurLoader()
+            }
+            
+            let opQueue = OperationQueue()
+                       opQueue.maxConcurrentOperationCount = 1
+                       
+            let group = DispatchGroup()
+            
+            let doProcessing = BlockOperation {
+                    group.enter()
+                    self.vc.finishRecording(success: true)
+            }
+            
+            doProcessing.completionBlock = { [unowned doProcessing] in
+                group.leave()
+            }
+    
+            opQueue.addOperation(doProcessing)
+            
+            group.wait()
+
+        }
     }
     
     @objc func decrementCounter(sender: UIButton!)
@@ -70,7 +112,6 @@ class JOLOView: UIView {
     }
     @objc func incrementCounter(sender: UIButton!)
     {
-
         count = count + 1;
         self.setNeedsDisplay()
     }
@@ -89,19 +130,14 @@ class JOLOView: UIView {
         let mirror = Mirror(reflecting: stimulus)
         
         for child in mirror.children {
-            print("Property name: ", child.label)
-            print("Property value: ", (String(describing: child.value)))
             if child.label!.contains("line") {
                 let val = (child.value as? Int)
-                
-                
                 if(val != nil)
                 {
                     drawLine(start: test.exampleLines![val!].point1, end: test.exampleLines![val!].point2, context: context, offX: 0.0, offY: 600.0)
                 }
             }
         }
-        
     }
     
     //draw stimulus lines without a number
@@ -118,7 +154,6 @@ class JOLOView: UIView {
         pathLayer.lineWidth = 2;
         pathLayer.lineJoin = CAShapeLayerLineJoin.round;
         self.layer.addSublayer(pathLayer);
-        
     }
     
     //draw them with a number

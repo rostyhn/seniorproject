@@ -1,3 +1,5 @@
+//  Copyright © 2020 Cogniscreen All rights reserved.
+
 #include <metal_stdlib>
 using namespace metal;
 //MARK: Uniforms for the 3D model

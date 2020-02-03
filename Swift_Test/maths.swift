@@ -1,3 +1,6 @@
+//  Copyright © 2020 Cogniscreen All rights reserved.
+
+
 import simd
 
 //math utility functions

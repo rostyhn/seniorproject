@@ -3,7 +3,7 @@
 //  Swift_Test
 //
 //  Created by Shashank Sastri on 10/23/19.
-//  Copyright © 2019 Rosty H. All rights reserved.
+//  Copyright © 2020 Cogniscreen All rights reserved.
 //
 //TODO: figure out more intelligent way to place UI components rather than hard coding them
 import Foundation

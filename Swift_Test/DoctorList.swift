@@ -3,7 +3,7 @@
 //  Swift_Test
 //
 //  Created by Shashank Sastri on 11/7/19.
-//  Copyright © 2019 Rosty H. All rights reserved.
+//  Copyright © 2020 Cogniscreen All rights reserved.
 //
 
 //struct for loading in doctor credentials

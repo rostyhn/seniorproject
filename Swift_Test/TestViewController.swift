@@ -3,7 +3,7 @@
 //  Swift_Test
 //
 //  Created by Shashank Sastri on 9/15/19.
-//  Copyright © 2019 Rosty H. All rights reserved.
+//  Copyright © 2020 Cogniscreen All rights reserved.
 //
 
 //rename to JOLOViewController
@@ -11,6 +11,7 @@
 
 import UIKit
 import AVFoundation
+import Speech
 //MARK: View Controller Setup
 class TestViewController: UIViewController, AVAudioRecorderDelegate {
     var recordingSession: AVAudioSession!
@@ -25,6 +26,7 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
             recordingSession = AVAudioSession.sharedInstance()
             
             do {
+                
                 try recordingSession.setCategory(.playAndRecord, mode: .default)
                 try recordingSession.setActive(true)
                 recordingSession.requestRecordPermission() { [unowned self] allowed in
@@ -81,9 +83,30 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
     func finishRecording(success: Bool)
     {
         //if successful, send to backend
-        audioRecorder.stop()
+        if(success)
+        {
+            audioRecorder.stop();
+            let loc = audioRecorder!.url
+            
+            SFSpeechRecognizer.requestAuthorization { authStatus in
+                OperationQueue.main.addOperation {
+                   switch authStatus {
+                      case .authorized:
+                        
+                        self.transcribeFile(url: loc)
+                      case .denied:
+                        self.performSegue(withIdentifier: "to_Main", sender: self);
+                      case .restricted:
+                         self.performSegue(withIdentifier: "to_Main", sender: self);
+                      case .notDetermined:
+                         self.performSegue(withIdentifier: "to_Main", sender: self);
+                   }
+                }
+            }
+            
+        }
         
-        let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
+        /*let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
         let url = URL(string: serverAddress + "/data/upload")
         let loc = audioRecorder!.url
         
@@ -95,7 +118,7 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
         answerRequest.setValue("audio/m4a", forHTTPHeaderField: "Content-Type")
         
         let task_answers = URLSession.shared.dataTask(with: answerRequest)
-        task_answers.resume()
+        task_answers.resume()*/
         
     }
     
@@ -118,4 +141,76 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
         return getDocumentsDirectory().appendingPathComponent("audio-" + String(Date.init().timeIntervalSince1970) + ".m4a")
     }
     
+    fileprivate func transcribeFile(url: URL) {
+
+      // 1 make sure dictation is enabled on the device in settings for this to work.
+      guard let recognizer = SFSpeechRecognizer() else {
+        print("Speech recognition not available for specified locale")
+        return
+      }
+      
+        if #available(iOS 13, *) {
+            recognizer.supportsOnDeviceRecognition = true
+        } else {
+            print("did not change supports")
+        }
+     
+      
+      // 2
+      let request = SFSpeechURLRecognitionRequest(url: url)
+        if #available(iOS 13, *) {
+            request.requiresOnDeviceRecognition = true
+        } else {
+            print("did not change requires")
+        }
+      // 3
+      recognizer.recognitionTask(with: request) {
+        [unowned self] (result, error) in
+        guard let result = result else {
+          print("There was an error transcribing that file")
+          DispatchQueue.main.async {
+            self.joloView.removeBlurLoader()
+          }
+          return
+        }
+        // 4
+        if result.isFinal {
+           
+            if #available(iOS 13, *) {
+                print(recognizer.supportsOnDeviceRecognition)
+                print(request.requiresOnDeviceRecognition)
+            } else {
+                print("network only")
+            }
+            
+            // Increments to next stimuli if response is a number
+            // If response starts with a WORD, then number won't continue either
+            // Must start with a number
+            if (result.bestTranscription.formattedString.isNumeric) {
+                self.joloView.count = self.joloView.count + 1
+            }
+            
+            var newResponse = Response(responseDataList: []);
+            
+            for segment in result.bestTranscription.segments {
+                newResponse.responseDataList.append(ResponseData(responsePart: segment.substring, timestamp: segment.timestamp, confidence: segment.confidence, duration: segment.duration))
+            }
+            self.joloView.test.responses.append(newResponse)
+            
+            DispatchQueue.main.async {
+                self.joloView.setNeedsDisplay()
+                self.joloView.removeBlurLoader()
+                print(self.joloView.test.responses)
+            }
+        }
+        
+        
+      }
+    }
+}
+
+extension String {
+    var isNumeric : Bool {
+        return Double(self) != nil
+    }
 }

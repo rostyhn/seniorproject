@@ -46,5 +46,7 @@
 	</array>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>The test is about to begin.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Speech recognition needs to be enabled.</string>
 </dict>
 </plist>
