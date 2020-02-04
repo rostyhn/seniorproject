@@ -80,6 +80,7 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
            }
     }
     
+    // MARK: Finish Recording
     func finishRecording(success: Bool)
     {
         //if successful, send to backend
@@ -141,6 +142,7 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
         return getDocumentsDirectory().appendingPathComponent("audio-" + String(Date.init().timeIntervalSince1970) + ".m4a")
     }
     
+    // MARK: Write voice input into result array
     fileprivate func transcribeFile(url: URL) {
 
       // 1 make sure dictation is enabled on the device in settings for this to work.
@@ -183,18 +185,22 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
                 print("network only")
             }
             
+            var newResponse = Response(responseDataList: []);
+            
             // Increments to next stimuli if response is a number
             // If response starts with a WORD, then number won't continue either
             // Must start with a number
+            // Sometimes it will be One instead of 1, need to account for that
             if (result.bestTranscription.formattedString.isNumeric) {
                 self.joloView.count = self.joloView.count + 1
+                for segment in result.bestTranscription.segments {
+                    newResponse.responseDataList.append(ResponseData(responsePart: segment.substring, timestamp: segment.timestamp, confidence: segment.confidence, duration: segment.duration))
+                }
+            } else {
+                print("Not numeric answer")
+                print(result.bestTranscription.formattedString)
             }
             
-            var newResponse = Response(responseDataList: []);
-            
-            for segment in result.bestTranscription.segments {
-                newResponse.responseDataList.append(ResponseData(responsePart: segment.substring, timestamp: segment.timestamp, confidence: segment.confidence, duration: segment.duration))
-            }
             self.joloView.test.responses.append(newResponse)
             
             DispatchQueue.main.async {
@@ -211,6 +217,10 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
 
 extension String {
     var isNumeric : Bool {
-        return Double(self) != nil
+        if Double(self) != nil {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

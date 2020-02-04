@@ -120,7 +120,7 @@ class JOLOView: UIView {
     func drawExample(context: CGContext)
     {
         for line in test.exampleLines! {
-            drawLine(start: line.point1, end: line.point2, context: context, offX: 0.0, offY: 0.0, id: line.id);
+            drawLine(start: line.point1, end: line.point2, context: context, offX: 0.0, offY: -200.0, id: line.id);
         }
     }
     
@@ -134,7 +134,7 @@ class JOLOView: UIView {
                 let val = (child.value as? Int)
                 if(val != nil)
                 {
-                    drawLine(start: test.exampleLines![val!].point1, end: test.exampleLines![val!].point2, context: context, offX: 0.0, offY: 600.0)
+                    drawLine(start: test.exampleLines![val!].point1, end: test.exampleLines![val!].point2, context: context, offX: 0.0, offY: 575.0)
                 }
             }
         }
@@ -151,7 +151,7 @@ class JOLOView: UIView {
         linePath.addLine(to: adj_end);
         pathLayer.path = linePath.cgPath
         pathLayer.strokeColor = UIColor.black.cgColor;
-        pathLayer.lineWidth = 2;
+        pathLayer.lineWidth = 3;
         pathLayer.lineJoin = CAShapeLayerLineJoin.round;
         self.layer.addSublayer(pathLayer);
     }
@@ -173,12 +173,12 @@ class JOLOView: UIView {
         self.layer.addSublayer(pathLayer);
         
         
-        let center = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.maxY - 50)
+        let center = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.maxY - 140)
         let startAngle: CGFloat = .pi
         let endAngle: CGFloat = 0
         
         let outestCircle = BezierPath(arcCenter: center,
-                                radius:  190,
+                                radius:  240,
                                startAngle: startAngle,
                                  endAngle: endAngle,
                                 clockwise: true)

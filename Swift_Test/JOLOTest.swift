@@ -84,19 +84,19 @@ class JOLOTest: Codable {
     func populateLines(midX: CGFloat, maxY: CGFloat) -> [Line]
     {
 
-        let botY = maxY - 50;
+        let botY = maxY;
         var lines = [Line]()
         
-        let center = CGPoint(x: 510, y: 1320)
+        let center = CGPoint(x: 510, y: botY)
         let startAngle: CGFloat = .pi
         let endAngle: CGFloat = 0
         let innerCircle = BezierPath(arcCenter: center,
-                                radius: 40.0 - 1.5,
+                                radius: 35.0 - 1.5,
                                startAngle: startAngle,
                                  endAngle: endAngle,
                                 clockwise: true)
         let outerCircle = BezierPath(arcCenter: center,
-                                radius: 175 - 1.5,
+                                radius: 220 - 1.5,
                                startAngle: startAngle,
                                  endAngle: endAngle,
                                 clockwise: true)

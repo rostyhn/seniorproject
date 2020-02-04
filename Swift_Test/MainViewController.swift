@@ -32,12 +32,14 @@ class MainViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         //hides navigation bar everywhere
          self.navigationController?.navigationBar.isHidden = true
+        appDelegate.deviceOrientation = .landscape
+        
      }
     
     //MARK: Begin button
     @IBAction func act_startTest(_ sender: UIButton)
     {
-            UserDefaults.standard.set("10.38.43.138", forKey: "serverAddress")
+            UserDefaults.standard.set("10.38.42.185", forKey: "serverAddress")
         
             
         
