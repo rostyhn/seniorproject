@@ -190,25 +190,48 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
             // You can use String.numericValue to get 1 instead of "one" now
             // Only gives "one" or "two" when they speak a single number (so invalid input in this case)
             var countOfNumbers: Int = 0
-            print(result.bestTranscription.formattedString)
-            print(result.bestTranscription)
+            //print(result.bestTranscription.formattedString)
+            //print(result.bestTranscription)
             for segment in result.bestTranscription.segments {
-                if (segment.substring.isNumeric) {
+                
+                let currSeg = segment.substring.convertToNumberString()
+
+                if(currSeg != "NaN" && currSeg.isNumeric)
+                {
                     newResponse.responseDataList.append(ResponseData(responsePart: segment.substring, timestamp: segment.timestamp, confidence: segment.confidence, duration: segment.duration))
                     countOfNumbers += 1;
                 }
             }
-            
+            var totalLines = 0;
             // Increments to next stimuli if there are 2 or more numbers given in response
-            if (countOfNumbers >= 2) {
+            let mirror = Mirror(reflecting: self.joloView!.test!.stimuli![self.joloView!.count])
+            
+            for child in mirror.children {
+                if child.label!.contains("line") {
+                    let val = (child.value as? Int)
+                    if(val != nil)
+                    {
+                        totalLines += 1;
+                    }
+                }
+            }
+            
+            //print(totalLines)
+            //print(countOfNumbers)
+            //check how many line fields are not null and count and then set that as the max
+            if (countOfNumbers == totalLines) {
                 self.joloView.count = self.joloView.count + 1
                 self.joloView.test.responses.append(newResponse)
+            }
+            else
+            {
+                self.showAlert(title: "Error", message: "Input not recognized. Please try again.");
             }
             
             DispatchQueue.main.async {
                 self.joloView.setNeedsDisplay()
                 self.joloView.removeBlurLoader()
-                print(self.joloView.test.responses)
+                //print(self.joloView.test.responses)
             }
         }
         
@@ -223,27 +246,23 @@ extension String {
     var isNumeric : Bool {
         return Double(self) != nil
     }
-    var numericValue: NSNumber? {
-
-        //init number formater
+    
+    func convertToNumberString() -> String{
+        //check if its a number then do the conversion
         let numberFormater = NumberFormatter()
-
-        //check if string is numeric
         numberFormater.numberStyle = .decimal
-
+        
         guard let number = numberFormater.number(from: self.lowercased()) else {
 
-            //check if string is spelled number
-            numberFormater.numberStyle = .spellOut
+        //check if string is spelled number
+        
 
-            //change language to spanish
-            //numberFormater.locale = Locale(identifier: "es")
-
-            return numberFormater.number(from: self.lowercased())
+        //change language to spanish
+        //numberFormater.locale = Locale(identifier: "es")
+        
+            return "NaN";
         }
-
-        // return converted numeric value
-        return number
+        return number.stringValue
     }
 }
 

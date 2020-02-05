@@ -29,6 +29,12 @@ class JOLOView: UIView {
     override func draw(_ rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()!
         self.layer.sublayers = nil
+        
+        if(self.count == self.test.stimuli!.count)
+        {
+            endTest()
+        }
+        
         if #available(iOS 13.0, *) {
             context.setFillColor(CGColor(srgbRed: 255, green: 255, blue: 255, alpha: 0))
         } else {
@@ -45,9 +51,8 @@ class JOLOView: UIView {
         renderCenterLine(context: context)
     }
     
-    @objc func endTest(sender: UIButton!) {
+     func endTest() {
         if (test.responses.count != 0) {
-            print("You got this far")
             let jsonEncoder = JSONEncoder()
             let jsonData = try? jsonEncoder.encode(test.responses)
             
@@ -73,10 +78,8 @@ class JOLOView: UIView {
             
             opQueue.addOperation(sendTestData)
             
-            
-        } else {
-            print("No responses made")
         }
+        
     }
     
     
@@ -104,10 +107,10 @@ class JOLOView: UIView {
         startButton.addTarget(self, action: #selector(startRecording), for: .touchUpInside)
         self.addSubview(startButton)
         
-        endTestButton.backgroundColor = UIColor.green
+        /*endTestButton.backgroundColor = UIColor.green
         endTestButton.setTitle("END TEST", for: .normal)
         endTestButton.addTarget(self, action: #selector(endTest), for: .touchUpInside)
-        self.addSubview(endTestButton)
+        self.addSubview(endTestButton)*/
     }
     
     //this will eventually just be triggered when the user stops talking - a bit complicated for now
