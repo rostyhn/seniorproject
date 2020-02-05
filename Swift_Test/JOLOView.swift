@@ -16,10 +16,13 @@ class JOLOView: UIView {
     // Remember to attach ! to view controller so it gets unpacked
     weak var vc: TestViewController!
     var test: JOLOTest!
+    var serverAddress = "http://" + (UserDefaults.standard.string(forKey: "serverAddress")!) + ":5000"
     var count: Int = 0;
     var pathLayer: CAShapeLayer!
     var stopButton = UIButton(frame: CGRect(x:800,y:30,  width:75, height:50))
     var startButton = UIButton(frame: CGRect(x:200,y:30, width:75, height:50))
+    var endTestButton = UIButton(frame: CGRect(x:500,y:30, width:150, height:50))
+    var centerLine = CGRect(x: 500, y: 500, width: 1000, height: 10)
     var isRecording = false
 
     // Override required here
@@ -39,6 +42,52 @@ class JOLOView: UIView {
         
         //later add this to only be in debug mode
         renderButton()
+        renderCenterLine(context: context)
+    }
+    
+    @objc func endTest(sender: UIButton!) {
+        if (test.responses.count != 0) {
+            print("You got this far")
+            let jsonEncoder = JSONEncoder()
+            let jsonData = try? jsonEncoder.encode(test.responses)
+            
+            let opQueue = OperationQueue()
+            opQueue.maxConcurrentOperationCount = 1
+                
+            let group = DispatchGroup()
+            
+            let url = URL(string: serverAddress + "/data/uploadJSON")
+            var request = URLRequest(url:url!)
+            request.httpMethod = "POST"
+            request.httpBody = jsonData
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let task = URLSession.shared.dataTask(with: request) {
+                data, response, error in group.leave()
+            }
+            
+            let sendTestData = BlockOperation {
+                group.enter()
+                task.resume()
+            }
+            
+            opQueue.addOperation(sendTestData)
+            
+            
+        } else {
+            print("No responses made")
+        }
+    }
+    
+    
+    
+    func renderCenterLine(context: CGContext) {
+        context.setLineWidth(2.0)
+        context.setStrokeColor(UIColor.black.cgColor)
+        context.move(to: CGPoint(x: 0, y: 700))
+        context.addLine(to: CGPoint(x: 1200, y: 700))
+        
+        context.strokePath()
     }
     
     func renderButton()
@@ -54,6 +103,11 @@ class JOLOView: UIView {
         startButton.setTitle("START", for: .normal)
         startButton.addTarget(self, action: #selector(startRecording), for: .touchUpInside)
         self.addSubview(startButton)
+        
+        endTestButton.backgroundColor = UIColor.green
+        endTestButton.setTitle("END TEST", for: .normal)
+        endTestButton.addTarget(self, action: #selector(endTest), for: .touchUpInside)
+        self.addSubview(endTestButton)
     }
     
     //this will eventually just be triggered when the user stops talking - a bit complicated for now

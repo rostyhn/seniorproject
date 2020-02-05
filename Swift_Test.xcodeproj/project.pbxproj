@@ -144,9 +144,9 @@
 			children = (
 				984F82D22345845E00481495 /* CancellationTest.swift */,
 				98E6A26823614C8A00EC54DF /* Question.swift */,
+				E902198223DF5FD30070678D /* JOLOTest.swift */,
 				987314E22373C6C1004D5C7A /* TestNameFromJSON.swift */,
 				98DD3B232374B104008AB7E6 /* DoctorList.swift */,
-				E902198223DF5FD30070678D /* JOLOTest.swift */,
 			);
 			name = "Data Structures";
 			sourceTree = "<group>";

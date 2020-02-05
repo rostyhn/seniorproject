@@ -42,7 +42,6 @@ struct ResponseData : Codable {
     }
 }
 
-
 struct Stimulus: Codable {
     var stimuliID: Int
     var line1: Int?

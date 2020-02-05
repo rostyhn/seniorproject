@@ -187,21 +187,23 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
             
             var newResponse = Response(responseDataList: []);
             
-            // Increments to next stimuli if response is a number
-            // If response starts with a WORD, then number won't continue either
-            // Must start with a number
-            // Sometimes it will be One instead of 1, need to account for that
-            if (result.bestTranscription.formattedString.isNumeric) {
-                self.joloView.count = self.joloView.count + 1
-                for segment in result.bestTranscription.segments {
+            // You can use String.numericValue to get 1 instead of "one" now
+            // Only gives "one" or "two" when they speak a single number (so invalid input in this case)
+            var countOfNumbers: Int = 0
+            print(result.bestTranscription.formattedString)
+            print(result.bestTranscription)
+            for segment in result.bestTranscription.segments {
+                if (segment.substring.isNumeric) {
                     newResponse.responseDataList.append(ResponseData(responsePart: segment.substring, timestamp: segment.timestamp, confidence: segment.confidence, duration: segment.duration))
+                    countOfNumbers += 1;
                 }
-            } else {
-                print("Not numeric answer")
-                print(result.bestTranscription.formattedString)
             }
             
-            self.joloView.test.responses.append(newResponse)
+            // Increments to next stimuli if there are 2 or more numbers given in response
+            if (countOfNumbers >= 2) {
+                self.joloView.count = self.joloView.count + 1
+                self.joloView.test.responses.append(newResponse)
+            }
             
             DispatchQueue.main.async {
                 self.joloView.setNeedsDisplay()
@@ -215,12 +217,33 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
     }
 }
 
+// MARK: String extensions
 extension String {
+    // returns true if string is a number (also accepts doubles)
     var isNumeric : Bool {
-        if Double(self) != nil {
-            return true;
-        } else {
-            return false;
+        return Double(self) != nil
+    }
+    var numericValue: NSNumber? {
+
+        //init number formater
+        let numberFormater = NumberFormatter()
+
+        //check if string is numeric
+        numberFormater.numberStyle = .decimal
+
+        guard let number = numberFormater.number(from: self.lowercased()) else {
+
+            //check if string is spelled number
+            numberFormater.numberStyle = .spellOut
+
+            //change language to spanish
+            //numberFormater.locale = Locale(identifier: "es")
+
+            return numberFormater.number(from: self.lowercased())
         }
+
+        // return converted numeric value
+        return number
     }
 }
+
