@@ -30,25 +30,30 @@ class JOLOView: UIView {
         let context = UIGraphicsGetCurrentContext()!
         self.layer.sublayers = nil
         
-        if(self.count == self.test.stimuli!.count)
-        {
-            endTest()
-        }
-        
         if #available(iOS 13.0, *) {
             context.setFillColor(CGColor(srgbRed: 255, green: 255, blue: 255, alpha: 0))
         } else {
             // Fallback on earlier versions
         }
-        context.fill(UIScreen.main.bounds)
-    
         
-        drawExample(context: context)
-        drawStimulus(stimulus: test.stimuli![count], context: context)
+        if(self.count == self.test.stimuli!.count)
+        {
+            endTest()
+        } else {
+            context.fill(UIScreen.main.bounds)
+            
+                
+            drawExample(context: context)
+            drawStimulus(stimulus: test.stimuli![count], context: context)
+            
+            //later add this to only be in debug mode
+            renderButton()
+            renderCenterLine(context: context)
+            
+        }
         
-        //later add this to only be in debug mode
-        renderButton()
-        renderCenterLine(context: context)
+        
+        
     }
     
      func endTest() {
@@ -77,6 +82,10 @@ class JOLOView: UIView {
             }
             
             opQueue.addOperation(sendTestData)
+            
+            // Causes app to crash without sending POST
+            //self.vc.showAlert(title: "Test Complete", message: "Please return the device to the test administrator")
+            //self.vc.performSegue(withIdentifier: "to_Main", sender: Any)
             
         }
         

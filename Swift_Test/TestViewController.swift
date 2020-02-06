@@ -190,7 +190,7 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
             // You can use String.numericValue to get 1 instead of "one" now
             // Only gives "one" or "two" when they speak a single number (so invalid input in this case)
             var countOfNumbers: Int = 0
-            //print(result.bestTranscription.formattedString)
+            print(result.bestTranscription.formattedString)
             //print(result.bestTranscription)
             for segment in result.bestTranscription.segments {
                 
