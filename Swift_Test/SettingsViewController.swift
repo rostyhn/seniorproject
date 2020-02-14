@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-enum Type {
+enum UIType {
     case toggle, textfield
 }
 
@@ -22,10 +22,10 @@ enum Locality: String, CaseIterable {
 struct Setting {
     let label : String
     let name : String
-    let type : Type
+    let type : UIType
     let locality : Locality
     
-    init(label: String, name: String, type: Type, locality: Locality)
+    init(label: String, name: String, type: UIType, locality: Locality)
     {
         self.label = label;
         self.name = name;
@@ -37,10 +37,8 @@ struct Setting {
 //settings view controller
 class SettingsViewController: UIViewController
 {
-    let settings = [Setting(label: "Debug Mode", name: "debug_mode", type: Type.toggle, locality: Locality.global),
-                        Setting(label: "Show Questionnaire", name: "show_questionnaire", type: Type.toggle, locality: Locality.global)];
-    var localeBeingEdited = "";
-    
+    let settings = [Setting(label: "Debug Mode", name: "debug_mode", type: UIType.toggle, locality: Locality.global),
+                        Setting(label: "Show Questionnaire", name: "show_questionnaire", type: UIType.toggle, locality: Locality.global)];
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
@@ -104,8 +102,7 @@ class SettingsViewController: UIViewController
     
     @objc func segueToTestSpecificSettings(sender: SegueButton)
     {
-        self.localeBeingEdited = sender.associatedVal!.rawValue;
-        self.performSegue(withIdentifier: "to_TestSpecificSettings", sender: self)
+        self.performSegue(withIdentifier: "to_TestSpecificSettings", sender: sender.associatedVal!)
     }
     
     @objc func toggleSetting(sender: ToggleButton!)
@@ -115,6 +112,15 @@ class SettingsViewController: UIViewController
     
     override func viewWillAppear(_ animated: Bool) {
          self.navigationController?.navigationBar.isHidden = false
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "to_TestSpecificSettings"
+        {
+            if let testViewController = segue.destination as? TestSpecificSettingsViewController {
+               testViewController.testBeingEdited = sender as? Locality;
+            }
+        }
     }
 }
 

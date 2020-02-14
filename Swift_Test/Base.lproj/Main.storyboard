@@ -67,12 +67,12 @@
                         <outlet property="btn_Settings" destination="O0e-cH-tXK" id="gAh-MF-jEb"/>
                         <outlet property="btn_startTest" destination="39F-oY-Usu" id="cAJ-BW-KSi"/>
                         <segue destination="7IP-pv-jJa" kind="show" identifier="to_Test" id="64q-07-DvQ"/>
-                        <segue destination="ICR-dU-mEX" kind="show" identifier="to_Settings" id="dT8-xv-VrL"/>
+                        <segue destination="ICR-dU-mEX" kind="show" identifier="to_Settings" id="URC-NH-ntE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1594.4244604316548" y="125.89928057553958"/>
+            <point key="canvasLocation" x="1594" y="127"/>
         </scene>
         <!--Test View-->
         <scene sceneID="qUc-qT-w79">
@@ -106,10 +106,13 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="SMJ-Va-vyA"/>
+                    <connections>
+                        <segue destination="nps-gJ-A0L" kind="show" identifier="to_TestSpecificSettings" id="Iwm-1D-V7G"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LUc-II-7B6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1594.9640287769785" y="810.79136690647488"/>
+            <point key="canvasLocation" x="1594" y="835"/>
         </scene>
         <!--Questionnaire-->
         <scene sceneID="r2V-XD-HFI">
@@ -160,43 +163,10 @@
                     <view key="view" contentMode="scaleToFill" id="huE-FU-fiH">
                         <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <pickerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l7H-yZ-QFc">
-                                <rect key="frame" x="0.0" y="152" width="712" height="216"/>
-                            </pickerView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Test Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c8U-FO-hCO">
-                                <rect key="frame" x="610" y="67" width="146" height="39"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="32"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Target Symbol" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xVU-vc-hli">
-                                <rect key="frame" x="584.5" y="635" width="197" height="39"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="32"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <pickerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iAx-7G-gc7">
-                                <rect key="frame" x="0.0" y="502" width="712" height="216"/>
-                            </pickerView>
-                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <constraints>
-                            <constraint firstItem="l7H-yZ-QFc" firstAttribute="top" secondItem="JmO-NO-CRb" secondAttribute="top" constant="152" id="0wn-iI-oY0"/>
-                            <constraint firstItem="c8U-FO-hCO" firstAttribute="centerX" secondItem="JmO-NO-CRb" secondAttribute="centerX" id="885-Ov-pGI"/>
-                            <constraint firstItem="iAx-7G-gc7" firstAttribute="centerX" secondItem="JmO-NO-CRb" secondAttribute="centerX" id="Aya-2P-ud6"/>
-                            <constraint firstItem="l7H-yZ-QFc" firstAttribute="centerX" secondItem="JmO-NO-CRb" secondAttribute="centerX" id="FAu-iE-WjF"/>
-                            <constraint firstItem="JmO-NO-CRb" firstAttribute="bottom" secondItem="iAx-7G-gc7" secondAttribute="bottom" constant="76" id="dbx-Fz-UpZ"/>
-                            <constraint firstItem="c8U-FO-hCO" firstAttribute="top" secondItem="JmO-NO-CRb" secondAttribute="top" constant="67" id="mFJ-th-Po9"/>
-                            <constraint firstItem="JmO-NO-CRb" firstAttribute="bottom" secondItem="xVU-vc-hli" secondAttribute="bottom" constant="350" id="uKh-EL-eTx"/>
-                            <constraint firstItem="xVU-vc-hli" firstAttribute="centerX" secondItem="JmO-NO-CRb" secondAttribute="centerX" id="uma-Cs-yJc"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="JmO-NO-CRb"/>
                     </view>
-                    <connections>
-                        <outlet property="picker_TargetSymbol" destination="iAx-7G-gc7" id="qhf-XF-eWP"/>
-                        <outlet property="picker_TestName" destination="l7H-yZ-QFc" id="8P0-C9-Y8U"/>
-                    </connections>
+                    <navigationItem key="navigationItem" id="yEa-oC-5DI"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pj2-M8-5mv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

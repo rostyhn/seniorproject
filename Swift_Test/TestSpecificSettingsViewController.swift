@@ -9,69 +9,98 @@
 import Foundation
 import UIKit
 
+
+struct TestParam {
+    var label: String
+    var endpoint: String
+    var options: [Any]
+    var jsonType: String
+    var targetSetting: String
+    init(label: String, endpoint: String, jsonType: String, targetSetting: String)
+    {
+        self.label = label;
+        self.endpoint = endpoint;
+        self.options = [];
+        self.jsonType = jsonType;
+        self.targetSetting = targetSetting;
+        //to make it even more dynamic, add params that are dependent on this one
+    }
+}
+
 //"more settings" view controller
 class TestSpecificSettingsViewController : UIViewController, UIPickerViewDelegate, UIPickerViewDataSource
 {
-    var testNames: [String] = [String]()
-    var possibleTargets: [String] = [String]()
-    @IBOutlet weak var picker_TestName: UIPickerView!
-    @IBOutlet weak var picker_TargetSymbol: UIPickerView!
+    var params = [TestParam]()
+    var testBeingEdited: Locality?
     
     //MARK: On view open
     override func viewDidLoad() {
+       
+        self.view.backgroundColor = UIColor.white;
         
-        picker_TestName.delegate = self
-        picker_TestName.dataSource = self
-        picker_TargetSymbol.delegate = self
-        picker_TargetSymbol.dataSource = self
-        
-        //MARK: If load locally
-        if(UserDefaults.standard.bool(forKey:"loadLocally"))
+        switch(testBeingEdited!)
         {
-            self.testNames = ["AlphabetTest", "SymbolTest"]
-            
-            //load the first test's targets
-            
-            let path = Bundle.main.path(forResource: "AlphabetTest", ofType: "json")!
-            
-            let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-            
-            //debug - gives you the string of data read in
-            //var rawData = String(decoding: jsonData!, as: UTF8.self);
-            
-            let testData = try? JSONDecoder().decode(SymbolData.self, from: jsonData!)
-            
-            self.possibleTargets = testData!.possibleTargets
-            self.picker_TargetSymbol.reloadAllComponents()
-            
+        case .jolo:
+            params.append(TestParam(label: "Test Version", endpoint: "data/getTestList", jsonType: "TestNamesFromJSON", targetSetting: "JOLOVersion"));
+            break;
+        case .cancellation:
+            break;
+        case .global:
+            break;
         }
-        //MARK: If load from server
-        else
-        {
-            let url = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000" + "/data/download/getTestList")
-            
+        
+        var counter = 0;
+        for i in 0...params.count-1 {
+            //load the picker's options
+            var param = params[i];
+            let url = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000/" + param.endpoint);
             let jsonData = try? Data(contentsOf: url!, options: .mappedIfSafe)
-            
-            let testNamesFromJSON = try? JSONDecoder().decode(TestNamesFromJSON.self, from: jsonData!)
-            
-            let firstTest = testNamesFromJSON!.first!.name
-            
-            for element in testNamesFromJSON!
+            switch(param.jsonType)
             {
-                self.testNames.append(element.name)
+                case "TestNamesFromJSON":
+                    let elements = try? JSONDecoder().decode(TestNamesFromJSON.self, from: jsonData!);
+                    for element in elements!
+                    {
+                        //make more general later
+                        param.options.append(element.name);
+                    }
+                    break;
+                default:
+                    break;
             }
+            //create a label for the picker
+            let newPickerLabel = UILabel();
+            newPickerLabel.numberOfLines = 0;
+            newPickerLabel.textColor = UIColor.black;
+            newPickerLabel.text = param.label;
+            newPickerLabel.frame = CGRect(x: 40, y: counter * 100 + 100, width: 1000, height:40);
+            counter = counter + 1;
+            newPickerLabel.font = UIFont(name: "Helvetica", size: 30.0);
+            self.view.addSubview(newPickerLabel);
             
+            //create the picker
+            let newPicker = attributedPickerView()
+            newPicker.center = CGPoint(x: Int(UIScreen.main.bounds.midX), y: counter * 100 + 100);
+            newPicker.delegate = self;
+            newPicker.dataSource = self;
+            newPicker.setValue(UIColor.black, forKeyPath: "textColor")
+            newPicker.targetParam = param;
+            counter = counter + 1;
+
+            self.view.addSubview(newPicker);
+
+        }
             //load in the first test's possible targets
             
-            let targetURL = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000" + "/data/download/" + firstTest)
+            /*let targetURL = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000" + "/data/download/" + firstTest)
             
             let targetJsonData = try? Data(contentsOf: targetURL!, options: .mappedIfSafe)
             
             let testData = try? JSONDecoder().decode(SymbolData.self, from: targetJsonData!)
             
             self.possibleTargets = testData!.possibleTargets
-            self.picker_TargetSymbol.reloadAllComponents()
-        }
+            self.picker_TargetSymbol.reloadAllComponents()*/
+        
     }
     //MARK: Picker functions
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -80,49 +109,21 @@ class TestSpecificSettingsViewController : UIViewController, UIPickerViewDelegat
     
     //MARK: Return number of components
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return (pickerView == picker_TestName) ? testNames.count : possibleTargets.count
+        let thisView = pickerView as! attributedPickerView;
+        return thisView.targetParam!.options.count;
     }
     
     //MARK: Return chosen component
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
+    {
+        let thisView = pickerView as! attributedPickerView;
+        UserDefaults.standard.set(thisView.targetParam!.options[row] as! String, forKey: thisView.targetParam!.targetSetting)
         
-        if pickerView == picker_TestName
-        {
-            UserDefaults.standard.set(testNames[row], forKey: "testSelected")
-            
-            if(!UserDefaults.standard.bool(forKey: "loadLocally"))
-            {
-                //make sure to pull the correct symbol list from the server
-                let targetURL = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000" + "/data/download/" + testNames[row])
-                
-                let targetJsonData = try? Data(contentsOf: targetURL!, options: .mappedIfSafe)
-                
-                let testData = try? JSONDecoder().decode(SymbolData.self, from: targetJsonData!)
-                
-                self.possibleTargets = testData!.possibleTargets
-                self.picker_TargetSymbol.reloadAllComponents()
-            }
-            else
-            {
-                //load the file in locally and grab the data
-                let path = Bundle.main.path(forResource: testNames[row], ofType: "json")!
-                
-                let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-                
-                //debug - gives you the string of data read in
-                //var rawData = String(decoding: jsonData!, as: UTF8.self);
-                
-                let testData = try? JSONDecoder().decode(SymbolData.self, from: jsonData!)
-                
-                self.possibleTargets = testData!.possibleTargets
-                self.picker_TargetSymbol.reloadAllComponents()
-            }
-        }
-        else
-        {
-            //set to target symbol
-            UserDefaults.standard.set(possibleTargets[row], forKey: "targetSymbol")
-        }
-        return (pickerView == picker_TestName) ? testNames[row] : possibleTargets[row]
+        return thisView.targetParam!.options[row] as! String;
+        
     }
+}
+    
+class attributedPickerView : UIPickerView {
+    var targetParam: TestParam?
 }

@@ -27,6 +27,7 @@ class MainViewController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
+        UserDefaults.standard.set("10.38.37.249", forKey: "serverAddress")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -42,7 +43,7 @@ class MainViewController: UIViewController {
     //MARK: Begin button
     @IBAction func act_startTest(_ sender: UIButton)
     {
-            UserDefaults.standard.set("10.38.45.161", forKey: "serverAddress")
+            
         
             
         
