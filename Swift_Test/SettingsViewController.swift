@@ -9,193 +9,124 @@
 import Foundation
 import UIKit
 
+enum Type {
+    case toggle, textfield
+}
+
+enum Locality: String, CaseIterable {
+    case global = "Global"
+    case cancellation = "Cancellation Test"
+    case jolo = "Angle Matching Test"
+}
+
+struct Setting {
+    let label : String
+    let name : String
+    let type : Type
+    let locality : Locality
+    
+    init(label: String, name: String, type: Type, locality: Locality)
+    {
+        self.label = label;
+        self.name = name;
+        self.type = type;
+        self.locality = locality;
+    }
+}
+
 //settings view controller
 class SettingsViewController: UIViewController
 {
-    @IBOutlet weak var serverNameTextField: UITextField!
-    @IBOutlet weak var doctorIDTextField: UITextField!
-    @IBOutlet weak var toggle_Debug: UISwitch!
-    @IBOutlet weak var toggle_LoadLocally: UISwitch!
-    @IBOutlet weak var segueToTestSettings: UIButton!
-    @IBOutlet weak var toggle_Questionnaire: UISwitch!
+    let settings = [Setting(label: "Debug Mode", name: "debug_mode", type: Type.toggle, locality: Locality.global),
+                        Setting(label: "Show Questionnaire", name: "show_questionnaire", type: Type.toggle, locality: Locality.global)];
+    var localeBeingEdited = "";
     
-    // MARK: Toggle loading locally
-    
-    @IBAction func f_toggle_LoadLocally(sender: UISwitch)
-    {
-        (sender.isOn) ? UserDefaults.standard.set(true, forKey: "loadLocally") : UserDefaults.standard.set(false, forKey: "loadLocally")
-    }
-    
-    // MARK: Toggle questionnaire
-    
-    @IBAction func f_toggle_Questionnaire(_ sender: UISwitch)
-    {
-        (sender.isOn) ? UserDefaults.standard.set(true, forKey: "showQuestionnaire") : UserDefaults.standard.set(false, forKey: "showQuestionnaire")
-    }
-    
-    // MARK: Toggle debug mode
-    
-    @IBAction func f_toggle_Debug(_ sender: UISwitch) {
-        (sender.isOn) ? UserDefaults.standard.set(true, forKey: "debugMode") : UserDefaults.standard.set(false, forKey: "debugMode")
-    }
-    
-    // MARK: Change Doctor ID
-    
-    @IBAction func change_DoctorID(_ sender: UITextField) {
-        //query database if doctor exists - could create a doctor ID lookup
-        var isCorrect = false
-        self.view.showBlurLoader()
-        let url = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000/data/download/getDoctorList")!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = UIColor.white
         
-        var request = URLRequest(url: url)
-         request.timeoutInterval = 3.0
-
-         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-             if let error = error {
-                 print("\(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    self.showConnectionError(title:"Unable to connect to server", message: "Check the server address you entered and try again.")
-                }
-             }
-             if let httpResponse = response as? HTTPURLResponse {
-                 print("statusCode: \(httpResponse.statusCode)")
-                 let jsonData = try? Data(contentsOf: url, options: .mappedIfSafe)
-                 
-                 let doctorNames = try? JSONDecoder().decode(DoctorNames.self, from: jsonData!)
-                 
-                 DispatchQueue.main.async {
-                 for doctor in doctorNames!
-                 {
-                     if(doctor.DoctorID == Int(sender.text!))
-                     {
-                         let alert = UIAlertController(title: "Doctor ID Changed", message: "Welcome, " + doctor.DoctorName + ".", preferredStyle: .alert)
-                         let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-                         alert.addAction(action)
-                         self.present(alert, animated: true, completion: nil)
-                         UserDefaults.standard.set(sender.text, forKey: "doctorID")
-                         isCorrect = true
-                         self.view.removeBlurLoader()
-                         return
-                     }
-                 }
-                 if(!isCorrect)
-                 {
-                     let alert = UIAlertController(title: "Doctor ID not found", message: "Check the ID you entered and try again.", preferredStyle: .alert)
-                     let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-                     alert.addAction(action)
-                     self.view.removeBlurLoader()
-                     self.present(alert, animated: true, completion: nil)
-                 }
-                }
-             }
-         }
-         task.resume()
-    }
-    
-    // MARK: Change Server Address
-    
-    @IBAction func change_ServerName(_ sender: UITextField) {
-        self.view.showBlurLoader()
-        guard let url = URL(string: "http://" + sender.text! + ":5000/data/testConnection") else { return }
-
-               var request = URLRequest(url: url)
-               request.timeoutInterval = 3.0
-
-               let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                   if let error = error {
-                       print("\(error.localizedDescription)")
-                    self.showConnectionError(title:"Unable to connect to server", message: "Check the server address you entered and try again.")
-                   }
-                   if let httpResponse = response as? HTTPURLResponse {
-                       print("statusCode: \(httpResponse.statusCode)")
-                    DispatchQueue.main.async {
-                            self.prepareTestSettingsPage(text: sender.text!)
-                        }
-                   }
-               }
-               task.resume()
-    }
-    
-    // MARK: Open more settings page
-
-    @IBAction func f_segueToTestSettings(sender: UIButton)
-    {
-        self.view.showBlurLoader()
-        //load test settings page if connection exists
-        guard let url = URL(string: "http://" + UserDefaults.standard.string(forKey: "serverAddress")! + ":5000/data/testConnection") else { return }
-
-               var request = URLRequest(url: url)
-               request.timeoutInterval = 3.0
-
-               let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                   if let error = error {
-                       print("\(error.localizedDescription)")
-                    DispatchQueue.main.async {
-                        self.view.showBlurLoader()
-                    self.showConnectionError(title:"Unable to connect to server", message: "Check the server address you entered and try again.")
+        var counter = 0;
+        
+        for locale in Locality.allCases {
+            let currentLocaleLabel = UILabel();
+            currentLocaleLabel.numberOfLines = 0;
+            currentLocaleLabel.textColor = UIColor.black;
+            currentLocaleLabel.text = locale.rawValue + " Settings";
+            currentLocaleLabel.font = UIFont(name: "Helvetica", size: 30.0);
+            currentLocaleLabel.frame = CGRect(x: 40, y: counter * 100 + 100, width: 1000, height:40);
+            counter = counter + 1;
+            self.view.addSubview(currentLocaleLabel);
+            for setting in settings
+            {
+                if(setting.locality == locale)
+                {
+                    let currentSettingLabel = UILabel();
+                    currentSettingLabel.numberOfLines = 0;
+                    currentSettingLabel.textColor = UIColor.black;
+                    currentSettingLabel.text = setting.label;
+                    currentSettingLabel.font = UIFont(name: "Helvetica", size:  24.0);
+                    currentSettingLabel.frame = CGRect(x: 40, y: counter * 100 + 100, width: 1000, height:40);
+                    
+                    switch(setting.type){
+                    case .toggle:
+                        let currentInteractable = ToggleButton();
+                        currentInteractable.isOn = (UserDefaults.standard.bool(forKey: setting.name)) ? true : false;
+                        //ooo nice and blue
+                        currentInteractable.onTintColor = UIColor.blue;
+                        currentInteractable.associatedVal = setting.name;
+                        currentInteractable.frame = CGRect(x: Int(UIScreen.main.bounds.maxX - 100.0), y: counter * 100 + 100, width: 50, height: 40);
+                        currentInteractable.addTarget(self, action: #selector(toggleSetting), for: .valueChanged);
+                        self.view.addSubview(currentInteractable);
+                        break;
+                    case .textfield:
+                        break;
                     }
-                   }
-                   if let httpResponse = response as? HTTPURLResponse {
-                       print("statusCode: \(httpResponse.statusCode)")
-                    DispatchQueue.main.async {
-                            self.view.removeBlurLoader()
-                           self.performSegue(withIdentifier: "to_TestSettings", sender: self)
-                        }
-                   }
-               }
-               task.resume()
-    }
-
-    // MARK: UI Utility Functions
-    
-    func prepareTestSettingsPage(text: String)
-    {
-            self.view.removeBlurLoader()
-            self.doctorIDTextField.isUserInteractionEnabled = true
-            UserDefaults.standard.set(true, forKey: "isConnectionSafe")
-            UserDefaults.standard.set(text,forKey: "serverAddress")
-            self.segueToTestSettings.isHidden = false
-            let alert = UIAlertController(title: "Connection successful", message: "Check the more settings page for advanced test administration options.", preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-                alert.addAction(action)
-            self.present(alert, animated: true)
-    }
-    
-    func showConnectionError(title: String, message: String)
-    {
-        DispatchQueue.main.async {
-            //reset everything
-            UserDefaults.standard.set(false, forKey: "isConnectionSafe")
-            UserDefaults.standard.set("", forKey: "doctorID")
-            self.doctorIDTextField.text = ""
-            self.doctorIDTextField.isUserInteractionEnabled = false
-            self.view.removeBlurLoader()
-            self.segueToTestSettings.isHidden = true
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alert.addAction(action)
-        self.present(alert, animated: true)
+                    self.view.addSubview(currentSettingLabel);
+                    counter = counter + 1;
+                }
+            }
+            //add button for specific settings if not global
+            if(locale != .global)
+            {
+                let btn_TestSpecific = SegueButton();
+                btn_TestSpecific.frame = CGRect(x: Int(UIScreen.main.bounds.midX) - 175, y: counter * 100 + 100, width: 350, height: 40);
+                btn_TestSpecific.setTitleColor(UIColor.blue, for: .normal)
+                btn_TestSpecific.setTitle("Change version of " + locale.rawValue.lowercased(), for: .normal);
+                btn_TestSpecific.layer.cornerRadius = 9.0;
+                btn_TestSpecific.layer.borderWidth = 0.8;
+                btn_TestSpecific.associatedVal = locale;
+                btn_TestSpecific.addTarget(self, action: #selector(segueToTestSpecificSettings), for: .touchUpInside);
+                self.view.addSubview(btn_TestSpecific);
+                counter = counter + 1;
+            }
         }
     }
     
-    //MARK: On view open
+    @objc func segueToTestSpecificSettings(sender: SegueButton)
+    {
+        self.localeBeingEdited = sender.associatedVal!.rawValue;
+        self.performSegue(withIdentifier: "to_TestSpecificSettings", sender: self)
+    }
+    
+    @objc func toggleSetting(sender: ToggleButton!)
+    {
+        (sender.isOn) ? UserDefaults.standard.set(true, forKey: sender.associatedVal!) : UserDefaults.standard.set(false, forKey: sender.associatedVal!);
+    }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.isHidden = false
-        self.segueToTestSettings.isHidden = UserDefaults.standard.bool(forKey: "isConnectionSafe") == true ? false : true
-        self.doctorIDTextField.isUserInteractionEnabled = UserDefaults.standard.bool(forKey: "isConnectionSafe") == true ? true: false
-        serverNameTextField.text = UserDefaults.standard.string(forKey: "serverAddress")
-        doctorIDTextField.text = UserDefaults.standard.string(forKey: "doctorID")
-        
-        (UserDefaults.standard.bool(forKey: "debugMode")) ? toggle_Debug.setOn(true, animated: true) : toggle_Debug.setOn(false, animated: true)
-        
-        (UserDefaults.standard.bool(forKey: "loadLocally")) ? toggle_LoadLocally.setOn(true, animated: true) : toggle_LoadLocally.setOn(false, animated: true)
-        
-        (UserDefaults.standard.bool(forKey: "showQuestionnaire")) ? toggle_Questionnaire.setOn(true, animated: true) : toggle_Questionnaire.setOn(false, animated: true)
+         self.navigationController?.navigationBar.isHidden = false
     }
 }
 
 class SettingsUIView: UIView
 {
     
+}
+
+class SegueButton: UIButton {
+    var associatedVal : Locality?
+}
+
+class ToggleButton: UISwitch {
+    var associatedVal : String?
 }

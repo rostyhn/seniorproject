@@ -36,6 +36,7 @@ class MainViewController: UIViewController {
          UIDevice.current.setValue(value, forKey: "orientation")
         
         
+        
      }
     
     //MARK: Begin button
@@ -76,6 +77,7 @@ class MainViewController: UIViewController {
     @IBAction func act_openSettings(_ sender: Any) {
         //except when we open the settings menu
         self.navigationController?.navigationBar.isHidden = false
+        self.performSegue(withIdentifier: "to_Settings", sender: self)
     }
     
     //MARK: UI Utility functions
