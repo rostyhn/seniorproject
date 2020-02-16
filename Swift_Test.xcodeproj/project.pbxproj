@@ -33,6 +33,8 @@
 		E902197F23DF5E430070678D /* CancellationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E902197E23DF5E430070678D /* CancellationView.swift */; };
 		E902198123DF5E910070678D /* JOLOView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E902198023DF5E910070678D /* JOLOView.swift */; };
 		E902198323DF5FD30070678D /* JOLOTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E902198223DF5FD30070678D /* JOLOTest.swift */; };
+		E96B205323F9D3B400B6B8F0 /* seniorproject in Resources */ = {isa = PBXBuildFile; fileRef = E96B205223F9D3B400B6B8F0 /* seniorproject */; };
+		E96B205523F9D41800B6B8F0 /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E96B205423F9D41800B6B8F0 /* ResultsViewController.swift */; };
 		E9C6937023E10AD600F4FBC4 /* GfxHacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C6936F23E10AD600F4FBC4 /* GfxHacks.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +67,8 @@
 		E902197E23DF5E430070678D /* CancellationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationView.swift; sourceTree = "<group>"; };
 		E902198023DF5E910070678D /* JOLOView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JOLOView.swift; sourceTree = "<group>"; };
 		E902198223DF5FD30070678D /* JOLOTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JOLOTest.swift; sourceTree = "<group>"; };
+		E96B205223F9D3B400B6B8F0 /* seniorproject */ = {isa = PBXFileReference; lastKnownFileType = folder; name = seniorproject; sourceTree = "<group>"; };
+		E96B205423F9D41800B6B8F0 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		E9C6936F23E10AD600F4FBC4 /* GfxHacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GfxHacks.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,6 +86,7 @@
 		9839820B232F079200734D87 = {
 			isa = PBXGroup;
 			children = (
+				E96B205223F9D3B400B6B8F0 /* seniorproject */,
 				98398216232F079200734D87 /* Swift_Test */,
 				98398215232F079200734D87 /* Products */,
 			);
@@ -135,6 +140,7 @@
 				98EFEC3823594D480000BDD9 /* TestViewController.swift */,
 				E902198023DF5E910070678D /* JOLOView.swift */,
 				E902197E23DF5E430070678D /* CancellationView.swift */,
+				E96B205423F9D41800B6B8F0 /* ResultsViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -232,6 +238,7 @@
 				98D87F03237118100014F1CB /* brain-simple-mesh.mtl in Resources */,
 				98D1B566236FCB980069CDD0 /* SymbolTest.json in Resources */,
 				98D1B568236FD02E0069CDD0 /* res in Resources */,
+				E96B205323F9D3B400B6B8F0 /* seniorproject in Resources */,
 				98D87F02237118100014F1CB /* brain-simple-mesh.obj in Resources */,
 				9839821D232F079200734D87 /* Main.storyboard in Resources */,
 				984F82DD2345AA4900481495 /* AlphabetTest.json in Resources */,
@@ -262,6 +269,7 @@
 				98EFEC3923594D480000BDD9 /* TestViewController.swift in Sources */,
 				987314E32373C6C1004D5C7A /* TestNameFromJSON.swift in Sources */,
 				98D87EFD237117D80014F1CB /* shaders.metal in Sources */,
+				E96B205523F9D41800B6B8F0 /* ResultsViewController.swift in Sources */,
 				98D87EFE237117DA0014F1CB /* maths.swift in Sources */,
 				984F82D32345845E00481495 /* CancellationTest.swift in Sources */,
 				98E6A267236142DB00EC54DF /* SettingsViewController.swift in Sources */,
