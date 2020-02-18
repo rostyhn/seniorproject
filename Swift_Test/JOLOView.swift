@@ -36,13 +36,8 @@ class JOLOView: UIView {
             // Fallback on earlier versions
         }
         
-        if(self.count == self.test.stimuli!.count)
-        {
-            endTest()
-        } else {
             context.fill(UIScreen.main.bounds)
             
-                
             drawExample(context: context)
             drawStimulus(stimulus: test.stimuli![count], context: context)
             
@@ -50,23 +45,24 @@ class JOLOView: UIView {
             renderButton()
             renderCenterLine(context: context)
             
-        }
+        
         
         
         
     }
     
-     func endTest() {
-        if (test.responses.count != 0) {
+      @objc func endTest() {
+        if (self.test.responses.count != 0) {
+        
             let jsonEncoder = JSONEncoder()
-            let jsonData = try? jsonEncoder.encode(test.responses)
+            let jsonData = try? jsonEncoder.encode(self.test)
             
             let opQueue = OperationQueue()
             opQueue.maxConcurrentOperationCount = 1
                 
             let group = DispatchGroup()
             
-            let url = URL(string: serverAddress + "/data/uploadJSON")
+            let url = URL(string: serverAddress + "/JOLO/storeTestData")
             var request = URLRequest(url:url!)
             request.httpMethod = "POST"
             request.httpBody = jsonData
@@ -83,14 +79,20 @@ class JOLOView: UIView {
             
             opQueue.addOperation(sendTestData)
             
-            // Causes app to crash without sending POST
-            //self.vc.showAlert(title: "Test Complete", message: "Please return the device to the test administrator")
-            //self.vc.performSegue(withIdentifier: "to_Main", sender: Any)
+            let alertController = UIAlertController(title: "Test Complete", message: "Please return the device to the test administator.", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "Done", style: .default, handler: {
+
+                [unowned self] (action) -> Void in
+                
+                self.vc.performSegue(withIdentifier: "to_Results", sender: self.test);
+            })
+            alertController.addAction(defaultAction)
+            
+            self.vc.present(alertController, animated: false);
             
         }
         
     }
-    
     
     
     func renderCenterLine(context: CGContext) {
@@ -116,10 +118,15 @@ class JOLOView: UIView {
         startButton.addTarget(self, action: #selector(startRecording), for: .touchUpInside)
         self.addSubview(startButton)
         
-        /*endTestButton.backgroundColor = UIColor.green
-        endTestButton.setTitle("END TEST", for: .normal)
-        endTestButton.addTarget(self, action: #selector(endTest), for: .touchUpInside)
-        self.addSubview(endTestButton)*/
+        if(UserDefaults.standard.bool(forKey: "debug_mode"))
+        {
+            endTestButton.backgroundColor = UIColor.green
+            endTestButton.setTitle("END TEST", for: .normal)
+            endTestButton.addTarget(self, action: #selector(endTest), for: .touchUpInside)
+            self.addSubview(endTestButton)
+        }
+        
+
     }
     
     //this will eventually just be triggered when the user stops talking - a bit complicated for now

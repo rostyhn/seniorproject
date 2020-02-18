@@ -6,7 +6,7 @@
 / this.
 / Some additional notes:
 / The if #avaliable clauses were forced on me by Swift
-//  Copyright © 2020 Cogniscreen All rights reserved.
+/ Copyright © 2020 Cogniscreen All rights reserved.
 */
 
 import UIKit
@@ -27,7 +27,7 @@ class MainViewController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        UserDefaults.standard.set("10.38.37.249", forKey: "serverAddress")
+        UserDefaults.standard.set("10.38.47.93", forKey: "serverAddress")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -35,18 +35,11 @@ class MainViewController: UIViewController {
          self.navigationController?.navigationBar.isHidden = true
          let value = UIInterfaceOrientation.landscapeLeft.rawValue
          UIDevice.current.setValue(value, forKey: "orientation")
-        
-        
-        
      }
     
     //MARK: Begin button
     @IBAction func act_startTest(_ sender: UIButton)
     {
-            
-        
-            
-        
             let alert = UIAlertController(title: "Enter Patient ID", message: "Please enter the patient's ID.", preferredStyle: .alert)
         
             alert.addTextField { (textField) -> Void in textField.text = "" }
@@ -59,6 +52,7 @@ class MainViewController: UIViewController {
             
                 if(textField.text != "")
                 {
+                    patientID = textField.text!;
                     self.performSegue(withIdentifier: "to_Test", sender: self)
                 }
                 else

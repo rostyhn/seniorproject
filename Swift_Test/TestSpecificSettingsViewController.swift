@@ -41,7 +41,7 @@ class TestSpecificSettingsViewController : UIViewController, UIPickerViewDelegat
         switch(testBeingEdited!)
         {
         case .jolo:
-            params.append(TestParam(label: "Test Version", endpoint: "data/getTestList", jsonType: "TestNamesFromJSON", targetSetting: "JOLOVersion"));
+            params.append(TestParam(label: "Test Version", endpoint: "data/getTestList/JOLO", jsonType: "TestNamesFromJSON", targetSetting: "JOLOVersion"));
             break;
         case .cancellation:
             break;

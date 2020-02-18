@@ -45,7 +45,7 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
         override func loadView() {
             //later we will determine the type of test before setting the view but not today
             joloView = JOLOView()
-            joloView.test = JOLOTest(patientID: patientID, bounds: UIScreen.main.bounds)
+            joloView.test = JOLOTest(jsonName: UserDefaults.standard.string(forKey: "JOLOVersion")!, patientID: patientID, bounds: UIScreen.main.bounds)
             joloView.vc = self
             joloView.backgroundColor = UIColor.white
             joloView.clearsContextBeforeDrawing = true
@@ -58,7 +58,14 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
         UIDevice.current.setValue(value, forKey: "orientation")
     }
     
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+           if segue.identifier == "to_Results"
+           {
+               if let resultVC = segue.destination as? ResultsViewController {
+                  resultVC.testData = sender as? JOLOTest;
+               }
+           }
+       }
     
     func startRecording()
     {
@@ -93,7 +100,6 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
                 OperationQueue.main.addOperation {
                    switch authStatus {
                       case .authorized:
-                        
                         self.transcribeFile(url: loc)
                       case .denied:
                         self.performSegue(withIdentifier: "to_Main", sender: self);
@@ -191,7 +197,7 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
             // Only gives "one" or "two" when they speak a single number (so invalid input in this case)
             var countOfNumbers: Int = 0
             print(result.bestTranscription.formattedString)
-            //print(result.bestTranscription)
+            // print(result)
             for segment in result.bestTranscription.segments {
                 
                 let currSeg = segment.substring.convertToNumberString()
@@ -220,8 +226,18 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
             //print(countOfNumbers)
             //check how many line fields are not null and count and then set that as the max
             if (countOfNumbers == totalLines) {
-                self.joloView.count = self.joloView.count + 1
                 self.joloView.test.responses.append(newResponse)
+                
+                if(self.joloView.test!.responses.count == self.joloView.test!.stimuli!.count)
+                {
+                    self.joloView.endTest()
+                }
+                else
+                {
+                    self.joloView.count = self.joloView.count + 1
+
+                }
+
             }
             else
             {
@@ -229,9 +245,11 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
             }
             
             DispatchQueue.main.async {
+                
                 self.joloView.setNeedsDisplay()
+            
+                
                 self.joloView.removeBlurLoader()
-                //print(self.joloView.test.responses)
             }
         }
         

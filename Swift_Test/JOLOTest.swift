@@ -64,19 +64,20 @@ class JOLOTest: Codable {
     var stimuli: [Stimulus]?
     var exampleLines: [Line]?
     var responses: [Response]
+    var jsonName: String
     
     
-    init(patientID: String, bounds: CGRect)
+    init(jsonName: String, patientID: String, bounds: CGRect)
     {
         self.testStartTime = Date();
         self.patientID = patientID;
         self.doctorID = "123456789";
         self.responses = []
+        self.jsonName = jsonName;
         self.exampleLines = populateLines(midX: bounds.midX, maxY: bounds.maxY);
         let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
-        let url = URL(string: serverAddress + "/data/getStimuli")
+        let url = URL(string: serverAddress + "/data/getStimuli/" + jsonName);
         let jsonData = try? Data(contentsOf: url!, options: .mappedIfSafe)
-
         self.stimuli = try? JSONDecoder().decode(Stimuli.self, from: jsonData!)
         
     }
