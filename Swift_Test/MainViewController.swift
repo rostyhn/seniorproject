@@ -33,8 +33,8 @@ class MainViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         //hides navigation bar everywhere
          self.navigationController?.navigationBar.isHidden = true
-         let value = UIInterfaceOrientation.landscapeLeft.rawValue
-         UIDevice.current.setValue(value, forKey: "orientation")
+         //let value = UIInterfaceOrientation.landscapeLeft.rawValue
+         //UIDevice.current.setValue(value, forKey: "orientation")
      }
     
     //MARK: Begin button

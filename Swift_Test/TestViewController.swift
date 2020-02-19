@@ -18,6 +18,15 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
     var audioRecorder: AVAudioRecorder!
     var joloView: JOLOView!
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    var currTrans: SFTranscription?
+    var file: AVAudioFile?
+    let audioQueue = DispatchQueue(label: "audioQ", qos:.userInitiated);
+
+    
+    let audioEngine = AVAudioEngine()
+    let speechRecognizer = SFSpeechRecognizer()
+    let request = SFSpeechAudioBufferRecognitionRequest()
+    var recognitionTask: SFSpeechRecognitionTask?
     
     //starts the view controller and then loads in our view
         override func viewDidLoad() {
@@ -26,20 +35,25 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
             recordingSession = AVAudioSession.sharedInstance()
             
             do {
-                
-                try recordingSession.setCategory(.playAndRecord, mode: .default)
-                try recordingSession.setActive(true)
-                recordingSession.requestRecordPermission() { [unowned self] allowed in
-                    DispatchQueue.main.async {
-                        if allowed {
-                            self.startRecording()
-                        } else {
-                            self.showAlert(title: "Test Cancelled", message: "The test will now end.")
-                        }
+                SFSpeechRecognizer.requestAuthorization {
+                    [unowned self] (authStatus) in
+                    switch authStatus {
+                    case .authorized:
+                        break;
+                    case .denied:
+                        self.showAlert(title: "Test Cancelled", message: "The test will now end.")
+                        break;
+                    case .restricted:
+                        self.showAlert(title: "Test Cancelled", message: "The test will now end.")
+                        break;
+                    case .notDetermined:
+                       self.showAlert(title: "Test Cancelled", message: "The test will now end.")
+                        break;
+                    @unknown default:
+                        self.showAlert(title: "Test Cancelled", message: "The test will now end.")
+                        break;
                     }
                 }
-            } catch {
-                self.showAlert(title: "Test Cancelled", message: "The test will now end.")
             }
         }
         override func loadView() {
@@ -67,69 +81,65 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
            }
        }
     
-    func startRecording()
+    func startRecording() throws
     {
-        let audioURL = self.getDataURL()
+        // 1
+        let node = audioEngine.inputNode
+        let recordingFormat = node.outputFormat(forBus: 0)
+        
+        let settings = [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+            AVSampleRateKey: 12000,
+            AVNumberOfChannelsKey: 1,
+            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+        ]
+        
+        
+        try! file = AVAudioFile(forWriting: getDataURL(), settings: settings)
+        
+        // https://stackoverflow.com/questions/45913789/how-to-improve-speech-recognition-in-ios-for-numeric-input
+        node.installTap(onBus: 0, bufferSize: 4096,
+                        format: recordingFormat) { [unowned self]
+          (buffer, _) in
+          
+          self.request.append(buffer)
+          
+          //self.request.append(AVAudioPCMBuffer(pcmFormat: , frameCapacity: <#T##AVAudioFrameCount#>))
+         // try! self.file?.write(from: buffer)
+        }
+        
+        request.taskHint = .dictation;
 
-           let settings = [
-               AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-               AVSampleRateKey: 12000,
-               AVNumberOfChannelsKey: 1,
-               AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
-           ]
-
-           do {
-               audioRecorder = try AVAudioRecorder(url: audioURL, settings: settings)
-               audioRecorder.delegate = self
-               audioRecorder.record()
-           } catch {
-               finishRecording(success: false)
-           }
+        // 3
+        audioEngine.prepare()
+        try audioEngine.start()
+        
+        //create new file and write to it while we have the audio engine open
+        recognitionTask = speechRecognizer?.recognitionTask(with: request) {
+          [unowned self]
+          (result, _) in
+            
+            if var result = result {
+                self.currTrans = result.bestTranscription
+                print(self.currTrans)
+            }
+        
+            
+        }
     }
     
     // MARK: Finish Recording
     func finishRecording(success: Bool)
     {
-        //if successful, send to backend
-        if(success)
-        {
-            audioRecorder.stop();
-            let loc = audioRecorder!.url
+        
+            audioEngine.stop()
+            audioEngine.inputNode.removeTap(onBus: 0)
+            request.endAudio()
+            recognitionTask?.cancel()
+            finalizeResponse();
             
-            SFSpeechRecognizer.requestAuthorization { authStatus in
-                OperationQueue.main.addOperation {
-                   switch authStatus {
-                      case .authorized:
-                        self.transcribeFile(url: loc)
-                      case .denied:
-                        self.performSegue(withIdentifier: "to_Main", sender: self);
-                      case .restricted:
-                         self.performSegue(withIdentifier: "to_Main", sender: self);
-                      case .notDetermined:
-                         self.performSegue(withIdentifier: "to_Main", sender: self);
-                   }
-                }
-            }
-            
-        }
-        
-        /*let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
-        let url = URL(string: serverAddress + "/data/upload")
-        let loc = audioRecorder!.url
-        
-        let answerData = try? Data(contentsOf: loc, options: .mappedIfSafe)
-        
-        var answerRequest = URLRequest(url:url!)
-        answerRequest.httpMethod = "POST"
-        answerRequest.httpBody = answerData
-        answerRequest.setValue("audio/m4a", forHTTPHeaderField: "Content-Type")
-        
-        let task_answers = URLSession.shared.dataTask(with: answerRequest)
-        task_answers.resume()*/
-        
     }
-    
-    
+
     func showAlert(title: String, message: String)
     {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -149,20 +159,18 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
     }
     
     // MARK: Write voice input into result array
-    fileprivate func transcribeFile(url: URL) {
+    fileprivate func finalizeResponse() {
 
-      // 1 make sure dictation is enabled on the device in settings for this to work.
-      guard let recognizer = SFSpeechRecognizer() else {
-        print("Speech recognition not available for specified locale")
-        return
-      }
-      
-        if #available(iOS 13, *) {
+        
+        
+        /*if #available(iOS 13, *) {
             recognizer.supportsOnDeviceRecognition = true
         } else {
             print("did not change supports")
         }
      
+         
+         
       
       // 2
       let request = SFSpeechURLRecognitionRequest(url: url)
@@ -189,19 +197,20 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
                 print(request.requiresOnDeviceRecognition)
             } else {
                 print("network only")
-            }
+            }*/
             
+        
             var newResponse = Response(responseDataList: []);
             
             // You can use String.numericValue to get 1 instead of "one" now
             // Only gives "one" or "two" when they speak a single number (so invalid input in this case)
             var countOfNumbers: Int = 0
-            print(result.bestTranscription.formattedString)
-            // print(result)
-            for segment in result.bestTranscription.segments {
-                
+        
+        
+        //responsedata no longer accurate
+       /* for segment in self.currTrans!.segments {
+               
                 let currSeg = segment.substring.convertToNumberString()
-
                 if(currSeg != "NaN" && currSeg.isNumeric)
                 {
                     newResponse.responseDataList.append(ResponseData(responsePart: segment.substring, timestamp: segment.timestamp, confidence: segment.confidence, duration: segment.duration))
@@ -228,6 +237,20 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
             if (countOfNumbers == totalLines) {
                 self.joloView.test.responses.append(newResponse)
                 
+                /*let serverAddress = "http://" + (UserDefaults.standard.string(forKey:"serverAddress")!) + ":5000"
+                let url = URL(string: serverAddress + "/data/upload")
+                let loc = audioRecorder!.url
+                
+                let answerData = try? Data(contentsOf: loc, options: .mappedIfSafe)
+                
+                var answerRequest = URLRequest(url:url!)
+                answerRequest.httpMethod = "POST"
+                answerRequest.httpBody = answerData
+                answerRequest.setValue("audio/m4a", forHTTPHeaderField: "Content-Type")
+                
+                let task_answers = URLSession.shared.dataTask(with: answerRequest)
+                task_answers.resume()*/
+                
                 if(self.joloView.test!.responses.count == self.joloView.test!.stimuli!.count)
                 {
                     self.joloView.endTest()
@@ -241,7 +264,9 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
             }
             else
             {
-                self.showAlert(title: "Error", message: "Input not recognized. Please try again.");
+                DispatchQueue.main.async {
+                    self.showAlert(title: "Error", message: "Input not recognized. Please try again.");
+                }
             }
             
             DispatchQueue.main.async {
@@ -251,12 +276,10 @@ class TestViewController: UIViewController, AVAudioRecorderDelegate {
                 
                 self.joloView.removeBlurLoader()
             }
-        }
-        
-        
-      }
+      }*/
     }
 }
+
 
 // MARK: String extensions
 extension String {
@@ -271,16 +294,8 @@ extension String {
         numberFormater.numberStyle = .decimal
         
         guard let number = numberFormater.number(from: self.lowercased()) else {
-
-        //check if string is spelled number
-        
-
-        //change language to spanish
-        //numberFormater.locale = Locale(identifier: "es")
-        
             return "NaN";
         }
         return number.stringValue
     }
 }
-

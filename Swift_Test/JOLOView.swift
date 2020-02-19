@@ -134,7 +134,9 @@ class JOLOView: UIView {
         if(!isRecording)
         {
         //need to setup async function here to wait until data is posted to continue
-            self.vc.startRecording()
+            self.vc.audioQueue.async {
+                try! self.vc.startRecording()
+            }
             isRecording = true;
             sender.isEnabled = false;
             stopButton.isEnabled = true;
@@ -145,16 +147,21 @@ class JOLOView: UIView {
     
     @objc func finishRecording(sender: UIButton!)
     {
-        if(self.vc.audioRecorder.url.absoluteString != "" && isRecording)
+        if(isRecording)
         {
             isRecording = false;
             sender.isEnabled = false;
             sender.alpha = 0.0
             startButton.isEnabled = true;
             startButton.alpha = 1.0
+            self.showBlurLoader()
+            self.vc.audioQueue.async {
+                self.vc.finishRecording(success: true)
+            }
             
-            DispatchQueue.main.async {
-                self.showBlurLoader()
+            
+            /*DispatchQueue.main.async {
+                
             }
             
             let opQueue = OperationQueue()
@@ -164,7 +171,7 @@ class JOLOView: UIView {
             
             let doProcessing = BlockOperation {
                     group.enter()
-                    self.vc.finishRecording(success: true)
+                   
             }
             
             doProcessing.completionBlock = { [unowned doProcessing] in
@@ -173,7 +180,7 @@ class JOLOView: UIView {
     
             opQueue.addOperation(doProcessing)
             
-            group.wait()
+            group.wait()*/
 
         }
     }
